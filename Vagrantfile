@@ -10,7 +10,7 @@ end
 
 Vagrant.configure("2") do |config|
   config.vm.define "synapse" do |dev|
-    dev.vm.box = "precise64"
+    dev.vm.box = "trusty64"
     dev.vm.network :private_network, ip: "10.99.99.230"
     dev.vm.hostname = "matrix-synapse"
     config.ssh.forward_agent = true
