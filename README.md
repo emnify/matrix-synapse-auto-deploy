@@ -5,7 +5,7 @@ The playbooks will try to use latest master from https://github.com/matrix-org/s
 
 ## Pre-requirements for host system
 * Git
-* Vagrant
+* Vagrant https://www.vagrantup.com/
 * Ansible
 * Virtualbox (or other virtual env at hand)
 
