@@ -1,6 +1,6 @@
 ---
 
-- hosts: dev
+- hosts: synapse
   remote_user: vagrant
   sudo: yes
   sudo_user: root
@@ -19,4 +19,3 @@
        - libssl-dev
        - python-virtualenv
        - libjpeg-dev
-       
