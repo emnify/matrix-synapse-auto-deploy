@@ -11,9 +11,9 @@ The playbooks will try to use latest master from https://github.com/matrix-org/s
 
 ## Load vagrant box
 
-  vagrant box add trusty64 https://atlas.hashicorp.com/ubuntu/boxes/trusty64/versions/20150427.0.0/providers/virtualbox.box
+    vagrant box add trusty64 https://atlas.hashicorp.com/ubuntu/boxes/trusty64/versions/20150427.0.0/providers/virtualbox.box
   
 ## Run vagrant
 
-  vagrant up
+    vagrant up
   
