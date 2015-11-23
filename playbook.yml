@@ -1,0 +1,23 @@
+---
+
+- hosts: all
+  remote_user: vagrant
+  sudo: yes
+  sudo_user: root
+  vars_files:
+    - ~/.ansible/github_vars.yml
+
+  tasks:
+    - apt: update_cache=yes
+    - name: install basic packages that should want to be on all nodes
+      action: apt pkg={{item}} state=installed
+      with_items:
+       - joe
+       - tcpdump
+       - tshark
+       - wget
+       - git
+       - vim
+       - locate
+
+- include: synapse.yml

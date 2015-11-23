@@ -1,0 +1,22 @@
+---
+
+- hosts: dev
+  remote_user: vagrant
+  sudo: yes
+  sudo_user: root
+
+  tasks:
+    - apt: update_cache=yes
+    - name: Install packages needed by synapse
+      action: apt pkg={{item}} state=installed
+      with_items:
+       - build-essential
+       - python2.7-dev
+       - libffi-dev
+       - python-pip
+       - python-setuptools
+       - sqlite3
+       - libssl-dev
+       - python-virtualenv
+       - libjpeg-dev
+       
