@@ -12,8 +12,19 @@ The playbooks will try to use latest master from https://github.com/matrix-org/s
 ## Load vagrant box
 
     vagrant box add trusty64 https://atlas.hashicorp.com/ubuntu/boxes/trusty64/versions/20150427.0.0/providers/virtualbox.box
-  
+ 
 ## Run vagrant
 
     vagrant up
+    
+## Check status of your new VM
+
+    vagrant status
+    
+## SSH into your new VM
+
+    vagrants ssh synapse
+    
+## Start using it from any matrix client
+
   
