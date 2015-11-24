@@ -16,19 +16,25 @@ The playbooks will try to use latest master from https://github.com/matrix-org/s
 ## Clone auto-deploy repo
 
     git clone https://github.com/EMnify/matrix-synapse-auto-deploy
-    
+
+## Adopt vars file as needed
+
+    ---
+
+    username: synapse # under wich user the server should be installed and run
+    git_repo: https://github.com/matrix-org/synapse/tarball/master # URL to Git Repo you want to install
+    hostname: 10.99.99.230 # FQDN to be used
+
 ## Run vagrant
 
     vagrant up
-    
+
 ## Check status of your new VM
 
     vagrant status
-    
+
 ## SSH into your new VM
 
     vagrants ssh synapse
-    
-## Start using it from any matrix client
 
-  
+## Start using it from any matrix client
