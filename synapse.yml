@@ -8,7 +8,6 @@
       - synapse_vars.yml
 
   tasks:
-    - apt: update_cache=yes
     - name: Install packages needed by synapse
       action: apt pkg={{item}} state=installed
       with_items:
@@ -49,3 +48,11 @@
         owner={{ username }}
         group={{ username }}
         recurse=yes
+
+    - name: Install upstart script
+      template:
+        src=init/synapse.conf
+        dest=/etc/init/synapse.conf
+
+    - name: Start synapse server
+      service: name=synapse state=started
