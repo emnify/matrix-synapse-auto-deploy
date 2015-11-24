@@ -33,8 +33,11 @@ The playbooks will try to use latest master from https://github.com/matrix-org/s
 
     vagrant status
 
-## SSH into your new VM
+## Start using matrix
+
+Go to http://10.99.99.230:8008 (or the FQDN you configured in the synapse_vars.yml), register a new user and start using matrix.
+
+## If you want to check what's going on, you can SSH into your new VM and check the logs
 
     vagrants ssh synapse
-
-## Start using it from any matrix client
+    tail ~synapse/.synapse/homeserver.log
