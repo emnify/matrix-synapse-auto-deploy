@@ -4,6 +4,8 @@
   remote_user: vagrant
   sudo: yes
   sudo_user: root
+  vars_files:
+      - synapse_vars.yml
 
   tasks:
     - apt: update_cache=yes
@@ -19,3 +21,31 @@
        - libssl-dev
        - python-virtualenv
        - libjpeg-dev
+
+    - name: Create synapse user
+      user: name={{ username }} shell=/bin/bash comment="{{ username }}" groups=admin,sudo
+
+    - name: Create virtualenv
+      command: virtualenv -p python2.7 ~/.synapse
+      args:
+        chdir: /home/{{ username }}
+
+    - name: PIP upgrade setup tools
+      pip: name=setuptools virtualenv=/home/{{ username }}/.synapse extra_args='--upgrade'
+
+    - name: PIP install into virtualenv
+      pip: name={{ git_repo }} virtualenv=/home/{{ username }}/.synapse
+
+    - name: Generate homeserver.yaml config file
+      shell: ". bin/activate && python -m synapse.app.homeserver --server-name {{ hostname }} --config-path homeserver.yaml --generate-config --report-stats=yes"
+      args:
+        chdir: /home/{{ username }}/.synapse/
+        creates: /home/{{ username }}/.synapse/homeserver.yaml
+
+    - name: Set permissions
+      file:
+        path='/home/{{ username }}/.synapse'
+        state=directory
+        owner={{ username }}
+        group={{ username }}
+        recurse=yes
