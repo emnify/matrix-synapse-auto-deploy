@@ -53,17 +53,22 @@
         regexp: "^enable_registration_captcha:"
         line: "enable_registration_captcha: {{ enable_registration_captcha }}"
 
-    - name: Configure private-key recaptch key
+    - name: Configure private-key recaptcha key
       lineinfile: dest=/home/{{ username }}/.synapse/homeserver.yaml
       args:
         regexp: "^recaptcha_private_key:"
         line: "recaptcha_private_key: {{ recaptcha_private_key }}"
 
-    - name: Configure public-key rceaptch key
+    - name: Configure public-key recaptcha key
       lineinfile: dest=/home/{{ username }}/.synapse/homeserver.yaml
       args:
         regexp: "^recaptcha_public_key:"
         line: "recaptcha_public_key: {{ recaptcha_public_key }}"
+
+    - name: Configure turn_user_lifetime recaptch key
+      lineinfile: dest=/home/{{ username }}/.synapse/homeserver.yaml
+      args:
+        line: "turn_user_lifetime: 86400000"
 
     - name: Set permissions
       file:

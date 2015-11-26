@@ -7,3 +7,4 @@ enable_registration: true
 enable_registration_captcha: false
 recaptcha_private_key: YOURPRIVATEKEYHERE
 recaptcha_public_key: YOURPUBLICKEYHERE
+turn_shared_secret: YOURSHAREDSECRETHERE
