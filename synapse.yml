@@ -44,8 +44,26 @@
     - name: Configure if registrations are enabled by default or not
       lineinfile: dest=/home/{{ username }}/.synapse/homeserver.yaml
       args:
-        regexp: ^enable_registration
+        regexp: "^enable_registration:"
         line: "enable_registration: {{ enable_registration }}"
+
+    - name: Configure if captchas are enabled by default or not
+      lineinfile: dest=/home/{{ username }}/.synapse/homeserver.yaml
+      args:
+        regexp: "^enable_registration_captcha:"
+        line: "enable_registration_captcha: {{ enable_registration_captcha }}"
+
+    - name: Configure private-key recaptch key
+      lineinfile: dest=/home/{{ username }}/.synapse/homeserver.yaml
+      args:
+        regexp: "^recaptcha_private_key:"
+        line: "recaptcha_private_key: {{ recaptcha_private_key }}"
+
+    - name: Configure public-key rceaptch key
+      lineinfile: dest=/home/{{ username }}/.synapse/homeserver.yaml
+      args:
+        regexp: "^recaptcha_public_key:"
+        line: "recaptcha_public_key: {{ recaptcha_public_key }}"
 
     - name: Set permissions
       file:
