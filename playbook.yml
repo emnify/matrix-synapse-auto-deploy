@@ -21,3 +21,4 @@
        - locate
 
 - include: synapse.yml
+- include: coturn.yml

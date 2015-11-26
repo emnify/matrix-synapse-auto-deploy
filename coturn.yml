@@ -1,0 +1,26 @@
+---
+
+- hosts: synapse
+  remote_user: vagrant
+  sudo: yes
+  sudo_user: root
+  vars_files:
+      - synapse_vars.yml
+
+  tasks:
+    - name: Install packages needed to compile coturn server
+      action: apt pkg={{item}} state=installed
+      with_items:
+       - gcc
+       - make
+       - autoconf
+       - libevent-dev
+       - libsqlite3-dev
+
+    - name: Clone coturn from github
+      git: repo=https://github.com/coturn/coturn.git dest=/usr/src/coturn
+
+    - name: compile and install coturn
+      shell: ./configure && make && make install
+      args:
+        chdir: /usr/src/coturn

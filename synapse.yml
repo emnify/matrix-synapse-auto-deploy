@@ -41,6 +41,12 @@
         chdir: /home/{{ username }}/.synapse/
         creates: /home/{{ username }}/.synapse/homeserver.yaml
 
+    - name: Configure if registrations are enabled by default or not
+      lineinfile: dest=/home/{{ username }}/.synapse/homeserver.yaml
+      args:
+        regexp: ^enable_registration
+        line: "enable_registration: {{ enable_registration }}"
+
     - name: Set permissions
       file:
         path='/home/{{ username }}/.synapse'

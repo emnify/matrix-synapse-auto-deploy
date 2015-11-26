@@ -3,3 +3,4 @@
 username: synapse
 git_repo: https://github.com/matrix-org/synapse/tarball/master
 hostname: 10.99.99.230
+enable_registration: true
