@@ -65,7 +65,17 @@
         regexp: "^recaptcha_public_key:"
         line: "recaptcha_public_key: {{ recaptcha_public_key }}"
 
-    - name: Configure turn_user_lifetime recaptch key
+    - name: Configure turn_uris
+      lineinfile: dest=/home/{{ username }}/.synapse/homeserver.yaml
+      args:
+        line: "turn_uris: [ \"turn:{{ hostname }}:3478?transport=udp\", \"turn:{{ hostname }}:3478?transport=tcp\" ]"
+
+    - name: Configure turn_user_lifetime
+      lineinfile: dest=/home/{{ username }}/.synapse/homeserver.yaml
+      args:
+        line: "turn_shared_secret: {{ turn_shared_secret }}"
+
+    - name: Configure turn_user_lifetime
       lineinfile: dest=/home/{{ username }}/.synapse/homeserver.yaml
       args:
         line: "turn_user_lifetime: 86400000"
