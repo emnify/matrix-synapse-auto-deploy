@@ -33,7 +33,7 @@
     - name: Install upstart script
       template:
         src=etc/init/turnserver.conf
-        dest=/etc/init/turnserver^.conf
+        dest=/etc/init/turnserver.conf
 
     - name: Start turn server
       service: name=turnserver state=started
