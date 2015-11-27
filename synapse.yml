@@ -90,7 +90,7 @@
 
     - name: Install upstart script
       template:
-        src=init/synapse.conf
+        src=etc/init/synapse.conf
         dest=/etc/init/synapse.conf
 
     - name: Start synapse server
