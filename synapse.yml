@@ -1,7 +1,7 @@
 ---
 
 - hosts: synapse
-  remote_user: vagrant
+  remote_user: ubuntu
   sudo: yes
   sudo_user: root
   vars_files:
@@ -19,6 +19,7 @@
        - sqlite3
        - libssl-dev
        - python-virtualenv
+       - python3-openssl
        - libjpeg-dev
 
     - name: Create synapse user
@@ -29,10 +30,19 @@
       args:
         chdir: /home/{{ username }}
 
-    - name: PIP upgrade setup tools
+    - name: PIP to upgrade setup tools
       pip: name=setuptools virtualenv=/home/{{ username }}/.synapse extra_args='--upgrade'
 
-    - name: PIP install into virtualenv
+    - name: PIP to install needed dependencies into virtualenv
+      action: pip name={{ item }} virtualenv=/home/{{ username }}/.synapse
+      with_items:
+       - cryptography
+       - pyasn1_modules
+       - characteristic
+       - simplejson
+       - canonicaljson
+
+    - name: PIP to install synapase from Git Repo into virtualenv
       pip: name={{ git_repo }} virtualenv=/home/{{ username }}/.synapse
 
     - name: Generate homeserver.yaml config file
