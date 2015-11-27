@@ -51,5 +51,6 @@ Vagrant.configure("2") do |config|
     ansible.sudo_user = "vagrant"
     ansible.raw_arguments = "-u vagrant --private-key ~/.vagrant.d/insecure_private_key"
     ansible.playbook = "playbook.yml"
+    ansible.extra_vars = { ansible_ssh_user: 'ubuntu' }
   end
 end

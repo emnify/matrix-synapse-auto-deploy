@@ -1,7 +1,7 @@
 ---
 
 - hosts: synapse
-  remote_user: ubuntu
+  remote_user: vagrant
   sudo: yes
   sudo_user: root
   vars_files:
