@@ -1,7 +1,7 @@
 # Auto-deployment for matrix-org/synapse
 Auto-deployment process for the matrix-org/synapse (https://github.com/matrix-org/synapse) homeserver using vagrant and ansible, this will automatically deploy a ready-to-go matrix server on Virtualbox and AWS (could be easily used also with Openstack/VMware/Docker if you add the right provider settings 8-).
 
-The playbooks will try to use latest master from https://github.com/matrix-org/synapse/tarball/master
+The playbook will try to install latest master from https://github.com/matrix-org/synapse/tarball/master
 
 ## Pre-requirements 
 * Git
