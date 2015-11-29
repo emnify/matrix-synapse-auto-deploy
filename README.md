@@ -11,10 +11,6 @@ The playbook will try to install latest master from https://github.com/matrix-or
 * Ansible
 * Virtualbox or AWS credentials
 
-## Load vagrant box
-
-    vagrant box add trusty64 https://atlas.hashicorp.com/ubuntu/boxes/trusty64/versions/20150427.0.0/providers/virtualbox.box
-
 ## Clone auto-deploy repo
 
     git clone https://github.com/EMnify/matrix-synapse-auto-deploy
@@ -33,6 +29,10 @@ The playbook will try to install latest master from https://github.com/matrix-or
     turn_shared_secret: YOURSHAREDSECRETHERE
 
 ## Setting it up on VirtualBox
+
+## Load vagrant box
+
+    vagrant box add trusty64 https://atlas.hashicorp.com/ubuntu/boxes/trusty64/versions/20150427.0.0/providers/virtualbox.box
 
 ### Run vagrant up, it will create a new VM and provision it
 
@@ -59,9 +59,9 @@ Otherwise you will see vagrant hanging around after the following log message
 
 To make it accessible for matrix users then you need to open following ports
 
-    * TCP 8008 : Matrix via HTTP
-    * TCP 8448 : Matrix via HTTPS
-    * UDP/TCP 3478/3479 TURN Server
+* TCP 8008 : Matrix via HTTP
+* TCP 8448 : Matrix via HTTPS
+* UDP/TCP 3478/3479 TURN Server
 
 ### Set your environment variables matching YOUR AWS setup
 
