@@ -22,7 +22,7 @@
        - libjpeg-dev
 
     - name: Create synapse user
-      user: name={{ username }} shell=/bin/bash comment="{{ username }}" groups=admin,sudo
+      user: name={{ username }} shell=/bin/bash comment="{{ username }}" groups=sudo
 
     - name: Create virtualenv
       command: virtualenv -p python2.7 ~/.synapse
