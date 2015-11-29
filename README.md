@@ -15,7 +15,7 @@ The playbook will try to install latest master from https://github.com/matrix-or
 
     git clone https://github.com/EMnify/matrix-synapse-auto-deploy
 
-## Adopt vars file as needed
+## Adopt vars file as needed or just go with these defaults
 
     ---
 
