@@ -1,11 +1,13 @@
 # Auto-deployment for matrix-org/synapse
-Auto-deployment process for the matrix-org/synapse (https://github.com/matrix-org/synapse) homeserver and turnserver using vagrant and ansible, this will automatically deploy a ready-to-go matrix server on Virtualbox and AWS (could be easily used also with Openstack/VMware/Docker if you add the right provider settings 8-).
+Auto-deployment process for the matrix-org/synapse (https://github.com/matrix-org/synapse) homeserver and turnserver using vagrant and ansible, this will automatically deploy a ready-to-go matrix server on Virtualbox, AWS and Digital Ocean (could be easily used also with Openstack/VMware/Docker if you add the right provider settings 8-).
 
 The playbook will try to install latest master from https://github.com/matrix-org/synapse/tarball/master
 
 ## Pre-requirements
 * Git
 * Vagrant https://www.vagrantup.com/
+  * vagrant-aws (vagrant plugin install vagrant-aws)
+  * vagrant-digitalocean (vagrant plugin install vagrant-digitalocean)
 * Ansible
 * Virtualbox or AWS credentials
 
@@ -79,3 +81,21 @@ To make it accessible for matrix users then you need to open following ports
 ### Start using matrix
 
 Go to http://fqdn:8008 (the FQDN you configure in your DNS e.g. Route53 on AWS, don't forget to put in synapse_vars.yml), register a new user and start using matrix.
+
+## Setting it up on DIGITAL OCEAN
+
+### Set your environment variables matching YOUR DIGITAL OCEAN setup
+
+export DO_TOKEN=YOURDOAPITOKENHERE
+export DO_REGION=YOURDOREGIONHERE
+export SSH_PRIVATE_KEY_PATH=PATHTOSECRETKEY
+
+Please notice you must have a file with your pub also available at the specified path, e.g. if you use .ssh/id_dsa then vagrant digital ocean provider will look for .ssh/id_dsa.pub!
+
+### Run vagrant up with provider DIGITAL OCEAN, it will create a new droplet and provision it
+
+    vagrant up --provider=digital_ocean
+
+### Start using matrix
+
+Go to http://fqdn:8008 (the FQDN you configure in your DNS or directly use the IP of your droplet for testing, don't forget to put the FQDN in synapse_vars.yml), register a new user and start using matrix.
