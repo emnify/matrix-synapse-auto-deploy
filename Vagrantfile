@@ -50,8 +50,6 @@ Vagrant.configure("2") do |config|
     ansible.sudo = true
     ansible.sudo_user = "vagrant"
     ansible.playbook = "playbook.yml"
-    config.vm.provider :aws do |vb|
-      ansible.extra_vars = { ansible_ssh_user: 'ubuntu' }
-    end
+    ansible.raw_arguments = "-vvv"
   end
 end
