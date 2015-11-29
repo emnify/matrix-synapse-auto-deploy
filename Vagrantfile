@@ -63,6 +63,6 @@ Vagrant.configure("2") do |config|
     ansible.sudo = true
     ansible.sudo_user = "vagrant"
     ansible.playbook = "playbook.yml"
-    ansible.raw_arguments = "-vvv"
+#    ansible.raw_arguments = "-vvv"
   end
 end
