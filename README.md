@@ -3,7 +3,7 @@ Auto-deployment process for the matrix-org/synapse (https://github.com/matrix-or
 
 The playbook will try to install latest master from https://github.com/matrix-org/synapse/tarball/master
 
-## Pre-requirements 
+## Pre-requirements
 * Git
 * Vagrant https://www.vagrantup.com/
 * Ansible
@@ -47,6 +47,20 @@ Go to http://10.99.99.230:8008 (or the FQDN you configured in the synapse_vars.y
 
 ## Setting it up on AWS
 
+### Create an security group with at least SSH access
+
+You need create a security group that give at least SSH to the machine from where you run vagrant/ansible or you can re-use an existing security group, please set AWS_SECURITY_GROUP_ID in the next step.
+
+Otherwise you will see vagrant hanging around after the following log message
+
+    ==> synapse: Waiting for SSH to become available...
+
+To make it accessible for matrix users then you need to open following ports
+
+    * TCP 8008 : Matrix via HTTP
+    * TCP 8448 : Matrix via HTTPS
+    * UDP/TCP 3478/3479 TURN Server
+
 ### Set your environment variables matching YOUR AWS setup
 
     export AWS_REGION=eu-central-1
@@ -55,21 +69,12 @@ Go to http://10.99.99.230:8008 (or the FQDN you configured in the synapse_vars.y
     export AWS_SECRET_ACCESS_KEY=YOURSECRETACESSKEY
     export AWS_SUBNET_ID=YOURSUBNET
     export AWS_KEYPAIR_NAME=YOURKEYPAIRNAME
+    export AWS_SECURITY_GROUP_ID=YOURSECURITYGROUPID
     export SSH_PRIVATE_KEY_PATH=PATHTOSECRETKEYMATHCINGKEYPAIR
 
 ### Run vagrant up with provider AWS, it will create a new instance and provision it
 
     vagrant up --provider=aws
-
-### Setup AWS security groups
-
-Make sure you have a security group that allows SSH access, otherwise ansible will not be able to provision your machine!
-
-To make it access for users then you need to open following ports
-
-* TCP 8008 : Matrix via HTTP
-* TCP 8448 : Matrix via HTTPS
-* UDP/TCP 3478/3479 TURN Server
 
 ### Start using matrix
 
