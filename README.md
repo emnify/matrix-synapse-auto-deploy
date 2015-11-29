@@ -86,11 +86,11 @@ Go to http://fqdn:8008 (the FQDN you configure in your DNS e.g. Route53 on AWS, 
 
 ### Set your environment variables matching YOUR DIGITAL OCEAN setup
 
-export DO_TOKEN=YOURDOAPITOKENHERE
-export DO_REGION=YOURDOREGIONHERE
-export SSH_PRIVATE_KEY_PATH=PATHTOSECRETKEY
+    export DO_TOKEN=YOURDOAPITOKENHERE
+    export DO_REGION=YOURDOREGIONHERE
+    export SSH_PRIVATE_KEY_PATH=PATHTOSECRETKEY
 
-Please notice you must have a file with your pub also available at the specified path, e.g. if you use .ssh/id_dsa then vagrant digital ocean provider will look for .ssh/id_dsa.pub!
+Please notice you must have a file with your pub key also available at the specified path, e.g. if you use .ssh/id_dsa then the vagrant digital ocean provider will look for .ssh/id_dsa.pub!
 
 ### Run vagrant up with provider DIGITAL OCEAN, it will create a new droplet and provision it
 
