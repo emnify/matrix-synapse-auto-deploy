@@ -29,6 +29,19 @@ Vagrant.configure("2") do |config|
   end
 end
 
+Vagrant.configure('2') do |config|
+  config.vm.provider :digital_ocean do |digital_ocean, override|
+    override.ssh.private_key_path = ENV['SSH_PRIVATE_KEY_PATH']
+    override.vm.box = 'digital_ocean'
+    override.vm.box_url = "https://github.com/smdahlen/vagrant-digitalocean/raw/master/box/digital_ocean.box"
+
+    digital_ocean.token = ENV['DO_TOKEN']
+    digital_ocean.image = 'ubuntu-14-04-x64'
+    digital_ocean.region = ENV['DO_REGION']
+    digital_ocean.size = '1024mb'
+  end
+end
+
 Vagrant.configure("2") do |config|
   config.vm.define "synapse" do |dev|
     dev.vm.box = "trusty64"
