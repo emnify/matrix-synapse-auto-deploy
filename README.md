@@ -9,7 +9,7 @@ The playbook will try to install latest master from https://github.com/matrix-or
   * vagrant-aws (vagrant plugin install vagrant-aws)
   * vagrant-digitalocean (vagrant plugin install vagrant-digitalocean)
 * Ansible
-* Virtualbox or AWS credentials
+* Virtualbox or AWS or Digital Ocean credentials
 
 ## Clone auto-deploy repo
 
