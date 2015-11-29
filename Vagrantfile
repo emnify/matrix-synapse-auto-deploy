@@ -38,7 +38,7 @@ Vagrant.configure('2') do |config|
     digital_ocean.token = ENV['DO_TOKEN']
     digital_ocean.image = 'ubuntu-14-04-x64'
     digital_ocean.region = ENV['DO_REGION']
-    digital_ocean.size = '1024mb'
+    digital_ocean.size = '512mb'
   end
 end
 
