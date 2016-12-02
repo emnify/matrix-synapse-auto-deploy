@@ -41,8 +41,11 @@
        - simplejson
        - canonicaljson
 
-    - name: PIP to install synapase from Git Repo into virtualenv
+    - name: PIP to install synapse from Git Repo into virtualenv
       pip: name={{ git_repo }} virtualenv=/home/{{ username }}/.synapse
+
+    - name: PIP rollback to ldap3 v1.4 (hotfix)
+      pip: name="ldap3=1.4" virtualenv=/home/{{ username }}/.synapse
 
     - name: Generate homeserver.yaml config file
       shell: ". bin/activate && python -m synapse.app.homeserver --server-name {{ hostname }} --config-path homeserver.yaml --generate-config --report-stats=yes"
@@ -97,10 +100,17 @@
         group={{ username }}
         recurse=yes
 
-    - name: Install upstart script
+    - name: Install systemd conf
       template:
-        src=etc/init/synapse.conf
-        dest=/etc/init/synapse.conf
+          src=etc/systemd/system/synapse.service.j2
+          dest=/etc/systemd/system/synapse.service
+          mode=0644
+
+    - name: Reloading Daemons
+      command: systemctl daemon-reload
+
+    - name: Enabling service
+      command: systemctl enable synapse
 
     - name: Start synapse server
       service: name=synapse state=started
