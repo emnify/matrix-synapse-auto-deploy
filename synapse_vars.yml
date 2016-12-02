@@ -8,3 +8,5 @@ enable_registration_captcha: false
 recaptcha_private_key: YOURPRIVATEKEYHERE
 recaptcha_public_key: YOURPUBLICKEYHERE
 turn_shared_secret: YOURSHAREDSECRETHERE
+make_migration: true     #Migrate the database from sqlite to postgres
+database_secret: YOURDATABASESECRETHERE

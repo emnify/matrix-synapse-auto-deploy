@@ -1,0 +1,58 @@
+---
+
+- hosts: synapse
+  become: yes
+  become_user: root
+  vars_files:
+    - synapse_vars.yml
+
+  tasks:
+    - name: Install postgresql
+      apt: pkg={{ item }} state=installed
+      with_items:
+          - libpq-dev
+          - postgresql
+
+    - name: Install psycopg2 in the venv
+      pip: name=psycopg2 virtualenv=/home/{{ username }}/.synapse extra_args='--upgrade'
+
+    - name: Create synapse user in postgres
+      postgresql_user:
+        name: synapse
+        password: {{ database_secret }}
+
+    - name: Create the database
+      postgresql_db:
+        name: homeserver
+        encoding: UTF-8
+        lc_collate: C
+        lc_ctype: C
+        template: template0
+        owner: synapse
+
+    - name: Stop synapse
+      service: name=synaspe state=stopped
+      when: makeMigration
+
+    - name: Patch the conf file to add pgsql database
+      lineinfile: 
+        dest: /home/{{ username }}/.synapse/homeserver.yaml.test
+        regexp: '(.*)name: "sqlite3"'
+        line: '\1name: "psycopg2"'
+        backrefs: yes 
+
+    - name: Add the args to connect to the db
+      lineinfile: 
+        dest: /home/{{ username }}/.synapse/homeserver.yaml.test 
+        regexp: '(.*)database: "(.*)homeserver.db"'
+        line: '\1user: "synapse"\n\1password: "{{ database_secret }}"\n\1database: "homeserver"\n\1host: "localhost"\n\1cp_min: 5\n\1cp_max: 10'
+        backrefs: yes 
+
+    - name: Migrate the database
+      command: /bin/synapse_port_db --sqlite-database homeserver.db --postgres-config homeserver.yaml
+      args:
+        chdir: /home/{{ username }}/.synapse
+      when: makeMigration
+
+    - name: Restart synapse
+      service: name=synapse state=started
