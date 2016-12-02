@@ -1,0 +1,21 @@
+server {
+        listen   80;
+        server_name mynock.rez-gif.supelec.fr mynock.larez.fr mynock.rezosup.org;
+        access_log  /var/log/synapse.access.log;
+        error_log  /var/log/synapse.nginx_error.log debug;
+        location / {
+                proxy_pass       http://127.0.0.1:8008/;
+        }
+}
+
+server {
+        listen   443 ssl;
+        server_name mynock.rez-gif.supelec.fr mynock.rezosup.org mynock.larez.fr;
+        access_log  /var/log/synapse.access.log;
+        error_log  /var/log/synapse.nginx_error.log debug;
+        ssl_certificate      /etc/ssl/rezosup/certs/fullchain.pem;
+        ssl_certificate_key  /etc/ssl/rezosup/private/matrix.pem;
+        location / {
+                proxy_pass       http://127.0.0.1:8008/;
+        }
+}
