@@ -19,3 +19,4 @@
 - include: synapse.yml
 - include: coturn.yml
 - include: nginx.yml
+- include: postgres.yml
