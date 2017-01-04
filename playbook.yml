@@ -4,17 +4,12 @@
 
   tasks:
     - apt: update_cache=yes
+
     - name: install basic packages that we want to be on all nodes
       action: apt pkg={{item}} state=installed
       with_items:
-       - joe
-       - tcpdump
-       - tshark
-       - wget
-       - git
-       - vim
-       - locate
-       - pwgen
+           - wget
+           - git
 
 - include: synapse.yml
 - include: coturn.yml

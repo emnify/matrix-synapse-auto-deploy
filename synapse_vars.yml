@@ -10,3 +10,5 @@ recaptcha_public_key: YOURPUBLICKEYHERE
 turn_shared_secret: YOURSHAREDSECRETHERE
 make_migration: true     #Migrate the database from sqlite to postgres
 database_secret: YOURDATABASESECRETHERE
+absolute_path_certificate: /etc/ssl/your_org/certs/fullchain.pem
+absolute_path_key: /etc/ssl/your_org/private/private_key.pem
