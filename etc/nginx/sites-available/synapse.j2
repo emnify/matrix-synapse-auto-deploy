@@ -18,4 +18,5 @@ server {
         }
         ssl_certificate      {{ absolute_path_certificate }};
         ssl_certificate_key  {{ absolute_path_key }};
+        ssl_dh_params        {{ DH_params_location }};
 }

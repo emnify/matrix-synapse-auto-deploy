@@ -89,6 +89,12 @@
         regexp: "^tls_private_key_path:"
         line: "tls_private_key_path: {{ absolute_path_key }}"
 
+    - name: Configure Diffie-Hellman parameters location
+      lineinfile: dest=/home/{{ username }}/.synapse/homeserver.yaml
+      args:
+        regexp: "^tls_private_key_path:"
+        line: "tls_dh_params_path: {{ DH_params_location }}"
+
     - name: Configure turn_uris
       lineinfile: dest=/home/{{ username }}/.synapse/homeserver.yaml
       args:
