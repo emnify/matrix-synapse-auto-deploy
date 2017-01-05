@@ -77,6 +77,18 @@
         regexp: "^recaptcha_public_key:"
         line: "recaptcha_public_key: {{ recaptcha_public_key }}"
 
+    - name: Configure fullchain location
+      lineinfile: dest=/home/{{ username }}/.synapse/homeserver.yaml
+      args:
+        regexp: "^tls_certificate_path:"
+        line: "tls_certificate_path: {{ absolute_path_certificate }}"
+
+    - name: Configure fullchain location
+      lineinfile: dest=/home/{{ username }}/.synapse/homeserver.yaml
+      args:
+        regexp: "^tls_private_key_path:"
+        line: "tls_private_key_path: {{ absolute_path_key }}"
+
     - name: Configure turn_uris
       lineinfile: dest=/home/{{ username }}/.synapse/homeserver.yaml
       args:
