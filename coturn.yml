@@ -1,8 +1,8 @@
 ---
 
 - hosts: synapse
-  sudo: yes
-  sudo_user: root
+  become: yes
+  become_user: root
   vars_files:
       - synapse_vars.yml
 

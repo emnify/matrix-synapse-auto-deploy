@@ -1,8 +1,8 @@
 ---
 
 - hosts: synapse
-  sudo: yes
-  sudo_user: root
+  become: yes
+  become_user: root
   vars_files:
       - synapse_vars.yml
 
@@ -22,7 +22,7 @@
        - libjpeg-dev
 
     - name: Create synapse user
-      user: name={{ username }} shell=/bin/bash comment="{{ username }}" groups=sudo
+      user: name={{ username }} shell=/bin/bash comment="{{ username }}"
 
     - name: Create virtualenv
       command: virtualenv -p python2.7 ~/.synapse
@@ -45,7 +45,7 @@
       pip: name={{ git_repo }} virtualenv=/home/{{ username }}/.synapse
 
     - name: PIP rollback to ldap3 v1.4 (hotfix)
-      pip: name="ldap3=1.4" virtualenv=/home/{{ username }}/.synapse
+      pip: name="ldap3==1.4" virtualenv=/home/{{ username }}/.synapse
 
     - name: Generate homeserver.yaml config file
       shell: ". bin/activate && python -m synapse.app.homeserver --server-name {{ hostname }} --config-path homeserver.yaml --generate-config --report-stats=yes"
