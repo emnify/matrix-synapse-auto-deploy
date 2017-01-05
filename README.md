@@ -27,9 +27,9 @@ The playbook will try to install latest master from https://github.com/matrix-or
     database_secret: YOURDATABASESECRETHERE
 
 
-## Run the recipe ansible
+## Run the ansible playbook
 
-If you are not familiar with ansible, the easiest way is to lauch from the server you want to install : `ansible-playbook playbook.yaml -c local` from a sudoer user.
+If you are not familiar with ansible, the easiest way is to lauch from the server you want to install : `ansible-playbook playbook.yml -c local` from a sudoer user.
 
 
 ## Getting safe
@@ -43,7 +43,7 @@ You should have a SRV entry like that (in order to tell other HomeServers on whi
 `_matrix._tcp.yourdomain.tld.	3600 IN	SRV 10 5 443 machine.yourdomain.tld.`
 
 
-## Enjoy
+## Enjoy
 
 You can now connect to your HomeServer, with the built-in web client ( http://machine.yourdomain.tld ) or by specifying your HomeServer on any other client.
 
@@ -64,7 +64,7 @@ With the commands :
 
 They should both read the file. Become the app user and test if you can read the files with `sudo -u synapse/www-data cat /path/to/the/certs/cert.crt`.
 
-If everything is fine for all certs and keys and all users, check the certs location in the conf (`/etc/nginx/sites-available and /home/{{username}}/.synapse/homeserver.yaml`). If you don't know what files you should link, get a look at this tutorial (https://matrix.org/docs/guides/lets-encrypt.html).
+If everything is fine for all certs and keys and all users, check the certs location in the conf (`/etc/nginx/sites-available and /home/{{username}}/.synapse/homeserver.yml`). If you don't know what files you should link, get a look at this tutorial (https://matrix.org/docs/guides/lets-encrypt.html).
 
 ## Still not working ? Come and ask for help on matrix:matrix.org using [Riot client](http://riot.im).
 
