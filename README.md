@@ -27,9 +27,9 @@ The playbook will try to install latest master from https://github.com/matrix-or
     database_secret: YOURDATABASESECRETHERE
 
 
-## Run the recipe ansible
+## Run the ansible playbook
 
-If you are not familiar with ansible, the easiest way is to lauch from the server you want to install : `ansible-playbook playbook.yaml -c local` from a sudoer user.
+If you are not familiar with ansible, the easiest way is to lauch from the server you want to install : `ansible-playbook playbook.yml -c local` from a sudoer user.
 
 
 ## Getting safe
@@ -43,7 +43,7 @@ You should have a SRV entry like that (in order to tell other HomeServers on whi
 `_matrix._tcp.yourdomain.tld.	3600 IN	SRV 10 5 443 machine.yourdomain.tld.`
 
 
-## Enjoy
+## Enjoy
 
 You can now connect to your HomeServer, with the built-in web client ( http://machine.yourdomain.tld ) or by specifying your HomeServer on any other client.
 
