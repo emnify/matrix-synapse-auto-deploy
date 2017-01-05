@@ -25,6 +25,10 @@ The playbook will try to install latest master from https://github.com/matrix-or
     turn_shared_secret: YOURSHAREDSECRETHERE
     make_migration : true # will shut down the the server to migrate from sqlite to postgresql.
     database_secret: YOURDATABASESECRETHERE
+    absolute_path_certificate: /etc/ssl/your_org/certs/fullchain.pem
+    absolute_path_key: /etc/ssl/your_org/private/private_key.pem
+    generate_DH_params: true   # Generate DH parameters
+    DH_params_location: /etc/ssl/your_org/diffihellman.pem
 
 
 ## Run the ansible playbook
@@ -66,8 +70,16 @@ They should both read the file. Become the app user and test if you can read the
 
 If everything is fine for all certs and keys and all users, check the certs location in the conf (`/etc/nginx/sites-available and /home/{{username}}/.synapse/homeserver.yaml`). If you don't know what files you should link, get a look at this tutorial (https://matrix.org/docs/guides/lets-encrypt.html).
 
+### Check if Diffie-Hellman parameters exist
+
+In order to secure your connections you will want to have DH parameters (they are used when you negociate a TLS connection). If you don't have any just set `generate_DH_params: true` and choose a location. If you already generated them, set this value to false and specify their location.
+
 ## Still not working ? Come and ask for help on matrix:matrix.org using [Riot client](http://riot.im).
 
+# Supported OS
+
+This playbook is made to run on Debian 8 Jessie. It should also run smoothly on Debian 7 but I never tested.
+It also may run on other OS, you're free to test and give me feedback (or PR to add support of your favorite system).
 
 # Credits :
 This is a fork of Martin Giess on [this original repo](https://github.com/EMnify/matrix-synapse-auto-deploy).

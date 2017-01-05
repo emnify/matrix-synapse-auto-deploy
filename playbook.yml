@@ -10,6 +10,8 @@
       with_items:
            - wget
            - git
+- include: openssl.yml
+  when: generate_DH_params
 
 - include: synapse.yml
 - include: coturn.yml
