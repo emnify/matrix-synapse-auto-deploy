@@ -8,4 +8,4 @@
     # overwrite default variables
 
   roles:
-  - matrix-synapse-auto-deploy
+  - role_under_test
