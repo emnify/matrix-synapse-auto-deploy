@@ -13,4 +13,4 @@ database_secret: YOURDATABASESECRETHERE
 absolute_path_certificate: /etc/ssl/your_org/certs/fullchain.pem
 absolute_path_key: /etc/ssl/your_org/private/private_key.pem
 generate_DH_params: true   # Generate DH parameters
-DH_params_location: /etc/ssl/your_org/diffihellman.pem
+DH_params_location: /etc/ssl/diffihellman.pem
