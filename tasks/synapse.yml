@@ -20,12 +20,13 @@
       command: virtualenv -p python2.7 ~/.synapse
       args:
         chdir: "/home/{{ username }}"
+        creates: "/home/{{ username }}/.synapse/"
 
     - name: PIP to upgrade setup tools
       pip: "name=setuptools virtualenv=/home/{{ username }}/.synapse extra_args='--upgrade'"
 
     - name: PIP to install needed dependencies into virtualenv
-      action: "pip name={{ item }} virtualenv=/home/{{ username }}/.synapse"
+      pip: "name={{ item }} virtualenv=/home/{{ username }}/.synapse"
       with_items:
        - cryptography
        - pyasn1_modules

@@ -1,7 +1,7 @@
 ---
 
-
-- apt: update_cache=yes
+- name: Update apt cache
+  apt: update_cache=yes
 
 - name: install basic packages that we want to be on all nodes
   apt: "pkg={{item}} state=installed"

@@ -16,7 +16,7 @@ install:
 
 before_script:
   - ansible-playbook -i tests/inventory tests/travis_test.yml --syntax-check
-  - ansible-lint tests/travis_test.yml
+    #  - ansible-lint tests/travis_test.yml
 
 script:
   - ansible-playbook -i tests/inventory -c local -b tests/travis_test.yml

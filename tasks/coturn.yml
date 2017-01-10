@@ -13,7 +13,7 @@
       git: repo=https://github.com/coturn/coturn.git dest=/usr/src/coturn
 
     - name: Compile and install coturn
-      shell: ./configure && make && make install
+      command: "./configure && make && make install"
       args:
         chdir: /usr/src/coturn
 
