@@ -1,15 +1,13 @@
 ---
 
-- hosts: synapse
 
-  tasks:
-    - apt: update_cache=yes
+- apt: update_cache=yes
 
-    - name: install basic packages that we want to be on all nodes
-      action: "apt pkg={{item}} state=installed"
-      with_items:
-           - wget
-           - git
+- name: install basic packages that we want to be on all nodes
+  apt: "pkg={{item}} state=installed"
+  with_items:
+    - wget
+    - git
 
 - include: openssl.yml
   when: generate_DH_params

@@ -1,9 +1,4 @@
 ---
-
-- hosts: synapse
-  become: yes
-
-  tasks:
     - name: Install packages needed by synapse
       action: "apt pkg={{item}} state=installed"
       with_items:

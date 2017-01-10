@@ -1,8 +1,5 @@
 ---
 
-- hosts: synapse
-
-  tasks:
     - name: Install packages needed to the reverse proxy
       action: apt pkg=nginx state=installed
 
