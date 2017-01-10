@@ -2,13 +2,10 @@
 
 - hosts: synapse
   become: yes
-  become_user: root
-  vars_files:
-      - synapse_vars.yml
 
   tasks:
     - name: Install packages needed to compile coturn server
-      action: apt pkg={{item}} state=installed
+      action: "apt pkg={{item}} state=installed"
       with_items:
        - gcc
        - make
@@ -26,14 +23,14 @@
 
     - name: Install turnserver config
       template:
-        src=etc/turnserver.conf
-        dest=/etc/turnserver.conf
+        src: etc/turnserver.conf.j2
+        dest: /etc/turnserver.conf
 
     - name: Install upstart script
       template:
-        src=etc/systemd/system/turnserver.service.j2
-        dest=/etc/systemd/system/turnserver.service
-        mode=0644
+        src: etc/systemd/system/turnserver.service.j2
+        dest: /etc/systemd/system/turnserver.service
+        mode: 0644
 
     - name: Reload daemons
       command: systemctl daemon-reload

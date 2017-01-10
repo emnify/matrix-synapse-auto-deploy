@@ -6,10 +6,11 @@
     - apt: update_cache=yes
 
     - name: install basic packages that we want to be on all nodes
-      action: apt pkg={{item}} state=installed
+      action: "apt pkg={{item}} state=installed"
       with_items:
            - wget
            - git
+
 - include: openssl.yml
   when: generate_DH_params
 
