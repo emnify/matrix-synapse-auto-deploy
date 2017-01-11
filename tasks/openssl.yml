@@ -1,8 +1,5 @@
 ---
 
-- hosts: synapse
-
-  tasks:
     - name: Install openssl
       apt: pkg=openssl state=installed
 

@@ -1,0 +1,11 @@
+---
+
+- hosts: localhost
+  become: yes
+
+  vars:
+    enable_registration: false
+    # overwrite default variables
+
+  roles:
+  - role_under_test
