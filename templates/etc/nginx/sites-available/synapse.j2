@@ -18,7 +18,7 @@ server {
         }
         ssl_certificate      {{ absolute_path_certificate }};
         ssl_certificate_key  {{ absolute_path_key }};
-        ssl_dhparams         {{ DH_params_location }};
+        ssl_dhparam          {{ DH_params_location }};
         ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
         ssl_prefer_server_ciphers on;
 
