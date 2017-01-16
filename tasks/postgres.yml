@@ -10,6 +10,9 @@
     - name: Install psycopg2 in the venv
       pip: "name=psycopg2 virtualenv=/home/{{ username }}/.synapse extra_args='--upgrade'"
 
+    - name: Start postgresql unit
+      service: name=postgresql state=started
+
     - name: Create synapse user in postgres
       postgresql_user: "name={{ username }} password={{ database_secret }}"
       become: true
