@@ -1,5 +1,7 @@
 # Auto-deployment for matrix-org/synapse
 
+[![Build Status](https://travis-ci.org/hugoShaka/matrix-synapse-auto-deploy.svg?branch=master)](https://travis-ci.org/hugoShaka/matrix-synapse-auto-deploy)
+
 Auto-deployment process for the matrix-org/synapse (https://github.com/matrix-org/synapse) homeserver and turnserver using  ansible, this will automatically deploy a ready-to-go matrix server on any server.
 
 The playbook will try to install latest master from https://github.com/matrix-org/synapse/tarball/master
@@ -78,8 +80,8 @@ In order to secure your connections you will want to have DH parameters (they ar
 
 # Supported OS
 
-This playbook is made to run on Debian 8 Jessie. It should also run smoothly on Debian 7 but I never tested.
-It also may run on other OS, you're free to test and give me feedback (or PR to add support of your favorite system).
+This playbook is made to run on Debian 8 Jessie. It should also run smoothly on any systemd flavoured OS but I didn't test.
+You're free to test and give me feedback (or PR to add support of your favorite system).
 
 # Credits :
 This is a fork of Martin Giess on [this original repo](https://github.com/EMnify/matrix-synapse-auto-deploy).
