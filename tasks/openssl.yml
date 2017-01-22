@@ -1,0 +1,8 @@
+---
+
+    - name: Install openssl
+      apt: pkg=openssl state=installed
+
+    - name: Generate Diffie-Hellman parameters
+      command: "openssl dhparam -out {{ DH_params_location }} 2048"
+      when: generate_DH_params

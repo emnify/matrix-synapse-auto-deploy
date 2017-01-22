@@ -1,0 +1,16 @@
+---
+
+username: synapse
+git_repo: https://github.com/matrix-org/synapse/tarball/master
+hostname: 10.99.99.230
+enable_registration: true
+enable_registration_captcha: false
+recaptcha_private_key: YOURPRIVATEKEYHERE
+recaptcha_public_key: YOURPUBLICKEYHERE
+turn_shared_secret: YOURSHAREDSECRETHERE
+make_migration: true     #Migrate the database from sqlite to postgres
+database_secret: YOURDATABASESECRETHERE
+absolute_path_certificate: /home/{{ username }}/.synapse/{{ hostname }}.tls.crt
+absolute_path_key: /home/{{ username }}/.synapse/{{ hostname }}.tls.key
+generate_DH_params: true   # Generate DH parameters
+DH_params_location: /etc/ssl/diffihellman.pem

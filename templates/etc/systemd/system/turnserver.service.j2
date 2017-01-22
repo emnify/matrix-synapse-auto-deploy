@@ -1,0 +1,15 @@
+[Unit]
+Description=Simple Turnerver
+After=network.target
+After=syslog.target
+
+[Service]
+Type=simple
+User={{ username }}
+Group={{ username }}
+ExecStart=/usr/local/bin/turnserver
+Restart=on-failure
+Environment=USER={{ username }} HOME=/home/{{ username }}
+
+[Install]
+WantedBy=multi-user.target

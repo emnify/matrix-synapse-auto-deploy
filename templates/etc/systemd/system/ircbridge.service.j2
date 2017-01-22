@@ -1,0 +1,16 @@
+[Unit]
+Description=Appservice IRC to Matrix bridge
+After=network.target
+After=syslog.target
+
+[Service]
+Type=simple
+User={{ username }}
+Group={{ username }}
+WorkingDirectory=/home/{{ username }}/matrix-irc/
+ExecStart=/usr/bin/node /home/{{ username }}/matrix-irc/app.js -c /home/{{ username }}/matrix-irc/config.yaml -p 8001
+Restart=on-failure
+Environment=USER={{ username }} HOME=/home/{{ username }}
+
+[Install]
+WantedBy=multi-user.target
