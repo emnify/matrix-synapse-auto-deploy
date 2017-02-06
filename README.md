@@ -12,35 +12,52 @@ The playbook will try to install latest master from https://github.com/matrix-or
 
 ## Clone auto-deploy repo
 
-    git clone https://github.com/hugoShaka/matrix-synapse-auto-deploy
+    git clone https://github.com/hugoShaka/matrix-synapse-auto-deploy into your role folder.
+
+## Create your inventory
+
+In your host file : `/etc/ansible/hosts`  add a group for synapse servers :
+
+    [synapse]
+    your.server.domain.tld
+
+## Create a playbook to apply the role
+
+    ---
+
+    - hosts: synapse
+      become: yes
+
+      vars:
+        enable_registration: false
+        # overwrite default variables
+
+      roles:
+        - role_under_test
 
 ## Adopt vars file as needed or just go with these defaults
 
+In your playbook file edit and add vars. Here is all the vars you can set and their default values.
+
     ---
-    username: synapse # under wich user the server should be installed and run
-    git_repo: https://github.com/matrix-org/synapse/tarball/master # URL to Git Repo you want to install
-    hostname: 10.99.99.230 # FQDN to be used
-    enable_registration: true # this will open registration by default, take care if you run a public server!
+    username: synapse
+    git_repo: https://github.com/matrix-org/synapse/tarball/master
+    hostname: 10.99.99.230
+    enable_registration: true
     enable_registration_captcha: false
     recaptcha_private_key: YOURPRIVATEKEYHERE
     recaptcha_public_key: YOURPUBLICKEYHERE
     turn_shared_secret: YOURSHAREDSECRETHERE
-    make_migration : true # will shut down the the server to migrate from sqlite to postgresql.
+    make_migration: true     #Migrate the database from sqlite to postgres, only apply the first time !
     database_secret: YOURDATABASESECRETHERE
-    absolute_path_certificate: /etc/ssl/your_org/certs/fullchain.pem
-    absolute_path_key: /etc/ssl/your_org/private/private_key.pem
+    absolute_path_certificate: /home/{{ username }}/.synapse/{{ hostname }}.tls.crt
+    absolute_path_key: /home/{{ username }}/.synapse/{{ hostname }}.tls.key
     generate_DH_params: true   # Generate DH parameters
-    DH_params_location: /etc/ssl/your_org/diffihellman.pem
+    DH_params_location: /etc/ssl/diffihellman.pem
+
+## Launch your playbook
 
 
-## Run the ansible playbook
-
-If you are not familiar with ansible, the easiest way is to lauch from the server you want to install : `ansible-playbook playbook.yml -c local` from a sudoer user.
-
-
-## Getting safe
-
-Get an SSL certificate (you can use let's encrypt : (https://matrix.org/docs/guides/lets-encrypt.html)), put the symlinks where they should be and be sure the nginx and synapse users have the right to read certs (610 with nginx and synapse in the group).
 
 ## Add your DNS entry
 
@@ -84,4 +101,7 @@ This playbook is made to run on Debian 8 Jessie. It should also run smoothly on 
 You're free to test and give me feedback (or PR to add support of your favorite system).
 
 # Credits :
-This is a fork of Martin Giess on [this original repo](https://github.com/EMnify/matrix-synapse-auto-deploy).
+Original playbook by Martin Giess.
+Adapted to a role by hugoShaka.
+
+Thanks to AlefBurzmali for his tests and reviews.
