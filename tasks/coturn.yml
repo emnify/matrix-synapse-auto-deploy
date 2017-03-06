@@ -22,7 +22,7 @@
         src: etc/turnserver.conf.j2
         dest: /etc/turnserver.conf
 
-    - name: Install upstart script
+    - name: Install systemd unit
       template:
         src: etc/systemd/system/turnserver.service.j2
         dest: /etc/systemd/system/turnserver.service
@@ -31,5 +31,9 @@
     - name: Reload daemons
       command: systemctl daemon-reload
 
-    - name: Start turn server
-      service: name=turnserver state=started
+    - name: Enable turn server
+      service:
+        name: turnserver
+        enabled: yes
+        state: started
+

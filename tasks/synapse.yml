@@ -70,13 +70,13 @@
         regexp: "^recaptcha_public_key:"
         line: "recaptcha_public_key: {{ recaptcha_public_key }}"
 
-    - name: Configure fullchain location
+    - name: Configure TLS fullchain location
       lineinfile: "dest=/home/{{ username }}/.synapse/homeserver.yaml"
       args:
         regexp: "^tls_certificate_path:"
         line: "tls_certificate_path: {{ absolute_path_certificate }}"
 
-    - name: Configure fullchain location
+    - name: Configure TLS private key location
       lineinfile: "dest=/home/{{ username }}/.synapse/homeserver.yaml"
       args:
         regexp: "^tls_private_key_path:"
@@ -93,7 +93,7 @@
       args:
         line: "turn_uris: [ \"turn:{{ hostname }}:3478?transport=udp\", \"turn:{{ hostname }}:3478?transport=tcp\" ]"
 
-    - name: Configure turn_user_lifetime
+    - name: Configure turn_shared_secret
       lineinfile: "dest=/home/{{ username }}/.synapse/homeserver.yaml"
       args:
         line: "turn_shared_secret: {{ turn_shared_secret }}"
@@ -121,7 +121,8 @@
       command: systemctl daemon-reload
 
     - name: Enabling service
-      command: systemctl enable synapse
+      service:
+        name: synapse
+        state: started
+        enabled: yes
 
-    - name: Start synapse server
-      service: name=synapse state=started
