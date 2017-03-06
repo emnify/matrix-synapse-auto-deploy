@@ -32,7 +32,8 @@
       command: systemctl daemon-reload
 
     - name: Enable turn server
-      service: name=turnserver state=enabled
+      service:
+        name: turnserver
+        enabled: yes
+        state: started
 
-    - name: Start turn server
-      service: name=turnserver state=started
