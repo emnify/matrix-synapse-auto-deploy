@@ -121,7 +121,7 @@
       command: systemctl daemon-reload
 
     - name: Enabling service
-      command: systemctl enable synapse
+      service: name=synapse state=enabled
 
     - name: Start synapse server
       service: name=synapse state=started
