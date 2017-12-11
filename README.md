@@ -17,6 +17,8 @@ This playbook is a fork from https://github.com/EMnify/matrix-synapse-auto-deplo
 - Change tls_dh_params_path instead of creating it every time the playbook runs
 - Added variables to use an external turn server
 
+All new variables are defined under defaults\main.yml
+
 ## ToDo
 - Add Riot Web Client
 - Lets encrypt support
