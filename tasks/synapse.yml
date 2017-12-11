@@ -57,96 +57,96 @@
       args:
         regexp: "^enable_registration:"
         line: "enable_registration: {{ enable_registration }}"
-      notify: "Restart synapse server"
+      notify: "Restart synapse"
 
     - name: Configure if captchas are enabled by default or not
       lineinfile: "dest=/home/{{ username }}/.synapse/homeserver.yaml"
       args:
         regexp: "^enable_registration_captcha:"
         line: "enable_registration_captcha: {{ enable_registration_captcha }}"
-      notify: "Restart synapse server"
+      notify: "Restart synapse"
 
     - name: Configure private-key recaptcha key
       lineinfile: "dest=/home/{{ username }}/.synapse/homeserver.yaml"
       args:
         regexp: "^recaptcha_private_key:"
         line: "recaptcha_private_key: {{ recaptcha_private_key }}"
-      notify: "Restart synapse server"
+      notify: "Restart synapse"
 
     - name: Configure public-key recaptcha key
       lineinfile: "dest=/home/{{ username }}/.synapse/homeserver.yaml"
       args:
         regexp: "^recaptcha_public_key:"
         line: "recaptcha_public_key: {{ recaptcha_public_key }}"
-      notify: "Restart synapse server"
+      notify: "Restart synapse"
 
     - name: Configure certificate fullchain location
       lineinfile: "dest=/home/{{ username }}/.synapse/homeserver.yaml"
       args:
         regexp: "^tls_certificate_path:"
         line: "tls_certificate_path: {{ absolute_path_certificate }}"
-      notify: "Restart synapse server"
+      notify: "Restart synapse"
 
     - name: Configure certificate private key location
       lineinfile: "dest=/home/{{ username }}/.synapse/homeserver.yaml"
       args:
         regexp: "^tls_private_key_path:"
         line: "tls_private_key_path: {{ absolute_path_key }}"
-      notify: "Restart synapse server"
+      notify: "Restart synapse"
 
     - name: Configure Diffie-Hellman parameters location
       lineinfile: "dest=/home/{{ username }}/.synapse/homeserver.yaml"
       args:
         regexp: "^tls_dh_params_path:"
         line: "tls_dh_params_path: {{ DH_params_location }}"
-      notify: "Restart synapse server"
+      notify: "Restart synapse"
 
-    - name: Configure turn_uris
+    - name: Configure local coturn turn_uris
       lineinfile: "dest=/home/{{ username }}/.synapse/homeserver.yaml"
       args:
         regexp: "^turn_uris:"
         line: "turn_uris: [ \"turn:{{ hostname }}:3478?transport=udp\", \"turn:{{ hostname }}:3478?transport=tcp\" ]"
       when: install_turnserver|bool == true
-      notify: "Restart synapse server"
+      notify: "Restart synapse"
 
     - name: Configure custom turn_uris
       lineinfile: "dest=/home/{{ username }}/.synapse/homeserver.yaml"
       args:
         regexp: "^turn_uris:"
         line: "turn_uris: [ {{ turn_uris }} ]"
-      when: turn_uris defined
-      notify: "Restart synapse server"
+      when: turn_uris is defined and not install_turnserver|bool == true
+      notify: "Restart synapse"
 
     - name: Configure custom turn_shared_secret
       lineinfile: "dest=/home/{{ username }}/.synapse/homeserver.yaml"
       args:
-        regexp: "^turn_shared_secret:"
+        regexp: ".*turn_shared_secret:"
         line: "turn_shared_secret: {{ turn_shared_secret }}"
-      when: turn_shared_secret defined
-      notify: "Restart synapse server"
+      when: turn_shared_secret is defined
+      notify: "Restart synapse"
 
     - name: Configure custom turn_username
       lineinfile: "dest=/home/{{ username }}/.synapse/homeserver.yaml"
       args:
-        regexp: "^turn_username:"
+        regexp: ".*turn_username:"
         line: "turn_username: {{ turn_username }}"
-      when: turn_username defined
-      notify: "Restart synapse server"
+      when: turn_username is defined
+      notify: "Restart synapse"
 
     - name: Configure custom turn_password
       lineinfile: "dest=/home/{{ username }}/.synapse/homeserver.yaml"
       args:
-        regexp: "^turn_password:"
+        regexp: ".*turn_password:"
         line: "turn_password: {{ turn_password }}"
-      when: turn_password defined
-      notify: "Restart synapse server"
+      when: turn_password is defined
+      notify: "Restart synapse"
 
     - name: Configure turn_user_lifetime
       lineinfile: "dest=/home/{{ username }}/.synapse/homeserver.yaml"
       args:
         line: "turn_user_lifetime: 86400000"
       when: install_turnserver|bool == true
-      notify: "Restart synapse server"
+      notify: "Restart synapse"
     
     - name: Configure synapse to use mxisd
       blockinfile:
@@ -157,7 +157,7 @@
                 config:
                   endpoint: "http://127.0.0.1:8090"
       when: install_mxisd|bool == true
-      notify: "Restart synapse server"
+      notify: "Restart synapse"
     
     - name: Set permissions
       file:
