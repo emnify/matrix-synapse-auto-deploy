@@ -125,7 +125,7 @@
       when: turn_shared_secret is defined
       notify: "Restart synapse"
 
-    - name: Configure custom turn_shared_secret
+    - name: Comment out turn_shared_secret
       lineinfile: "dest=/home/{{ username }}/.synapse/homeserver.yaml"
       args:
         regexp: ".*turn_shared_secret:"
