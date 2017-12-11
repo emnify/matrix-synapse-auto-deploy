@@ -109,6 +109,38 @@
       when: install_turnserver|bool == true
       notify: "Restart synapse server"
 
+    - name: Configure custom turn_uris
+      lineinfile: "dest=/home/{{ username }}/.synapse/homeserver.yaml"
+      args:
+        regexp: "^turn_uris:"
+        line: "turn_uris: [ {{ turn_uris }} ]"
+      when: turn_uris defined
+      notify: "Restart synapse server"
+
+    - name: Configure custom turn_shared_secret
+      lineinfile: "dest=/home/{{ username }}/.synapse/homeserver.yaml"
+      args:
+        regexp: "^turn_shared_secret:"
+        line: "turn_shared_secret: {{ turn_shared_secret }}"
+      when: turn_shared_secret defined
+      notify: "Restart synapse server"
+
+    - name: Configure custom turn_username
+      lineinfile: "dest=/home/{{ username }}/.synapse/homeserver.yaml"
+      args:
+        regexp: "^turn_username:"
+        line: "turn_username: {{ turn_username }}"
+      when: turn_username defined
+      notify: "Restart synapse server"
+
+    - name: Configure custom turn_password
+      lineinfile: "dest=/home/{{ username }}/.synapse/homeserver.yaml"
+      args:
+        regexp: "^turn_password:"
+        line: "turn_password: {{ turn_password }}"
+      when: turn_password defined
+      notify: "Restart synapse server"
+
     - name: Configure turn_user_lifetime
       lineinfile: "dest=/home/{{ username }}/.synapse/homeserver.yaml"
       args:

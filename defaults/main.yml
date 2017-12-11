@@ -15,6 +15,13 @@ absolute_path_key: /home/{{ username }}/.synapse/{{ hostname }}.tls.key
 generate_DH_params: true   # Generate DH parameters
 DH_params_location: /etc/ssl/diffihellman.pem
 install_turnserver: yes
+
+# Define this variables if you want to use a custom turn server. Recommended you do not let the playbook install the turnserver
+# turn_uris: \"turn:{{ hostname }}:3478?transport=udp\", \"turn:{{ hostname }}:3478?transport=tcp\"
+# turn_shared_secret: 
+# turn_username:
+# turn_password:
+
 # mxisd (identity server) configuration, only for ldap for now
 # For more information see https://github.com/kamax-io/mxisd/
 install_mxisd: false
