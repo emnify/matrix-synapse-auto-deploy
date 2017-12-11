@@ -1,8 +1,8 @@
 ---
 username: synapse # under wich user the server should be installed and run
 git_repo: https://github.com/matrix-org/synapse/tarball/master  # URL to Git Repo you want to install
-hostname: 10.99.99.230 # FQDN to be used
-domain: domain.de # Domain Part of the User MXIDs
+hostname: matrix.domain.com # FQDN to be used
+domain: domain.com # Domain Part of the User MXIDs
 enable_registration: true # this will open registration by default, take care if you run a public server!
 enable_registration_captcha: false
 recaptcha_private_key: YOURPRIVATEKEYHERE
@@ -16,7 +16,7 @@ DH_params_location: /etc/ssl/diffihellman.pem
 letsencrypt: false
 
 install_turnserver: yes
-# Define this variables if you want to use a custom turn server and install_turnserver is set to no.
+# Define this variables if you want to use a custom turn server AND install_turnserver is set to false.
 # Recommended if you do not let the playbook install the cotrun turnserver.
 # turn_uris: \"turn:{{ hostname }}:3478?transport=udp\", \"turn:{{ hostname }}:3478?transport=tcp\"
 # turn_shared_secret: 
