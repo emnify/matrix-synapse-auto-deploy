@@ -2,7 +2,8 @@
 
 Auto-deployment process for the matrix-org/synapse (https://github.com/matrix-org/synapse) homeserver and turnserver using  ansible, this will automatically deploy a ready-to-go matrix server on any server.
 
-The playbook will try to install latest master from https://github.com/matrix-org/synapse/tarball/master
+The playbook will try to install latest synapse master from https://github.com/matrix-org/synapse/tarball/master
+and latest riot.im master from https://github.com/vector-im/riot-web/releases/latest
 
 This playbook is a fork from https://github.com/EMnify/matrix-synapse-auto-deploy.
 ## Changes from the original repository
