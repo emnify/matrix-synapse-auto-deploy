@@ -15,7 +15,6 @@ This playbook is a fork from https://github.com/EMnify/matrix-synapse-auto-deplo
 - Don't create the dhparams file every time the playbook runs
 - Added missing python libraries for url previews
 - Differentiate between Matrix Domain and Hostname so you can use mxids in form of "@name:domain.tld" instead of "@name:hostname.domain.tld"
-- Do not create tls_dh_params every time the playbook runs
 - Added variables to use an external turn server
 - Installs Riot Web Client to a separate domain
 
