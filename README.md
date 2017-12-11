@@ -5,7 +5,7 @@ Auto-deployment process for the matrix-org/synapse (https://github.com/matrix-or
 The playbook will try to install latest master from https://github.com/matrix-org/synapse/tarball/master
 
 This playbook is a fork from https://github.com/EMnify/matrix-synapse-auto-deploy.
-## Changes
+## Changes from the original repository
 - Added Hyper-V settings to the Vagrantfile
 - Added mxisd for ldap auth
 - Install turnserver and mxisd only when the appropriate variable is true
