@@ -1,0 +1,106 @@
+# {{ ansible_managed }}
+# For a complete list of options, see https://github.com/kamax-io/mxisd
+
+#######################
+# Matrix config items #
+#######################
+# Matrix domain, same as the domain configure in your Homeserver configuration.
+#
+# This is used to build the various identifiers for identity, auth and directory.
+matrix:
+  domain: '{{ domain }}'
+
+server:
+   name: '{{ hostname }}'
+
+dns.overwrite.homeserver.client:
+  - name: '{{ hostname }}'
+    value: 'http://127.0.0.1:8008'
+
+#directory.exclude.homeserver: true
+
+################
+# Signing keys #
+################
+# Absolute path for the Identity Server signing key.
+# During testing, /var/tmp/mxisd.key is a possible value
+#
+key.path: '/var/lib/mxisd/signing.key'
+
+############################
+# Persistence config items #
+############################
+
+# Configure the storage backend, usually a DB
+# Possible built-in values:
+#   sqlite                      SQLite backend, default
+#
+#storage.backend: 'sqlite'
+
+# Path to the SQLite DB file
+storage.provider.sqlite.database: '/var/lib/mxisd/mxisd.db'
+
+################
+# LDAP Backend #
+################
+# If you would like to integrate with your AD/Samba/LDAP server,
+# see https://github.com/kamax-io/mxisd/blob/master/docs/backends/ldap.md
+
+ldap:
+  enabled: true
+  connection:
+    host: '{{ ldap_server }}'
+    bindDn: '{{ bind_dn }}'
+    bindPassword: '{{ bind_pass }}'
+    baseDn: '{{ base_dn }}'
+    tls: {{ ldap_tls }}
+    port: {{ ldap_port }}
+  filter: '{{ ldap_filter }}'
+  attribute:
+    uid:
+      type: 'uid'
+      value: 'sAMAccountName'
+    name: 'displayName'
+    threepid:
+      email:
+        - mail
+      msisdn:
+        - telephoneNumber
+        - mobile
+
+###############
+# SQL Backend #
+###############
+# If you would like to integrate with a MySQL/MariaDB/PostgreQL/SQLite DB,
+# see https://github.com/kamax-io/mxisd/blob/master/docs/backends/sql.md
+
+################
+# REST Backend #
+################
+# If you would like to integrate with an existing web service/webapp,
+# see https://github.com/kamax-io/mxisd/blob/master/docs/backends/rest.md
+
+#################################################
+# Notifications for invites/addition to profile #
+#################################################
+# If you would like to change the content,
+# see https://github.com/kamax-io/mxisd/blob/master/docs/threepids/notifications/template-generator.md
+#
+#### E-mail invite sender
+
+{% if mail | bool %}
+threepid:
+  medium:
+    email:
+      identity:
+        from: '{{ mail_from }}'
+        name: '{{ mail_name }}'
+      connectors:
+        smtp:
+          host: '{{ mail_host }}'
+          port: {{ mail_port }}
+          # 0 = no STARTLS, 1 = try, 2 = force
+          tls: {{ mail_tls }}
+          login: '{{ mail_user }}'
+          password: '{{ mail_pass }}'
+{% endif %}

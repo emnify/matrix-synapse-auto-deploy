@@ -1,0 +1,17 @@
+---
+    - name: Download mxisd
+      shell: "wget -O /root/mxisd.deb $(curl -s https://api.github.com/repos/kamax-io/mxisd/releases/latest | jq -r \".assets[].browser_download_url\")"
+
+    - name: Install mxisd
+      apt:
+        deb: /root/mxisd.deb
+ 
+    - name: Install mxisd conf
+      template:
+        src:  etc/mxisd/mxisd.yaml.j2
+        dest: /etc/mxisd/mxisd.yaml
+        mode: 0644
+      notify: "Restart mxisd daemon"
+
+    - name: Enabling mxisd service at boot
+      command: systemctl enable mxisd

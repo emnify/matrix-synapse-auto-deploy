@@ -12,6 +12,9 @@
        - python-virtualenv
        - python3-openssl
        - libjpeg-dev
+       - python-lxml
+       - libxslt1-dev
+       - jq
 
     - name: Create synapse user
       user: "name={{ username }} shell=/bin/bash comment='{{ username }}'"
@@ -33,6 +36,9 @@
        - characteristic
        - simplejson
        - canonicaljson
+       - enum34
+       - ipaddress
+       - lxml
 
     - name: PIP to install synapse from Git Repo into virtualenv
       pip: "name={{ git_repo }} virtualenv=/home/{{ username }}/.synapse"
@@ -41,7 +47,7 @@
       pip: name="ldap3==1.4" virtualenv="/home/{{ username }}/.synapse"
 
     - name: Generate homeserver.yaml config file
-      shell: ". bin/activate && python -m synapse.app.homeserver --server-name {{ hostname }} --config-path homeserver.yaml --generate-config --report-stats=yes"
+      shell: ". bin/activate && python -m synapse.app.homeserver --server-name {{ domain }} --config-path homeserver.yaml --generate-config --report-stats=yes"
       args:
         chdir: "/home/{{ username }}/.synapse/"
         creates: "/home/{{ username }}/.synapse/homeserver.yaml"
@@ -51,58 +57,83 @@
       args:
         regexp: "^enable_registration:"
         line: "enable_registration: {{ enable_registration }}"
+      notify: "Restart synapse server"
 
     - name: Configure if captchas are enabled by default or not
       lineinfile: "dest=/home/{{ username }}/.synapse/homeserver.yaml"
       args:
         regexp: "^enable_registration_captcha:"
         line: "enable_registration_captcha: {{ enable_registration_captcha }}"
+      notify: "Restart synapse server"
 
     - name: Configure private-key recaptcha key
       lineinfile: "dest=/home/{{ username }}/.synapse/homeserver.yaml"
       args:
         regexp: "^recaptcha_private_key:"
         line: "recaptcha_private_key: {{ recaptcha_private_key }}"
+      notify: "Restart synapse server"
 
     - name: Configure public-key recaptcha key
       lineinfile: "dest=/home/{{ username }}/.synapse/homeserver.yaml"
       args:
         regexp: "^recaptcha_public_key:"
         line: "recaptcha_public_key: {{ recaptcha_public_key }}"
+      notify: "Restart synapse server"
 
-    - name: Configure fullchain location
+    - name: Configure certificate fullchain location
       lineinfile: "dest=/home/{{ username }}/.synapse/homeserver.yaml"
       args:
         regexp: "^tls_certificate_path:"
         line: "tls_certificate_path: {{ absolute_path_certificate }}"
+      notify: "Restart synapse server"
 
-    - name: Configure fullchain location
+    - name: Configure certificate private key location
       lineinfile: "dest=/home/{{ username }}/.synapse/homeserver.yaml"
       args:
         regexp: "^tls_private_key_path:"
         line: "tls_private_key_path: {{ absolute_path_key }}"
+      notify: "Restart synapse server"
 
     - name: Configure Diffie-Hellman parameters location
       lineinfile: "dest=/home/{{ username }}/.synapse/homeserver.yaml"
       args:
-        regexp: "^tls_private_key_path:"
+        regexp: "^tls_dh_params_path:"
         line: "tls_dh_params_path: {{ DH_params_location }}"
+      notify: "Restart synapse server"
 
     - name: Configure turn_uris
       lineinfile: "dest=/home/{{ username }}/.synapse/homeserver.yaml"
       args:
+        regexp: "^turn_uris:"
         line: "turn_uris: [ \"turn:{{ hostname }}:3478?transport=udp\", \"turn:{{ hostname }}:3478?transport=tcp\" ]"
+      when: install_turnserver|bool == true
+      notify: "Restart synapse server"
 
     - name: Configure turn_user_lifetime
       lineinfile: "dest=/home/{{ username }}/.synapse/homeserver.yaml"
       args:
         line: "turn_shared_secret: {{ turn_shared_secret }}"
+      when: install_turnserver|bool == true
+      notify: "Restart synapse server"
 
     - name: Configure turn_user_lifetime
       lineinfile: "dest=/home/{{ username }}/.synapse/homeserver.yaml"
       args:
         line: "turn_user_lifetime: 86400000"
-
+      when: install_turnserver|bool == true
+      notify: "Restart synapse server"
+    
+    - name: Configure synapse to use mxisd
+      blockinfile:
+        path: /home/{{ username }}/.synapse/homeserver.yaml
+        block: |
+          password_providers:
+              - module: "rest_auth_provider.RestAuthProvider"
+                config:
+                  endpoint: "http://127.0.0.1:8090"
+      when: install_mxisd|bool == true
+      notify: "Restart synapse server"
+    
     - name: Set permissions
       file:
         path: '/home/{{ username }}/.synapse'
@@ -111,17 +142,14 @@
         group: "{{ username }}"
         recurse: yes
 
-    - name: Install systemd conf
+    - name: Install synapse systemd conf
       template:
           src: etc/systemd/system/synapse.service.j2
           dest: /etc/systemd/system/synapse.service
           mode: 0644
+      notify:
+          - "Reload systemctl config"
+          - "Start synapse server"
 
-    - name: Reloading Daemons
-      command: systemctl daemon-reload
-
-    - name: Enabling service
+    - name: Enabling synapse service at boot
       command: systemctl enable synapse
-
-    - name: Start synapse server
-      service: name=synapse state=started

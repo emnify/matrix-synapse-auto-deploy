@@ -14,5 +14,8 @@
 
 - include: synapse.yml
 - include: coturn.yml
+  when: install_turnserver|bool == true
 - include: nginx.yml
 - include: postgres.yml
+- include: mxisd.yml
+  when: install_mxisd|bool == true

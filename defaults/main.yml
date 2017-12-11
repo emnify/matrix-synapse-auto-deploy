@@ -1,9 +1,9 @@
 ---
-
-username: synapse
-git_repo: https://github.com/matrix-org/synapse/tarball/master
-hostname: 10.99.99.230
-enable_registration: true
+username: synapse # under wich user the server should be installed and run
+git_repo: https://github.com/matrix-org/synapse/tarball/master  # URL to Git Repo you want to install
+hostname: 10.99.99.230 # FQDN to be used
+domain: domain.de # Domain Part of the User MXIDs
+enable_registration: true # this will open registration by default, take care if you run a public server!
 enable_registration_captcha: false
 recaptcha_private_key: YOURPRIVATEKEYHERE
 recaptcha_public_key: YOURPUBLICKEYHERE
@@ -14,3 +14,23 @@ absolute_path_certificate: /home/{{ username }}/.synapse/{{ hostname }}.tls.crt
 absolute_path_key: /home/{{ username }}/.synapse/{{ hostname }}.tls.key
 generate_DH_params: true   # Generate DH parameters
 DH_params_location: /etc/ssl/diffihellman.pem
+install_turnserver: yes
+# mxisd (identity server) configuration, only for ldap for now
+# For more information see https://github.com/kamax-io/mxisd/
+install_mxisd: false
+ldap_server:
+bind_dn:
+bind_pass:
+base_dn:
+ldap_tls: true
+ldap_port: 636
+ldap_filter: (&(objectclass=user)(mail=*))
+mail: yes
+mail_from: matrix@{{ domain }}
+mail_name: Identity Server
+mail_host:
+mail_port: 587
+# 0 = no STARTLS, 1 = try, 2 = force
+mail_tls: 1
+mail_user:
+mail_pass:

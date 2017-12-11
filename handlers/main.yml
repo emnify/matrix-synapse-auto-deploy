@@ -1,0 +1,17 @@
+- name: Reload systemctl config
+  command: systemctl daemon-reload
+
+- name: Restart turn server
+  service: name=turnserver state=restarted
+
+- name: Restart mxisd daemon
+  service: name=mxisd state=restarted
+
+- name: Reload nginx
+  service: name=nginx state=reloaded
+
+- name: Restart synapse
+  service: name=synapse state=started
+
+- name: Start synapse server
+  service: name=synapse state=started

@@ -21,15 +21,16 @@
       template:
         src: etc/turnserver.conf.j2
         dest: /etc/turnserver.conf
+      notify: "Restart turn server"
 
-    - name: Install upstart script
+    - name: Install systemd service
       template:
         src: etc/systemd/system/turnserver.service.j2
         dest: /etc/systemd/system/turnserver.service
         mode: 0644
+      notify:
+        - "Reload systemctl config"
+        - "Restart turn server"
 
-    - name: Reload daemons
-      command: systemctl daemon-reload
-
-    - name: Start turn server
-      service: name=turnserver state=started
+    - name: Enabling coturn service at boot
+      command: systemctl enable mxisd

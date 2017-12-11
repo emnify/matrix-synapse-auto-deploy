@@ -43,6 +43,28 @@ Vagrant.configure('2') do |config|
 end
 
 Vagrant.configure("2") do |config|
+  config.vm.network "public_network"
+  config.vm.provider "hyperv" do |h, override|
+    h.vm_integration_services = {
+      enable_virtualization_extensions: true,
+      guest_service_interface: true,
+      heartbeat: true,
+      key_value_pair_exchange: true,
+      shutdown: true,
+      time_synchronization: true,
+      vss: true,
+      differencing_disk: true
+    }
+    override.vm.box = 'generic/ubuntu1604'
+    override.vm.provision "ansible_local" do |ansible|
+      ansible.playbook = "playbook.yml"
+      ansible.install_mode = "pip"
+      ansible.version = "2.3.0.0"
+    end
+  end
+end
+
+Vagrant.configure("2") do |config|
   config.vm.define "synapse" do |dev|
     dev.vm.box = "trusty64"
     dev.vm.network :private_network, ip: "10.99.99.230"
@@ -60,8 +82,8 @@ end
 Vagrant.configure("2") do |config|
   config.vm.provision "ansible" do |ansible|
     ansible.host_key_checking = false
-    ansible.sudo = true
-    ansible.sudo_user = "vagrant"
+    ansible.become = true
+    ansible.become_user = "vagrant"
     ansible.playbook = "playbook.yml"
 #    ansible.raw_arguments = "-vvv"
   end

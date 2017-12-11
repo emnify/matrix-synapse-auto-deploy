@@ -7,18 +7,18 @@
           - postgresql
           - python-psycopg2
 
-    - name: Install psycopg2 in the venv
+    - name: Install psycopg2 into the python venv
       pip: "name=psycopg2 virtualenv=/home/{{ username }}/.synapse extra_args='--upgrade'"
 
     - name: Start postgresql unit
       service: name=postgresql state=started
 
-    - name: Create synapse user in postgres
+    - name: Creating synapse user in postgres
       postgresql_user: "name={{ username }} password={{ database_secret }}"
       become: true
       become_user: postgres
 
-    - name: Create the database
+    - name: Creating the database
       postgresql_db:
         name: homeserver
         encoding: UTF-8
@@ -52,6 +52,4 @@
       args:
         chdir: "/home/{{ username }}/.synapse"
       when: make_migration
-
-    - name: Restart synapse
-      service: name=synapse state=started
+      notify: "Restart synapse"
