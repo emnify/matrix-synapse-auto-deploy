@@ -1,0 +1,34 @@
+---
+  - name: Download riot.im
+    shell: "wget -O /root/riot.im.tar.gz $(curl -s https://api.github.com/repos/vector-im/riot-web/releases/latest | jq -r \".assets[].browser_download_url\" | sed -n 1p)"
+
+  - name: Create riot.im folder
+    file:
+      path: "{{ riot_path }}"
+      state: directory
+      mode: 0755
+
+  - name: Extract riot.im
+    unarchive:
+      src: "/root/riot.im.tar.gz"
+      dest: "{{ riot_path }}"
+      remote_src: yes
+      extra_opts: [--strip-components=1]
+
+  - name: riot.im configuration
+    template:
+      src: riot_config.json.j2
+      dest: "{{ riot_path }}/config.json"
+
+  - name: Install nginx conf for riot.im
+    template:
+      src:  etc/nginx/sites-available/riot.j2
+      dest: /etc/nginx/sites-available/riot
+    notify: "Reload nginx"
+
+  - name: Enable the riot.im vhost (symlink)
+    file:
+      src: /etc/nginx/sites-available/riot
+      dest: /etc/nginx/sites-enabled/riot
+      state: link
+    notify: "Reload nginx"

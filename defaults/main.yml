@@ -13,8 +13,9 @@ absolute_path_certificate: /home/{{ username }}/.synapse/{{ hostname }}.tls.crt
 absolute_path_key: /home/{{ username }}/.synapse/{{ hostname }}.tls.key
 generate_DH_params: true   # Generate DH parameters
 DH_params_location: /etc/ssl/diffihellman.pem
-install_turnserver: yes
+letsencrypt: false
 
+install_turnserver: yes
 # Define this variables if you want to use a custom turn server and install_turnserver is set to no.
 # Recommended if you do not let the playbook install the cotrun turnserver.
 # turn_uris: \"turn:{{ hostname }}:3478?transport=udp\", \"turn:{{ hostname }}:3478?transport=tcp\"
@@ -41,3 +42,11 @@ mail_port: 587
 mail_tls: 1
 mail_user:
 mail_pass:
+
+# riot webclient
+riot_hostname: chat.domain.de # should be on another domain as the matrix server!
+riot_path_certificate:
+riot_path_key:
+riot_path: /var/www/riot
+riot_integration_ui:
+riot_integration_api:

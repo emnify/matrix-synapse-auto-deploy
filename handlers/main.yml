@@ -9,6 +9,7 @@
 
 - name: Reload nginx
   service: name=nginx state=reloaded
+  tags: riot
 
 - name: Restart synapse
   service: name=synapse state=started

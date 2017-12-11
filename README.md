@@ -16,11 +16,11 @@ This playbook is a fork from https://github.com/EMnify/matrix-synapse-auto-deplo
 - Differentiate between Matrix Domain and Hostname so you can use mxids in form of "@name:domain.tld" instead of "@name:hostname.domain.tld"
 - Do not create tls_dh_params every time the playbook runs
 - Added variables to use an external turn server
+- Installs Riot Web Client to a separate domain
 
 All new variables are defined under defaults\main.yml
 
 ## ToDo
-- Add Riot Web Client
 - Lets encrypt support
 
 ## Pre-requirements
@@ -31,12 +31,15 @@ All new variables are defined under defaults\main.yml
 
     git clone https://github.com/Madic-/matrix-synapse-auto-deploy.git
 
-## Adopt vars file as needed or just go with these defaults
-
-    ---
+## Example playbook, adapt to your needs
+---
+- hosts: myhost
+  become: yes
+  become_user: root
+  vars:
     username: synapse # under wich user the server should be installed and run
     git_repo: https://github.com/matrix-org/synapse/tarball/master # URL to Git Repo you want to install
-    hostname: 10.99.99.230 # FQDN to be used
+    hostname: matrix.domain.com # FQDN to be used
     enable_registration: true # this will open registration by default, take care if you run a public server!
     enable_registration_captcha: false
     recaptcha_private_key: YOURPRIVATEKEYHERE
@@ -44,11 +47,17 @@ All new variables are defined under defaults\main.yml
     turn_shared_secret: YOURSHAREDSECRETHERE
     make_migration : true # will shut down the the server to migrate from sqlite to postgresql.
     database_secret: YOURDATABASESECRETHERE
-    absolute_path_certificate: /etc/ssl/your_org/certs/fullchain.pem
-    absolute_path_key: /etc/ssl/your_org/private/private_key.pem
+    absolute_path_certificate: /etc/ssl/your_org/fullchain.pem
+    absolute_path_key: /etc/ssl/your_org/private_key.pem
     generate_DH_params: true   # Generate DH parameters
     DH_params_location: /etc/ssl/your_org/diffihellman.pem
     install_turnserver: yes
+    riot_hostname: chat.domain.com
+    riot_path_certificate: /etc/ssl/your_org/fullchain.pem
+    riot_path_key: /etc/ssl/your_org/private_key.pem
+    riot_path: /var/www/riot
+  roles:
+    - matrix-synapse-auto-deploy
 
 
 ## Run the ansible playbook

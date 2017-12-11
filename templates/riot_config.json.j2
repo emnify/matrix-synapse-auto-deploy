@@ -1,0 +1,17 @@
+{
+    "default_hs_url": "https://{{ hostname }}",
+    "default_is_url": "https://{{ hostname }}",
+    "brand": "Riot",
+{% if riot_integration_ui is defined and not riot_integration_ui is none %}
+    "integrations_ui_url": "{{ riot_integration_ui }}",
+{% endif %}
+{% if riot_integration_api is defined and not riot_integration_api is none %}
+    "integrations_rest_url": "{{ riot_integration_api }}",
+{% endif %}
+    "enableLabs": true,
+    "roomDirectory": {
+        "servers": [
+            "{{ hostname }}"
+        ]
+    }
+}

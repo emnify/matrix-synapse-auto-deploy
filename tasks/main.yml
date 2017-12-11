@@ -17,5 +17,9 @@
   when: install_turnserver|bool == true
 - include: nginx.yml
 - include: postgres.yml
+- include: letsencrypt.yml
+  when: letsencrypt|bool == true
 - include: mxisd.yml
   when: install_mxisd|bool == true
+- include: riot.im.yml
+  tags: riot
