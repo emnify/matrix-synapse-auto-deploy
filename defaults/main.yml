@@ -7,7 +7,6 @@ enable_registration: true # this will open registration by default, take care if
 enable_registration_captcha: false
 recaptcha_private_key: YOURPRIVATEKEYHERE
 recaptcha_public_key: YOURPUBLICKEYHERE
-turn_shared_secret: YOURSHAREDSECRETHERE
 make_migration: true     #Migrate the database from sqlite to postgres
 database_secret: YOURDATABASESECRETHERE
 absolute_path_certificate: /home/{{ username }}/.synapse/{{ hostname }}.tls.crt

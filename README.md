@@ -1,10 +1,21 @@
 # Auto-deployment for matrix-org/synapse
 
-[![Build Status](https://travis-ci.org/hugoShaka/matrix-synapse-auto-deploy.svg?branch=master)](https://travis-ci.org/hugoShaka/matrix-synapse-auto-deploy)
-
 Auto-deployment process for the matrix-org/synapse (https://github.com/matrix-org/synapse) homeserver and turnserver using  ansible, this will automatically deploy a ready-to-go matrix server on any server.
 
 The playbook will try to install latest master from https://github.com/matrix-org/synapse/tarball/master
+
+This playbook is a fork from https://github.com/EMnify/matrix-synapse-auto-deploy.
+Changes:
+- Added Hyper-V settings to the Vagrantfile
+- Added mxisd for ldap auth
+- Install turnserver and mxisd only when the appropriate variable is true
+- Added handlers so the applications aren't restarted every time the playbook runs but only when it's necessary
+- corrected typos
+- Don't create the dhparams file every time the playbook runs
+- Added missing python libraries for url previews
+- Differentiate between Matrix Domain and Hostname so you can use mxids in form of "@name:domain.tld" instead of "@name:hostname.domain.tld"
+- Change tls_dh_params_path instead of creating it every time the playbook runs
+- Added variables to use an external turn server
 
 ## Pre-requirements
 * Git
@@ -12,7 +23,7 @@ The playbook will try to install latest master from https://github.com/matrix-or
 
 ## Clone auto-deploy repo
 
-    git clone https://github.com/hugoShaka/matrix-synapse-auto-deploy
+    git clone https://github.com/Madic-/matrix-synapse-auto-deploy.git
 
 ## Adopt vars file as needed or just go with these defaults
 
@@ -31,6 +42,7 @@ The playbook will try to install latest master from https://github.com/matrix-or
     absolute_path_key: /etc/ssl/your_org/private/private_key.pem
     generate_DH_params: true   # Generate DH parameters
     DH_params_location: /etc/ssl/your_org/diffihellman.pem
+    install_turnserver: yes
 
 
 ## Run the ansible playbook
@@ -82,6 +94,3 @@ In order to secure your connections you will want to have DH parameters (they ar
 
 This playbook is made to run on Debian 8 Jessie. It should also run smoothly on any systemd flavoured OS but I didn't test.
 You're free to test and give me feedback (or PR to add support of your favorite system).
-
-# Credits :
-This is a fork of Martin Giess on [this original repo](https://github.com/EMnify/matrix-synapse-auto-deploy).

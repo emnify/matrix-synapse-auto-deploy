@@ -144,13 +144,6 @@
     - name: Configure turn_user_lifetime
       lineinfile: "dest=/home/{{ username }}/.synapse/homeserver.yaml"
       args:
-        line: "turn_shared_secret: {{ turn_shared_secret }}"
-      when: install_turnserver|bool == true
-      notify: "Restart synapse server"
-
-    - name: Configure turn_user_lifetime
-      lineinfile: "dest=/home/{{ username }}/.synapse/homeserver.yaml"
-      args:
         line: "turn_user_lifetime: 86400000"
       when: install_turnserver|bool == true
       notify: "Restart synapse server"
