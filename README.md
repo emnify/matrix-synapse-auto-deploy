@@ -5,7 +5,7 @@ Auto-deployment process for the matrix-org/synapse (https://github.com/matrix-or
 The playbook will try to install latest master from https://github.com/matrix-org/synapse/tarball/master
 
 This playbook is a fork from https://github.com/EMnify/matrix-synapse-auto-deploy.
-Changes:
+## Changes
 - Added Hyper-V settings to the Vagrantfile
 - Added mxisd for ldap auth
 - Install turnserver and mxisd only when the appropriate variable is true
@@ -16,6 +16,10 @@ Changes:
 - Differentiate between Matrix Domain and Hostname so you can use mxids in form of "@name:domain.tld" instead of "@name:hostname.domain.tld"
 - Change tls_dh_params_path instead of creating it every time the playbook runs
 - Added variables to use an external turn server
+
+## ToDo
+- Add Riot Web Client
+- Lets encrypt support
 
 ## Pre-requirements
 * Git
