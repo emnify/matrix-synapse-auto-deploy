@@ -17,6 +17,7 @@ This playbook is a fork from https://github.com/EMnify/matrix-synapse-auto-deplo
 - Differentiate between Matrix Domain and Hostname so you can use matrix ids in form of "@name:domain.tld" instead of "@name:hostname.domain.tld"
 - Added variables to use an external turn server
 - Installs Riot Web Client to a separate domain
+- Configurable E-Mail Settings
 
 All new variables are defined under defaults\main.yml
 
