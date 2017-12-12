@@ -1,6 +1,6 @@
 # {{ ansible_managed }}
 server {
-        listen 80;
+        listen 80 default_server;
         server_name {{ hostname }};
         access_log  /var/log/nginx/synapse.access.log;
         error_log  /var/log/nginx/synapse.nginx_error.log;
@@ -9,7 +9,7 @@ server {
 }
 
 server {
-        listen 443 ssl;
+        listen 443 ssl default_server;
         server_name {{ hostname }};
         access_log  /var/log/nginx/synapse.access.log;
         error_log  /var/log/nginx/synapse.nginx_error.log;
