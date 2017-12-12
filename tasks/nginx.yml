@@ -16,7 +16,7 @@
         state: link
       notify: "Reload nginx"
 
-    - name: Remove default vhost
+    - name: Remove default vhost symlink
       file:
         src: /etc/nginx/sites-enabled/default
         state: absent
