@@ -176,7 +176,8 @@
              notif_for_new_users: True
              riot_base_url: "https://{{ riot_hostname }}{{ riot_app_path}}"
       when: mail|bool == true
-
+      notify: "Restart synapse"
+      
     - name: Creating mail template folders
       file:
         path: /home/{{ username }}/.synapse/res/templates
