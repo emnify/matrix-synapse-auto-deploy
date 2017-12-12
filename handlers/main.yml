@@ -13,6 +13,3 @@
 
 - name: Restart synapse
   service: name=synapse state=started
-
-- name: Start synapse server
-  service: name=synapse state=started
