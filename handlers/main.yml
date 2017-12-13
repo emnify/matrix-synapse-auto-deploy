@@ -1,8 +1,10 @@
 - name: Reload systemctl config
   command: systemctl daemon-reload
+  tags: synapse, turnserver
 
 - name: Restart turn server
   service: name=turnserver state=restarted
+  tags: turnserver
 
 - name: Restart mxisd daemon
   service: name=mxisd state=restarted
@@ -13,3 +15,4 @@
 
 - name: Restart synapse
   service: name=synapse state=started
+  tags: synapse

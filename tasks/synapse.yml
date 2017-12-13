@@ -101,14 +101,6 @@
         line: "tls_dh_params_path: {{ DH_params_location }}"
       notify: "Restart synapse"
 
-    - name: Configure local coturn turn_uris
-      lineinfile: "dest=/home/{{ username }}/.synapse/homeserver.yaml"
-      args:
-        regexp: "^turn_uris:"
-        line: "turn_uris: [ \"turn:{{ hostname }}:3478?transport=udp\", \"turn:{{ hostname }}:3478?transport=tcp\" ]"
-      when: install_turnserver|bool == true
-      notify: "Restart synapse"
-
     - name: Configure custom turn_uris
       lineinfile: "dest=/home/{{ username }}/.synapse/homeserver.yaml"
       args:
@@ -164,10 +156,10 @@
           email:
              enable_notifs: true
              smtp_host: "{{ mail_host }}"
-             smtp_port: "{{ mail_port }}"
+             smtp_port: {{ mail_port }}
              smtp_user: "{{ mail_user }}"
              smtp_pass: "{{ mail_pass }}"
-             require_transport_security: "{{ mail_tls_synapse }}"
+             require_transport_security: {{ mail_tls_synapse }}
              notif_from: "Your Friendly %(app)s Home Server {{ mail_from }}"
              app_name: Matrix
              template_dir: /home/{{ username }}/.synapse/res/templates

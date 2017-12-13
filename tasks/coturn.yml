@@ -32,5 +32,13 @@
         - "Reload systemctl config"
         - "Restart turn server"
 
+    - name: Configure local coturn turn_uris
+      lineinfile: "dest=/home/{{ username }}/.synapse/homeserver.yaml"
+      args:
+        regexp: "^turn_uris:"
+        line: "turn_uris: [ \"turn:{{ hostname }}:3478?transport=udp\", \"turn:{{ hostname }}:3478?transport=tcp\" ]"
+      when: install_turnserver|bool == true
+      notify: "Restart synapse"
+
     - name: Enabling coturn service at boot
       command: systemctl enable mxisd
