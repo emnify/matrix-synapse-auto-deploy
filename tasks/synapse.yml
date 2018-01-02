@@ -147,7 +147,12 @@
         line: "turn_user_lifetime: 86400000"
       when: install_turnserver|bool == true
       notify: "Restart synapse"
-    
+
+      # VERY UGLY!!!
+    - name: Enable X-Forwarded-For Header for proxied listener
+      shell: "awk '/x_forwarded/{c++;if(c==2){sub(\"x_forwarded: false\",\"x_forwarded: true\");c=0}}1' /home/{{ username }}/.synapse/homeserver.yaml > /tmp/homeserver.yaml && mv /tmp/homeserver.yaml /home/{{ username }}/.synapse/homeserver.yaml"
+      tags: xforward
+
     - name: E-Mail Configuration for synapse
       blockinfile:
         path: /home/{{ username }}/.synapse/homeserver.yaml
