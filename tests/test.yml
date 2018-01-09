@@ -1,0 +1,52 @@
+---
+- hosts: localhost
+- tasks:
+    - name: Check if turnserver service is enabled
+      command: systemctl is-enabled turnserver
+      register: command_result
+      failed_when: "'disabled' in command_result.stdout"
+
+    - name: Check if nginx service is enabled
+      command: systemctl is-enabled nginx
+      register: command_result
+      failed_when: "'disabled' in command_result.stdout"
+
+    - name: Check if postgresql service is enabled
+      command: systemctl is-enabled postgresql
+      register: command_result
+      failed_when: "'disabled' in command_result.stdout"
+
+    - name: Check if synapse service is enabled
+      command: systemctl is-enabled synapse
+      register: command_result
+      failed_when: "'disabled' in command_result.stdout"
+
+#    - name: Check if mxisd service is enabled
+#      command: systemctl is-enabled mxisd
+#      register: command_result
+#      failed_when: "'disabled' in command_result.stdout"
+
+    - name: Check if turnserver is running
+      shell: "systemctl status turnserver | grep -i running"
+      register: status
+      failed_when: status.rc != 0
+
+    - name: Check if nginx is running
+      shell: "systemctl status nginx | grep -i running"
+      register: status
+      failed_when: status.rc != 0
+
+    - name: Check if postgresql is running
+      shell: "systemctl status postgresql@9.4-main | grep -i running"
+      register: status
+      failed_when: status.rc != 0
+
+    - name: Check if synapse is running
+      shell: "systemctl status synapse | grep -i running"
+      register: status
+      failed_when: status.rc != 0
+
+    - name: Check if mxisd is running
+      shell: "systemctl status mxisd | grep -i running"
+      register: status
+      failed_when: status.rc != 0
