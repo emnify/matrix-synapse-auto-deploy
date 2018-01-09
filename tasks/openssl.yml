@@ -1,13 +1,13 @@
 ---
 
-    - name: Install openssl
-      apt: pkg=openssl state=installed
+- name: Install openssl
+  apt: pkg=openssl state=installed
 
-    - name: Check if dhparams exist
-      stat:
-        path: "{{ DH_params_location }}"
-      register: dhparams_file
+- name: Check if dhparams exist
+  stat:
+    path: "{{ DH_params_location }}"
+  register: dhparams_file
 
-    - name: Generate Diffie-Hellman parameters
-      command: "openssl dhparam -out {{ DH_params_location }} 2048"
-      when: generate_DH_params|bool == true and not dhparams_file.stat.exists
+- name: Generate Diffie-Hellman parameters
+  command: "openssl dhparam -out {{ DH_params_location }} 2048"
+  when: generate_DH_params|bool == true and not dhparams_file.stat.exists

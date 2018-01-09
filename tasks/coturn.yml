@@ -1,44 +1,43 @@
 ---
 
-    - name: Install packages needed to compile coturn server
-      action: "apt pkg={{item}} state=installed"
-      with_items:
-       - gcc
-       - make
-       - autoconf
-       - libevent-dev
-       - libsqlite3-dev
+- name: Install packages needed to compile coturn server
+  action: "apt pkg={{item}} state=installed"
+  with_items:
+   - gcc
+   - make
+   - autoconf
+   - libevent-dev
+   - libsqlite3-dev
 
-    - name: Clone coturn from github
-      git: repo=https://github.com/coturn/coturn.git dest=/usr/src/coturn
+- name: Clone coturn from github
+  git: repo=https://github.com/coturn/coturn.git dest=/usr/src/coturn
 
-    - name: Compile and install coturn
-      command: "./configure && make && make install"
-      args:
-        chdir: /usr/src/coturn
+- name: Compile and install coturn
+  command: "./configure && make && make install"
+  args:
+    chdir: /usr/src/coturn
 
-    - name: Install turnserver config
-      template:
-        src: etc/turnserver.conf.j2
-        dest: /etc/turnserver.conf
-      notify: "Restart turn server"
+- name: Install turnserver config
+  template:
+    src: etc/turnserver.conf.j2
+    dest: /etc/turnserver.conf
+  notify: 
+    - restart turn server
 
-    - name: Install systemd service
-      template:
-        src: etc/systemd/system/turnserver.service.j2
-        dest: /etc/systemd/system/turnserver.service
-        mode: 0644
-      notify:
-        - "Reload systemctl config"
-        - "Restart turn server"
+- name: Install systemd service
+  template:
+    src: etc/systemd/system/turnserver.service.j2
+    dest: /etc/systemd/system/turnserver.service
+    mode: 0644
+  notify:
+    - reload systemctl daemon
+    - restart turn server
 
-    - name: Configure local coturn turn_uris
-      lineinfile: "dest=/home/{{ username }}/.synapse/homeserver.yaml"
-      args:
-        regexp: "^turn_uris:"
-        line: "turn_uris: [ \"turn:{{ hostname }}:3478?transport=udp\", \"turn:{{ hostname }}:3478?transport=tcp\" ]"
-      when: install_turnserver|bool == true
-      notify: "Restart synapse"
-
-    - name: Enabling coturn service at boot
-      command: systemctl enable mxisd
+- name: Configure local coturn turn_uris
+  lineinfile: "dest=/home/{{ username }}/.synapse/homeserver.yaml"
+  args:
+    regexp: "^turn_uris:"
+    line: "turn_uris: [ \"turn:{{ hostname }}:3478?transport=udp\", \"turn:{{ hostname }}:3478?transport=tcp\" ]"
+  when: install_turnserver|bool == true
+  notify:
+    - restart synapse

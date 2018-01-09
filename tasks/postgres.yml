@@ -1,55 +1,56 @@
 ---
 
-    - name: Install postgresql
-      apt: "pkg={{ item }} state=installed"
-      with_items:
-          - libpq-dev
-          - postgresql
-          - python-psycopg2
+- name: Install postgresql
+  apt: "pkg={{ item }} state=installed"
+  with_items:
+      - libpq-dev
+      - postgresql
+      - python-psycopg2
 
-    - name: Install psycopg2 into the python venv
-      pip: "name=psycopg2 virtualenv=/home/{{ username }}/.synapse extra_args='--upgrade'"
+- name: Install psycopg2 into the python venv
+  pip: "name=psycopg2 virtualenv=/home/{{ username }}/.synapse extra_args='--upgrade'"
 
-    - name: Start postgresql unit
-      service: name=postgresql state=started
+- name: Start postgresql unit
+  service: name=postgresql state=started
 
-    - name: Creating synapse user in postgres
-      postgresql_user: "name={{ username }} password={{ database_secret }}"
-      become: true
-      become_user: postgres
+- name: Creating synapse user in postgres
+  postgresql_user: "name={{ username }} password={{ database_secret }}"
+  become: true
+  become_user: postgres
 
-    - name: Creating the database
-      postgresql_db:
-        name: homeserver
-        encoding: UTF-8
-        lc_collate: C
-        lc_ctype: C
-        template: template0
-        owner: synapse
-      become: true
-      become_user: postgres
+- name: Creating the database
+  postgresql_db:
+    name: homeserver
+    encoding: UTF-8
+    lc_collate: C
+    lc_ctype: C
+    template: template0
+    owner: synapse
+  become: true
+  become_user: postgres
 
-    - name: Stop synapse
-      service: name=synapse.service state=stopped
-      when: make_migration
+- name: Stop synapse
+  service: name=synapse.service state=stopped
+  when: make_migration
 
-    - name: Patch the conf file to add pgsql database
-      lineinfile:
-        dest: "/home/{{ username }}/.synapse/homeserver.yaml"
-        regexp: '(.*)name: "sqlite3"'
-        line: '\1name: "psycopg2"'
-        backrefs: yes
+- name: Patch the conf file to add pgsql database
+  lineinfile:
+    dest: "/home/{{ username }}/.synapse/homeserver.yaml"
+    regexp: '(.*)name: "sqlite3"'
+    line: '\1name: "psycopg2"'
+    backrefs: yes
 
-    - name: Add the args to connect to the db
-      lineinfile:
-        dest: /home/{{ username }}/.synapse/homeserver.yaml
-        regexp: '(.*)database: "(.*)homeserver.db"'
-        line: '\1user: "{{ username }}"\n\1password: "{{ database_secret }}"\n\1database: "homeserver"\n\1host: "localhost"\n\1cp_min: 5\n\1cp_max: 10'
-        backrefs: yes
+- name: Add the args to connect to the db
+  lineinfile:
+    dest: /home/{{ username }}/.synapse/homeserver.yaml
+    regexp: '(.*)database: "(.*)homeserver.db"'
+    line: '\1user: "{{ username }}"\n\1password: "{{ database_secret }}"\n\1database: "homeserver"\n\1host: "localhost"\n\1cp_min: 5\n\1cp_max: 10'
+    backrefs: yes
 
-    - name: Migrate the database
-      command: "/home/{{username}}/.synapse/bin/synapse_port_db --sqlite-database homeserver.db --postgres-config homeserver.yaml"
-      args:
-        chdir: "/home/{{ username }}/.synapse"
-      when: make_migration
-      notify: "Restart synapse"
+- name: Migrate the database
+  command: "/home/{{username}}/.synapse/bin/synapse_port_db --sqlite-database homeserver.db --postgres-config homeserver.yaml"
+  args:
+    chdir: "/home/{{ username }}/.synapse"
+  when: make_migration
+  notify:
+    - restart synapse

@@ -1,18 +1,18 @@
-- name: Reload systemctl config
+- name: reload systemctl daemon
   command: systemctl daemon-reload
   tags: synapse, turnserver
 
-- name: Restart turn server
-  service: name=turnserver state=restarted
+- name: restart turn server
+  service: name=turnserver state=restarted enabled=yes
   tags: turnserver
 
-- name: Restart mxisd daemon
-  service: name=mxisd state=restarted
+- name: restart mxisd
+  service: name=mxisd state=restarted enabled=yes
 
-- name: Reload nginx
-  service: name=nginx state=reloaded
+- name: restart nginx
+  service: name=nginx state=restarted enabled=yes
   tags: riot
 
-- name: Restart synapse
-  service: name=synapse state=started
+- name: restart synapse
+  service: name=synapse state=started enabled=yes
   tags: synapse

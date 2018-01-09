@@ -1,218 +1,230 @@
 ---
-    - name: Install packages needed by synapse
-      action: "apt pkg={{item}} state=installed"
-      with_items:
-       - build-essential
-       - python2.7-dev
-       - libffi-dev
-       - python-pip
-       - python-setuptools
-       - sqlite3
-       - libssl-dev
-       - python-virtualenv
-       - python3-openssl
-       - libjpeg-dev
-       - python-lxml
-       - libxslt1-dev
-       - jq
 
-    - name: Create synapse user
-      user: "name={{ username }} shell=/bin/bash comment='{{ username }}'"
+- name: Install packages needed by synapse
+  action: "apt pkg={{item}} state=installed"
+  with_items:
+   - build-essential
+   - python2.7-dev
+   - libffi-dev
+   - python-pip
+   - python-setuptools
+   - sqlite3
+   - libssl-dev
+   - python-virtualenv
+   - python3-openssl
+   - libjpeg-dev
+   - python-lxml
+   - libxslt1-dev
+   - jq
 
-    - name: Create virtualenv
-      command: virtualenv -p python2.7 ~/.synapse
-      args:
-        chdir: "/home/{{ username }}"
-        creates: "/home/{{ username }}/.synapse/"
+- name: Create synapse user
+  user: "name={{ username }} shell=/bin/bash comment='{{ username }}'"
 
-    - name: PIP to upgrade setup tools
-      pip: "name=setuptools virtualenv=/home/{{ username }}/.synapse extra_args='--upgrade'"
+- name: Create virtualenv
+  command: virtualenv -p python2.7 ~/.synapse
+  args:
+    chdir: "/home/{{ username }}"
+    creates: "/home/{{ username }}/.synapse/"
 
-    - name: PIP to install needed dependencies into virtualenv
-      pip: "name={{ item }} virtualenv=/home/{{ username }}/.synapse"
-      with_items:
-       - cryptography
-       - pyasn1_modules
-       - characteristic
-       - simplejson
-       - canonicaljson
-       - enum34
-       - ipaddress
-       - lxml
+- name: PIP to upgrade setup tools
+  pip: "name=setuptools virtualenv=/home/{{ username }}/.synapse extra_args='--upgrade'"
 
-    - name: PIP to install synapse from Git Repo into virtualenv
-      pip: "name={{ git_repo }} virtualenv=/home/{{ username }}/.synapse"
+- name: PIP to install needed dependencies into virtualenv
+  pip: "name={{ item }} virtualenv=/home/{{ username }}/.synapse"
+  with_items:
+   - cryptography
+   - pyasn1_modules
+   - characteristic
+   - simplejson
+   - canonicaljson
+   - enum34
+   - ipaddress
+   - lxml
 
-    - name: PIP rollback to ldap3 v1.4 (hotfix)
-      pip: name="ldap3==1.4" virtualenv="/home/{{ username }}/.synapse"
+- name: PIP to install synapse from Git Repo into virtualenv
+  pip: "name={{ git_repo }} virtualenv=/home/{{ username }}/.synapse"
 
-    - name: Generate homeserver.yaml config file
-      shell: ". bin/activate && python -m synapse.app.homeserver --server-name {{ domain }} --config-path homeserver.yaml --generate-config --report-stats=yes"
-      args:
-        chdir: "/home/{{ username }}/.synapse/"
-        creates: "/home/{{ username }}/.synapse/homeserver.yaml"
+- name: PIP rollback to ldap3 v1.4 (hotfix)
+  pip: name="ldap3==1.4" virtualenv="/home/{{ username }}/.synapse"
 
-    - name: Configure if registrations are enabled by default or not
-      lineinfile: "dest=/home/{{ username }}/.synapse/homeserver.yaml"
-      args:
-        regexp: "^enable_registration:"
-        line: "enable_registration: {{ enable_registration }}"
-      notify: "Restart synapse"
+- name: Generate homeserver.yaml config file
+  shell: ". bin/activate && python -m synapse.app.homeserver --server-name {{ domain }} --config-path homeserver.yaml --generate-config --report-stats=yes"
+  args:
+    chdir: "/home/{{ username }}/.synapse/"
+    creates: "/home/{{ username }}/.synapse/homeserver.yaml"
 
-    - name: Configure if captchas are enabled by default or not
-      lineinfile: "dest=/home/{{ username }}/.synapse/homeserver.yaml"
-      args:
-        regexp: "^enable_registration_captcha:"
-        line: "enable_registration_captcha: {{ enable_registration_captcha }}"
-      notify: "Restart synapse"
+- name: Configure if registrations are enabled by default or not
+  lineinfile: "dest=/home/{{ username }}/.synapse/homeserver.yaml"
+  args:
+    regexp: "^enable_registration:"
+    line: "enable_registration: {{ enable_registration }}"
+  notify:
+    - restart synapse
 
-    - name: Configure private-key recaptcha key
-      lineinfile: "dest=/home/{{ username }}/.synapse/homeserver.yaml"
-      args:
-        regexp: "^recaptcha_private_key:"
-        line: "recaptcha_private_key: {{ recaptcha_private_key }}"
-      notify: "Restart synapse"
+- name: Configure if captchas are enabled by default or not
+  lineinfile: "dest=/home/{{ username }}/.synapse/homeserver.yaml"
+  args:
+    regexp: "^enable_registration_captcha:"
+    line: "enable_registration_captcha: {{ enable_registration_captcha }}"
+  notify:
+    - restart synapse
 
-    - name: Configure public-key recaptcha key
-      lineinfile: "dest=/home/{{ username }}/.synapse/homeserver.yaml"
-      args:
-        regexp: "^recaptcha_public_key:"
-        line: "recaptcha_public_key: {{ recaptcha_public_key }}"
-      notify: "Restart synapse"
+- name: Configure private-key recaptcha key
+  lineinfile: "dest=/home/{{ username }}/.synapse/homeserver.yaml"
+  args:
+    regexp: "^recaptcha_private_key:"
+    line: "recaptcha_private_key: {{ recaptcha_private_key }}"
+  notify:
+    - restart synapse
 
-    - name: Configure certificate fullchain location
-      lineinfile: "dest=/home/{{ username }}/.synapse/homeserver.yaml"
-      args:
-        regexp: "^tls_certificate_path:"
-        line: "tls_certificate_path: {{ absolute_path_certificate }}"
-      notify: "Restart synapse"
+- name: Configure public-key recaptcha key
+  lineinfile: "dest=/home/{{ username }}/.synapse/homeserver.yaml"
+  args:
+    regexp: "^recaptcha_public_key:"
+    line: "recaptcha_public_key: {{ recaptcha_public_key }}"
+  notify:
+    - restart synapse
 
-    - name: Configure certificate private key location
-      lineinfile: "dest=/home/{{ username }}/.synapse/homeserver.yaml"
-      args:
-        regexp: "^tls_private_key_path:"
-        line: "tls_private_key_path: {{ absolute_path_key }}"
-      notify: "Restart synapse"
+- name: Configure certificate fullchain location
+  lineinfile: "dest=/home/{{ username }}/.synapse/homeserver.yaml"
+  args:
+    regexp: "^tls_certificate_path:"
+    line: "tls_certificate_path: {{ absolute_path_certificate }}"
+  notify:
+    - restart synapse
 
-    - name: Configure Diffie-Hellman parameters location
-      lineinfile: "dest=/home/{{ username }}/.synapse/homeserver.yaml"
-      args:
-        regexp: "^tls_dh_params_path:"
-        line: "tls_dh_params_path: {{ DH_params_location }}"
-      notify: "Restart synapse"
+- name: Configure certificate private key location
+  lineinfile: "dest=/home/{{ username }}/.synapse/homeserver.yaml"
+  args:
+    regexp: "^tls_private_key_path:"
+    line: "tls_private_key_path: {{ absolute_path_key }}"
+  notify:
+    - restart synapse
 
-    - name: Configure custom turn_uris
-      lineinfile: "dest=/home/{{ username }}/.synapse/homeserver.yaml"
-      args:
-        regexp: "^turn_uris:"
-        line: "turn_uris: [ {{ turn_uris }} ]"
-      when: turn_uris is defined and not install_turnserver|bool == true
-      notify: "Restart synapse"
+- name: Configure Diffie-Hellman parameters location
+  lineinfile: "dest=/home/{{ username }}/.synapse/homeserver.yaml"
+  args:
+    regexp: "^tls_dh_params_path:"
+    line: "tls_dh_params_path: {{ DH_params_location }}"
+  notify:
+    - restart synapse
 
-    - name: Configure custom turn_shared_secret
-      lineinfile: "dest=/home/{{ username }}/.synapse/homeserver.yaml"
-      args:
-        regexp: ".*turn_shared_secret:"
-        line: "turn_shared_secret: {{ turn_shared_secret }}"
-      when: turn_shared_secret is defined
-      notify: "Restart synapse"
+- name: Configure custom turn_uris
+  lineinfile: "dest=/home/{{ username }}/.synapse/homeserver.yaml"
+  args:
+    regexp: "^turn_uris:"
+    line: "turn_uris: [ {{ turn_uris }} ]"
+  when: turn_uris is defined and not install_turnserver|bool == true
+  notify:
+    - restart synapse
 
-    - name: Comment out turn_shared_secret
-      lineinfile: "dest=/home/{{ username }}/.synapse/homeserver.yaml"
-      args:
-        regexp: ".*turn_shared_secret:"
-        line: "#turn_shared_secret:"
-      when: turn_shared_secret is not defined
-      notify: "Restart synapse"
+- name: Configure custom turn_shared_secret
+  lineinfile: "dest=/home/{{ username }}/.synapse/homeserver.yaml"
+  args:
+    regexp: ".*turn_shared_secret:"
+    line: "turn_shared_secret: {{ turn_shared_secret }}"
+  when: turn_shared_secret is defined
+  notify:
+    - restart synapse
 
-    - name: Configure custom turn_username
-      lineinfile: "dest=/home/{{ username }}/.synapse/homeserver.yaml"
-      args:
-        regexp: ".*turn_username:"
-        line: "turn_username: {{ turn_username }}"
-      when: turn_username is defined
-      notify: "Restart synapse"
+- name: Comment out turn_shared_secret
+  lineinfile: "dest=/home/{{ username }}/.synapse/homeserver.yaml"
+  args:
+    regexp: ".*turn_shared_secret:"
+    line: "#turn_shared_secret:"
+  when: turn_shared_secret is not defined
+  notify:
+    - restart synapse
 
-    - name: Configure custom turn_password
-      lineinfile: "dest=/home/{{ username }}/.synapse/homeserver.yaml"
-      args:
-        regexp: ".*turn_password:"
-        line: "turn_password: {{ turn_password }}"
-      when: turn_password is defined
-      notify: "Restart synapse"
+- name: Configure custom turn_username
+  lineinfile: "dest=/home/{{ username }}/.synapse/homeserver.yaml"
+  args:
+    regexp: ".*turn_username:"
+    line: "turn_username: {{ turn_username }}"
+  when: turn_username is defined
+  notify:
+    - restart synapse
 
-    - name: Configure turn_user_lifetime
-      lineinfile: "dest=/home/{{ username }}/.synapse/homeserver.yaml"
-      args:
-        line: "turn_user_lifetime: 86400000"
-      when: install_turnserver|bool == true
-      notify: "Restart synapse"
+- name: Configure custom turn_password
+  lineinfile: "dest=/home/{{ username }}/.synapse/homeserver.yaml"
+  args:
+    regexp: ".*turn_password:"
+    line: "turn_password: {{ turn_password }}"
+  when: turn_password is defined
+  notify:
+    - restart synapse
 
-      # VERY UGLY!!!
-    - name: Enable X-Forwarded-For Header for proxied listener
-      shell: "awk '/x_forwarded/{c++;if(c==2){sub(\"x_forwarded: false\",\"x_forwarded: true\");c=0}}1' /home/{{ username }}/.synapse/homeserver.yaml > /tmp/homeserver.yaml && mv /tmp/homeserver.yaml /home/{{ username }}/.synapse/homeserver.yaml"
-      tags: xforward
+- name: Configure turn_user_lifetime
+  lineinfile: "dest=/home/{{ username }}/.synapse/homeserver.yaml"
+  args:
+    line: "turn_user_lifetime: 86400000"
+  when: install_turnserver|bool == true
+  notify:
+    - restart synapse
 
-    - name: E-Mail Configuration for synapse
-      blockinfile:
-        path: /home/{{ username }}/.synapse/homeserver.yaml
-        marker: "#<-- {mark} ANSIBLE MANAGED EMAIL BLOCK -->"
-        block: |
-          email:
-             enable_notifs: true
-             smtp_host: "{{ mail_host }}"
-             smtp_port: {{ mail_port }}
-             smtp_user: "{{ mail_user }}"
-             smtp_pass: "{{ mail_pass }}"
-             require_transport_security: {{ mail_tls_synapse }}
-             notif_from: "Your Friendly %(app)s Home Server {{ mail_from }}"
-             app_name: Matrix
-             template_dir: /home/{{ username }}/.synapse/res/templates
-             notif_template_html: notif_mail.html
-             notif_template_text: notif_mail.txt
-             notif_for_new_users: True
-             riot_base_url: "https://{{ riot_hostname }}{{ riot_app_path}}"
-      when: mail|bool == true
-      notify: "Restart synapse"
-      
-    - name: Creating mail template folders
-      file:
-        path: /home/{{ username }}/.synapse/res/templates
-        state: directory
-        mode: 0755
-      when: mail|bool == true
+  # VERY UGLY!!!
+- name: Enable X-Forwarded-For Header for proxied listener
+  shell: "awk '/x_forwarded/{c++;if(c==2){sub(\"x_forwarded: false\",\"x_forwarded: true\");c=0}}1' /home/{{ username }}/.synapse/homeserver.yaml > /tmp/homeserver.yaml && mv /tmp/homeserver.yaml /home/{{ username }}/.synapse/homeserver.yaml"
+  tags: xforward
 
-    - name: Downloading Mail templates
-      get_url:
-        url: "{{ item.src }}"
-        dest: "{{ item.dst }}"
-      with_items:
-        - { src: 'https://raw.githubusercontent.com/matrix-org/synapse/master/res/templates/mail-Vector.css', dst: '/home/{{ username }}/.synapse/res/templates/mail-Vector.css' }
-        - { src: 'https://raw.githubusercontent.com/matrix-org/synapse/master/res/templates/mail.css', dst: '/home/{{ username }}/.synapse/res/templates/mail.css' }
-        - { src: 'https://raw.githubusercontent.com/matrix-org/synapse/master/res/templates/notif.html', dst: '/home/{{ username }}/.synapse/res/templates/notif.html' }
-        - { src: 'https://raw.githubusercontent.com/matrix-org/synapse/master/res/templates/notif.txt', dst: '/home/{{ username }}/.synapse/res/templates/notif.txt' }
-        - { src: 'https://raw.githubusercontent.com/matrix-org/synapse/master/res/templates/notif_mail.html', dst: '/home/{{ username }}/.synapse/res/templates/notif_mail.html' }
-        - { src: 'https://raw.githubusercontent.com/matrix-org/synapse/master/res/templates/notif_mail.txt', dst: '/home/{{ username }}/.synapse/res/templates/notif_mail.txt' }
-        - { src: 'https://raw.githubusercontent.com/matrix-org/synapse/master/res/templates/room.html', dst: '/home/{{ username }}/.synapse/res/templates/room.html' }
-        - { src: 'https://raw.githubusercontent.com/matrix-org/synapse/master/res/templates/room.txt', dst: '/home/{{ username }}/.synapse/res/templates/room.txt' }
-      when: mail|bool == true
+- name: E-Mail Configuration for synapse
+  blockinfile:
+    path: /home/{{ username }}/.synapse/homeserver.yaml
+    marker: "#<-- {mark} ANSIBLE MANAGED EMAIL BLOCK -->"
+    block: |
+      email:
+         enable_notifs: true
+         smtp_host: "{{ mail_host }}"
+         smtp_port: {{ mail_port }}
+         smtp_user: "{{ mail_user }}"
+         smtp_pass: "{{ mail_pass }}"
+         require_transport_security: {{ mail_tls_synapse }}
+         notif_from: "Your Friendly %(app)s Home Server {{ mail_from }}"
+         app_name: Matrix
+         template_dir: /home/{{ username }}/.synapse/res/templates
+         notif_template_html: notif_mail.html
+         notif_template_text: notif_mail.txt
+         notif_for_new_users: True
+         riot_base_url: "https://{{ riot_hostname }}{{ riot_app_path}}"
+  when: mail|bool == true
+  notify:
+    - restart synapse
 
-    - name: Set permissions
-      file:
-        path: '/home/{{ username }}/.synapse'
-        state: directory
-        owner: "{{ username }}"
-        group: "{{ username }}"
-        recurse: yes
+- name: Creating mail template folders
+  file:
+    path: /home/{{ username }}/.synapse/res/templates
+    state: directory
+    mode: 0755
+  when: mail|bool == true
 
-    - name: Install synapse systemd conf
-      template:
-          src: etc/systemd/system/synapse.service.j2
-          dest: /etc/systemd/system/synapse.service
-          mode: 0644
-      notify:
-          - "Reload systemctl config"
-          - "Restart synapse"
+- name: Downloading Mail templates
+  get_url:
+    url: "{{ item.src }}"
+    dest: "{{ item.dst }}"
+  with_items:
+    - { src: 'https://raw.githubusercontent.com/matrix-org/synapse/master/res/templates/mail-Vector.css', dst: '/home/{{ username }}/.synapse/res/templates/mail-Vector.css' }
+    - { src: 'https://raw.githubusercontent.com/matrix-org/synapse/master/res/templates/mail.css', dst: '/home/{{ username }}/.synapse/res/templates/mail.css' }
+    - { src: 'https://raw.githubusercontent.com/matrix-org/synapse/master/res/templates/notif.html', dst: '/home/{{ username }}/.synapse/res/templates/notif.html' }
+    - { src: 'https://raw.githubusercontent.com/matrix-org/synapse/master/res/templates/notif.txt', dst: '/home/{{ username }}/.synapse/res/templates/notif.txt' }
+    - { src: 'https://raw.githubusercontent.com/matrix-org/synapse/master/res/templates/notif_mail.html', dst: '/home/{{ username }}/.synapse/res/templates/notif_mail.html' }
+    - { src: 'https://raw.githubusercontent.com/matrix-org/synapse/master/res/templates/notif_mail.txt', dst: '/home/{{ username }}/.synapse/res/templates/notif_mail.txt' }
+    - { src: 'https://raw.githubusercontent.com/matrix-org/synapse/master/res/templates/room.html', dst: '/home/{{ username }}/.synapse/res/templates/room.html' }
+    - { src: 'https://raw.githubusercontent.com/matrix-org/synapse/master/res/templates/room.txt', dst: '/home/{{ username }}/.synapse/res/templates/room.txt' }
+  when: mail|bool == true
 
-    - name: Enabling synapse service at boot
-      command: systemctl enable synapse
+- name: Set permissions
+  file:
+    path: '/home/{{ username }}/.synapse'
+    state: directory
+    owner: "{{ username }}"
+    group: "{{ username }}"
+    recurse: yes
+
+- name: Install synapse systemd conf
+  template:
+      src: etc/systemd/system/synapse.service.j2
+      dest: /etc/systemd/system/synapse.service
+      mode: 0644
+  notify:
+      - reload systemctl daemon
+      - restart synapse

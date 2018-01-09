@@ -1,28 +1,31 @@
 ---
-    - name: Download mxisd
-      shell: "wget -O /root/mxisd.deb $(curl -s https://api.github.com/repos/kamax-io/mxisd/releases/latest | jq -r \".assets[].browser_download_url\")"
 
-    - name: Install mxisd
-      apt:
-        deb: /root/mxisd.deb
- 
-    - name: Install mxisd conf
-      template:
-        src:  etc/mxisd/mxisd.yaml.j2
-        dest: /etc/mxisd/mxisd.yaml
-        mode: 0644
-      notify: "Restart mxisd daemon"
+- name: Download mxisd
+  shell: "wget -O /root/mxisd.deb $(curl -s https://api.github.com/repos/kamax-io/mxisd/releases/latest | jq -r \".assets[].browser_download_url\")"
 
-    - name: Enabling mxisd service at boot
-      command: systemctl enable mxisd
+- name: Install mxisd
+  apt:
+    deb: /root/mxisd.deb
  
-    - name: Configure synapse to use mxisd
-      blockinfile:
-        path: /home/{{ username }}/.synapse/homeserver.yaml
-        marker: "#<-- {mark} ANSIBLE MANAGED MXISD BLOCK -->"
-        block: |
-          password_providers:
-              - module: "rest_auth_provider.RestAuthProvider"
-                config:
-                  endpoint: "http://127.0.0.1:8090"
-      notify: "Restart synapse"
+- name: Install mxisd conf
+  template:
+    src:  etc/mxisd/mxisd.yaml.j2
+    dest: /etc/mxisd/mxisd.yaml
+    mode: 0644
+  notify: 
+    - restart mxisd
+
+- name: Enabling mxisd service at boot
+  command: systemctl enable mxisd
+
+- name: Configure synapse to use mxisd
+  blockinfile:
+    path: /home/{{ username }}/.synapse/homeserver.yaml
+    marker: "#<-- {mark} ANSIBLE MANAGED MXISD BLOCK -->"
+    block: |
+      password_providers:
+          - module: "rest_auth_provider.RestAuthProvider"
+            config:
+              endpoint: "http://127.0.0.1:8090"
+  notify:
+    - restart synapse

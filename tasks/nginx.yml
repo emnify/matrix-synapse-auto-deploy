@@ -1,23 +1,26 @@
 ---
 
-    - name: Installing packages needed for the reverse proxy
-      action: apt pkg=nginx state=installed
+- name: Installing packages needed for the reverse proxy
+  action: apt pkg=nginx state=installed
 
-    - name: Install nginx conf
-      template:
-        src:  etc/nginx/sites-available/synapse.j2
-        dest: /etc/nginx/sites-available/synapse
-      notify: "Reload nginx"
+- name: Install nginx conf
+  template:
+    src:  etc/nginx/sites-available/synapse.j2
+    dest: /etc/nginx/sites-available/synapse
+  notify:
+   - restart nginx
 
-    - name: Enable the vhost (symlink)
-      file:
-        src: /etc/nginx/sites-available/synapse
-        dest: /etc/nginx/sites-enabled/synapse
-        state: link
-      notify: "Reload nginx"
+- name: Enable the vhost (symlink)
+  file:
+    src: /etc/nginx/sites-available/synapse
+    dest: /etc/nginx/sites-enabled/synapse
+    state: link
+  notify: 
+    - restart nginx
 
-    - name: Remove default vhost symlink
-      file:
-        src: /etc/nginx/sites-enabled/default
-        state: absent
-      notify: "Reload nginx"
+- name: Remove default vhost symlink
+  file:
+    src: /etc/nginx/sites-enabled/default
+    state: absent
+  notify: 
+    - restart nginx
