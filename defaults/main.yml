@@ -18,7 +18,7 @@ letsencrypt: false
 install_turnserver: yes
 # Define this variables if you want to use a custom turn server AND install_turnserver is set to false.
 # Recommended if you do not let the playbook install the cotrun turnserver.
-# turn_uris: \"turn:{{ hostname }}:3478?transport=udp\", \"turn:{{ hostname }}:3478?transport=tcp\"
+# turn_uris: '"turn:{{ hostname }}:3478?transport=udp\", \"turn:{{ hostname }}:3478?transport=tcp"'
 # turn_shared_secret: 
 # turn_username:
 # turn_password:
@@ -34,19 +34,26 @@ ldap_tls: true
 ldap_port: 636
 ldap_filter: (&(objectclass=user)(mail=*))
 
+<<<<<<< HEAD
 # Set, if you want the server to send emails
+=======
+# Configure e-mail Settings
+>>>>>>> 4ee44af35ab6c18b4c14fb299d2f7f62688fdcaf
 mail: yes
 mail_from: matrix@{{ domain }}
 mail_name: Identity Server
 mail_host:
 mail_port: 587
-# 0 = no STARTLS, 1 = try, 2 = force
+# For mxisd: 0 = no STARTLS, 1 = try, 2 = force
 mail_tls: 1
+# For synapse: True = TLS / False = No TLS (StartTLS not possible)
+mail_tls_synapse: True
 mail_user:
 mail_pass:
 
 # riot webclient
-riot_hostname: chat.domain.de # should be on another domain as the matrix server!
+riot_hostname: riot.im # should be on another domain as the matrix server!
+riot_app_path: /app
 riot_path_certificate:
 riot_path_key:
 riot_path: /var/www/riot

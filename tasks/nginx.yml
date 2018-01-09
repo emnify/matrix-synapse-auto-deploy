@@ -15,3 +15,9 @@
         dest: /etc/nginx/sites-enabled/synapse
         state: link
       notify: "Reload nginx"
+
+    - name: Remove default vhost symlink
+      file:
+        src: /etc/nginx/sites-enabled/default
+        state: absent
+      notify: "Reload nginx"

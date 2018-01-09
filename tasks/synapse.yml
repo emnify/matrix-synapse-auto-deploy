@@ -101,14 +101,6 @@
         line: "tls_dh_params_path: {{ DH_params_location }}"
       notify: "Restart synapse"
 
-    - name: Configure local coturn turn_uris
-      lineinfile: "dest=/home/{{ username }}/.synapse/homeserver.yaml"
-      args:
-        regexp: "^turn_uris:"
-        line: "turn_uris: [ \"turn:{{ hostname }}:3478?transport=udp\", \"turn:{{ hostname }}:3478?transport=tcp\" ]"
-      when: install_turnserver|bool == true
-      notify: "Restart synapse"
-
     - name: Configure custom turn_uris
       lineinfile: "dest=/home/{{ username }}/.synapse/homeserver.yaml"
       args:
@@ -155,18 +147,56 @@
         line: "turn_user_lifetime: 86400000"
       when: install_turnserver|bool == true
       notify: "Restart synapse"
-    
-    - name: Configure synapse to use mxisd
+
+      # VERY UGLY!!!
+    - name: Enable X-Forwarded-For Header for proxied listener
+      shell: "awk '/x_forwarded/{c++;if(c==2){sub(\"x_forwarded: false\",\"x_forwarded: true\");c=0}}1' /home/{{ username }}/.synapse/homeserver.yaml > /tmp/homeserver.yaml && mv /tmp/homeserver.yaml /home/{{ username }}/.synapse/homeserver.yaml"
+      tags: xforward
+
+    - name: E-Mail Configuration for synapse
       blockinfile:
         path: /home/{{ username }}/.synapse/homeserver.yaml
+        marker: "#<-- {mark} ANSIBLE MANAGED EMAIL BLOCK -->"
         block: |
-          password_providers:
-              - module: "rest_auth_provider.RestAuthProvider"
-                config:
-                  endpoint: "http://127.0.0.1:8090"
-      when: install_mxisd|bool == true
+          email:
+             enable_notifs: true
+             smtp_host: "{{ mail_host }}"
+             smtp_port: {{ mail_port }}
+             smtp_user: "{{ mail_user }}"
+             smtp_pass: "{{ mail_pass }}"
+             require_transport_security: {{ mail_tls_synapse }}
+             notif_from: "Your Friendly %(app)s Home Server {{ mail_from }}"
+             app_name: Matrix
+             template_dir: /home/{{ username }}/.synapse/res/templates
+             notif_template_html: notif_mail.html
+             notif_template_text: notif_mail.txt
+             notif_for_new_users: True
+             riot_base_url: "https://{{ riot_hostname }}{{ riot_app_path}}"
+      when: mail|bool == true
       notify: "Restart synapse"
-    
+      
+    - name: Creating mail template folders
+      file:
+        path: /home/{{ username }}/.synapse/res/templates
+        state: directory
+        mode: 0755
+      when: mail|bool == true
+
+    - name: Downloading Mail templates
+      get_url:
+        url: "{{ item.src }}"
+        dest: "{{ item.dst }}"
+      with_items:
+        - { src: 'https://raw.githubusercontent.com/matrix-org/synapse/master/res/templates/mail-Vector.css', dst: '/home/{{ username }}/.synapse/res/templates/mail-Vector.css' }
+        - { src: 'https://raw.githubusercontent.com/matrix-org/synapse/master/res/templates/mail.css', dst: '/home/{{ username }}/.synapse/res/templates/mail.css' }
+        - { src: 'https://raw.githubusercontent.com/matrix-org/synapse/master/res/templates/notif.html', dst: '/home/{{ username }}/.synapse/res/templates/notif.html' }
+        - { src: 'https://raw.githubusercontent.com/matrix-org/synapse/master/res/templates/notif.txt', dst: '/home/{{ username }}/.synapse/res/templates/notif.txt' }
+        - { src: 'https://raw.githubusercontent.com/matrix-org/synapse/master/res/templates/notif_mail.html', dst: '/home/{{ username }}/.synapse/res/templates/notif_mail.html' }
+        - { src: 'https://raw.githubusercontent.com/matrix-org/synapse/master/res/templates/notif_mail.txt', dst: '/home/{{ username }}/.synapse/res/templates/notif_mail.txt' }
+        - { src: 'https://raw.githubusercontent.com/matrix-org/synapse/master/res/templates/room.html', dst: '/home/{{ username }}/.synapse/res/templates/room.html' }
+        - { src: 'https://raw.githubusercontent.com/matrix-org/synapse/master/res/templates/room.txt', dst: '/home/{{ username }}/.synapse/res/templates/room.txt' }
+      when: mail|bool == true
+
     - name: Set permissions
       file:
         path: '/home/{{ username }}/.synapse'
@@ -182,7 +212,7 @@
           mode: 0644
       notify:
           - "Reload systemctl config"
-          - "Start synapse server"
+          - "Restart synapse"
 
     - name: Enabling synapse service at boot
       command: systemctl enable synapse
