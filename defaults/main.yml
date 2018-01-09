@@ -19,7 +19,7 @@ install_turnserver: yes
 # Define this variables if you want to use a custom turn server AND install_turnserver is set to false.
 # Recommended if you do not let the playbook install the cotrun turnserver.
 # turn_uris: '"turn:{{ hostname }}:3478?transport=udp\", \"turn:{{ hostname }}:3478?transport=tcp"'
-# turn_shared_secret: 
+turn_shared_secret: CHANGEME
 # turn_username:
 # turn_password:
 
@@ -35,7 +35,7 @@ ldap_port: 636
 ldap_filter: (&(objectclass=user)(mail=*))
 
 # Configure e-mail Settings
-mail: yes
+mail: no
 mail_from: matrix@{{ domain }}
 mail_name: Identity Server
 mail_host:
