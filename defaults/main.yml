@@ -33,6 +33,8 @@ base_dn:
 ldap_tls: true
 ldap_port: 636
 ldap_filter: (&(objectclass=user)(mail=*))
+
+# Set, if you want the server to send emails
 mail: yes
 mail_from: matrix@{{ domain }}
 mail_name: Identity Server
