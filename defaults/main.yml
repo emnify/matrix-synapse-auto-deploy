@@ -34,11 +34,7 @@ ldap_tls: true
 ldap_port: 636
 ldap_filter: (&(objectclass=user)(mail=*))
 
-<<<<<<< HEAD
-# Set, if you want the server to send emails
-=======
 # Configure e-mail Settings
->>>>>>> 4ee44af35ab6c18b4c14fb299d2f7f62688fdcaf
 mail: yes
 mail_from: matrix@{{ domain }}
 mail_name: Identity Server
