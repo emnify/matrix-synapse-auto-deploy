@@ -9,13 +9,29 @@
    - libevent-dev
    - libsqlite3-dev
 
-- name: Clone coturn from github
-  git: repo=https://github.com/coturn/coturn.git dest=/usr/src/coturn
+- name: Create coturn install dir
+  file:
+    path: "{{ turn_path }}"
+    state: directory
+    owner: "root"
+    group: "root"
+    mode: 0755
+
+- name: Download and extract coturn
+  unarchive:
+    src: "{{ turn_tarball_url }}"
+    dest: "{{ turn_path }}"
+    owner: root
+    group: root
+    copy: no
+    creates: "{{ turn_path }}/{{ turn_archive }}"
+  register: turn_download
 
 - name: Compile and install coturn
   command: "./configure && make && make install"
   args:
-    chdir: /usr/src/coturn
+    chdir: "{{ turn_path }}/{{ turn_archive }}"
+  when: turn_download.changed
 
 - name: Install turnserver config
   template:

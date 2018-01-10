@@ -16,6 +16,10 @@ DH_params_location: /etc/ssl/diffihellman.pem
 letsencrypt: false
 
 install_turnserver: yes
+turn_version: 4.5.0.7
+turn_archive: coturn-{{ turn_version }}
+turn_tarball_url: https://github.com/coturn/coturn/archive/{{ turn_version }}.tar.gz
+turn_path: /usr/src
 # Define this variables if you want to use a custom turn server AND install_turnserver is set to false.
 # Recommended if you do not let the playbook install the cotrun turnserver.
 # turn_uris: '"turn:{{ hostname }}:3478?transport=udp\", \"turn:{{ hostname }}:3478?transport=tcp"'
