@@ -20,7 +20,7 @@
 
 - name: Remove default vhost symlink
   file:
-    src: /etc/nginx/sites-enabled/default
+    path: /etc/nginx/sites-enabled/default
     state: absent
   notify: 
     - restart nginx

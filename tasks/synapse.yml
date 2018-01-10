@@ -1,6 +1,6 @@
 ---
 
-- name: Install packages needed by synapse
+- name: Install packages required by synapse
   action: "apt pkg={{item}} state=installed"
   with_items:
    - build-essential
@@ -165,7 +165,7 @@
   # VERY UGLY!!!
 - name: Enable X-Forwarded-For Header for proxied listener
   shell: "awk '/x_forwarded/{c++;if(c==2){sub(\"x_forwarded: false\",\"x_forwarded: true\");c=0}}1' /home/{{ username }}/.synapse/homeserver.yaml > /tmp/homeserver.yaml && mv /tmp/homeserver.yaml /home/{{ username }}/.synapse/homeserver.yaml"
-  tags: xforward
+  changed_when: false
 
 - name: E-Mail Configuration for synapse
   blockinfile:

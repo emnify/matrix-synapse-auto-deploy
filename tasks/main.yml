@@ -2,8 +2,9 @@
 
 - name: Update apt cache
   apt: update_cache=yes
+  changed_when: false
 
-- name: install basic packages that we want to be on all nodes
+- name: install basic packages
   apt: "pkg={{item}} state=installed"
   with_items:
     - wget

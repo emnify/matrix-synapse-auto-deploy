@@ -1,25 +1,25 @@
 ---
-
-- name: Download riot.im
-  shell: "wget -O /root/riot.im.tar.gz $(curl -s https://api.github.com/repos/vector-im/riot-web/releases/latest | jq -r \".assets[].browser_download_url\" | sed -n 1p)"
-
-- name: Create riot.im folder
+- name: Create riot.im install dir
   file:
     path: "{{ riot_path }}"
     state: directory
+    owner: "root"
+    group: "root"
     mode: 0755
 
-- name: Extract riot.im
+- name: Download and extract riot.im
   unarchive:
-    src: "/root/riot.im.tar.gz"
+    src: "{{ riot_im_tarball_url }}"
     dest: "{{ riot_path }}"
-    remote_src: yes
-    extra_opts: [--strip-components=1]
+    owner: root
+    group: root
+    copy: no
+    creates: "{{ riot_path }}/{{ riot_im_archive }}"
 
 - name: riot.im configuration
   template:
     src: riot_config.json.j2
-    dest: "{{ riot_path }}/config.json"
+    dest: "{{ riot_path }}/{{ riot_im_archive }}/config.json"
 
 - name: Install nginx conf for riot.im
   template:
