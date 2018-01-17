@@ -3,6 +3,7 @@
 
   vars:
     enable_registration: false
+    DH_params_size: 1024
 
   roles:
     - role_under_test
