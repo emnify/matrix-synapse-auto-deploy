@@ -1,6 +1,9 @@
 ---
 sudo: required
 
+notifications:
+  webhooks: https://galaxy.ansible.com/api/v1/notifications/
+
 env:
   matrix:
     - distro: ubuntu1604
