@@ -50,7 +50,7 @@
     - restart turn server
 
 - name: Configure local coturn turn_uris
-  lineinfile: "dest=/home/{{ username }}/.synapse/homeserver.yaml"
+  lineinfile: "dest=/home/{{ username }}/.synapse/{{synapse_version}}/homeserver.yaml"
   args:
     regexp: "^turn_uris:"
     line: "turn_uris: [ \"turn:{{ hostname }}:3478?transport=udp\", \"turn:{{ hostname }}:3478?transport=tcp\" ]"

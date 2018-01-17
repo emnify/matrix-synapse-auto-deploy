@@ -20,7 +20,7 @@
 
 - name: Configure synapse to use mxisd
   blockinfile:
-    path: /home/{{ username }}/.synapse/homeserver.yaml
+    path: /home/{{ username }}/.synapse/{{synapse_version}}/homeserver.yaml
     marker: "#<-- {mark} ANSIBLE MANAGED MXISD BLOCK -->"
     block: |
       password_providers:

@@ -1,6 +1,8 @@
 ---
 username: synapse # under wich user the server should be installed and run
-git_repo: https://github.com/matrix-org/synapse/tarball/master  # URL to Git Repo you want to install
+synapse_version: v0.26.0 # version number or 'master'
+git_repo: https://github.com/matrix-org/synapse/archive/{{synapse_version}}.tar.gz
+#git_repo: https://github.com/matrix-org/synapse/tarball/master  # URL to Git Repo you want to install
 hostname: matrix.domain.com # FQDN to be used
 domain: domain.com # Domain Part of the User MXIDs
 enable_registration: true # this will open registration by default, take care if you run a public server!
@@ -9,10 +11,11 @@ recaptcha_private_key: YOURPRIVATEKEYHERE
 recaptcha_public_key: YOURPUBLICKEYHERE
 make_migration: true     # Migrate the database from sqlite to postgres
 database_secret: YOURDATABASESECRETHERE
-absolute_path_certificate: /home/{{ username }}/.synapse/{{ hostname }}.tls.crt
-absolute_path_key: /home/{{ username }}/.synapse/{{ hostname }}.tls.key
+absolute_path_certificate: /home/{{ username }}/.synapse/{{synapse_version}}/{{ hostname }}.tls.crt
+absolute_path_key: /home/{{ username }}/.synapse/{{synapse_version}}/{{ hostname }}.tls.key
 generate_DH_params: true   # Generate DH parameters
 DH_params_location: /etc/ssl/diffihellman.pem
+DH_params_size: 4096
 letsencrypt: false
 
 install_turnserver: yes
