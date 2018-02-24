@@ -15,11 +15,13 @@
     group: root
     copy: no
     creates: "{{ riot_path }}/{{ riot_im_archive }}"
+  when: not ansible_check_mode
 
 - name: riot.im configuration
   template:
     src: riot_config.json.j2
     dest: "{{ riot_path }}/{{ riot_im_archive }}/config.json"
+  
 
 - name: Install nginx conf for riot.im
   template:
@@ -35,3 +37,4 @@
     state: link
   notify:
     - restart nginx
+  when: not ansible_check_mode

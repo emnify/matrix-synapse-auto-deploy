@@ -17,6 +17,7 @@
   postgresql_user: "name={{ username }} password={{ database_secret }}"
   become: true
   become_user: postgres
+  when: not ansible_check_mode
 
 - name: Creating the database
   postgresql_db:
@@ -28,6 +29,7 @@
     owner: synapse
   become: true
   become_user: postgres
+  when: not ansible_check_mode
 
 - name: Stop synapse
   service: name=synapse.service state=stopped
@@ -39,6 +41,7 @@
     regexp: '(.*)name: "sqlite3"'
     line: '\1name: "psycopg2"'
     backrefs: yes
+  when: not ansible_check_mode
 
 - name: Add the args to connect to the db
   lineinfile:
@@ -46,6 +49,7 @@
     regexp: '(.*)database: "(.*)homeserver.db"'
     line: '\1user: "{{ username }}"\n\1password: "{{ database_secret }}"\n\1database: "homeserver"\n\1host: "localhost"\n\1cp_min: 5\n\1cp_max: 10'
     backrefs: yes
+  when: not ansible_check_mode
 
 - name: Migrate the database
   command: "/home/{{username}}/.synapse/{{synapse_version}}/bin/synapse_port_db --sqlite-database homeserver.db --postgres-config homeserver.yaml"

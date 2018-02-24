@@ -10,17 +10,20 @@
     - wget
     - git
 
-- include: openssl.yml
+- import_tasks: openssl.yml
   when: generate_DH_params
 
-- include: synapse.yml
+- import_tasks: synapse.yml
   tags: synapse
-- include: coturn.yml
+- import_tasks: coturn.yml
   when: install_turnserver|bool == true
   tags: turnserver
-- include: nginx.yml
-- include: postgres.yml
-- include: mxisd.yml
+- import_tasks: nginx.yml
+  when: install_reverseproxy|bool == true
+- import_tasks: postgres.yml
+  when: install_postgres|bool == true
+  tags: postgres
+- import_tasks: mxisd.yml
   when: install_mxisd|bool == true
-- include: riot.im.yml
+- import_tasks: riot.im.yml
   tags: riot

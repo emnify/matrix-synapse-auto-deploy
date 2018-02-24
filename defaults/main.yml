@@ -11,11 +11,15 @@ recaptcha_private_key: YOURPRIVATEKEYHERE
 recaptcha_public_key: YOURPUBLICKEYHERE
 make_migration: true     # Migrate the database from sqlite to postgres
 database_secret: YOURDATABASESECRETHERE
+max_upload_size: 10M # Max size for uploads. Don't forget to configure your reverse proxy!
 absolute_path_certificate: /home/{{ username }}/.synapse/{{synapse_version}}/{{ hostname }}.tls.crt
 absolute_path_key: /home/{{ username }}/.synapse/{{synapse_version}}/{{ hostname }}.tls.key
 generate_DH_params: true   # Generate DH parameters
 DH_params_location: /etc/ssl/diffihellman.pem
 DH_params_size: 4096
+install_postgres: true
+install_nginx_package: true
+install_reverseproxy: true
 letsencrypt: false
 
 install_turnserver: yes

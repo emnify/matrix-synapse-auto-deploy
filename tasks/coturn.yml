@@ -54,6 +54,6 @@
   args:
     regexp: "^turn_uris:"
     line: "turn_uris: [ \"turn:{{ hostname }}:3478?transport=udp\", \"turn:{{ hostname }}:3478?transport=tcp\" ]"
-  when: install_turnserver|bool == true
+  when: install_turnserver|bool == true and not ansible_check_mode
   notify:
     - restart synapse

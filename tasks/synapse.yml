@@ -60,6 +60,7 @@
     line: "enable_registration: {{ enable_registration }}"
   notify:
     - restart synapse
+  when: not ansible_check_mode
 
 - name: Configure if captchas are enabled by default or not
   lineinfile: "dest=/home/{{ username }}/.synapse/{{synapse_version}}/homeserver.yaml"
@@ -68,6 +69,7 @@
     line: "enable_registration_captcha: {{ enable_registration_captcha }}"
   notify:
     - restart synapse
+  when: not ansible_check_mode
 
 - name: Configure private-key recaptcha key
   lineinfile: "dest=/home/{{ username }}/.synapse/{{synapse_version}}/homeserver.yaml"
@@ -76,6 +78,7 @@
     line: "recaptcha_private_key: {{ recaptcha_private_key }}"
   notify:
     - restart synapse
+  when: not ansible_check_mode
 
 - name: Configure public-key recaptcha key
   lineinfile: "dest=/home/{{ username }}/.synapse/{{synapse_version}}/homeserver.yaml"
@@ -84,6 +87,7 @@
     line: "recaptcha_public_key: {{ recaptcha_public_key }}"
   notify:
     - restart synapse
+  when: not ansible_check_mode
 
 - name: Configure certificate fullchain location
   lineinfile: "dest=/home/{{ username }}/.synapse/{{synapse_version}}/homeserver.yaml"
@@ -92,6 +96,7 @@
     line: "tls_certificate_path: {{ absolute_path_certificate }}"
   notify:
     - restart synapse
+  when: not ansible_check_mode
 
 - name: Configure certificate private key location
   lineinfile: "dest=/home/{{ username }}/.synapse/{{synapse_version}}/homeserver.yaml"
@@ -100,6 +105,7 @@
     line: "tls_private_key_path: {{ absolute_path_key }}"
   notify:
     - restart synapse
+  when: not ansible_check_mode
 
 - name: Configure Diffie-Hellman parameters location
   lineinfile: "dest=/home/{{ username }}/.synapse/{{synapse_version}}/homeserver.yaml"
@@ -108,13 +114,14 @@
     line: "tls_dh_params_path: {{ DH_params_location }}"
   notify:
     - restart synapse
+  when: not ansible_check_mode
 
 - name: Configure custom turn_uris
   lineinfile: "dest=/home/{{ username }}/.synapse/{{synapse_version}}/homeserver.yaml"
   args:
     regexp: "^turn_uris:"
     line: "turn_uris: [ {{ turn_uris }} ]"
-  when: turn_uris is defined and not install_turnserver|bool == true
+  when: turn_uris is defined and not install_turnserver|bool == true and not ansible_check_mode
   notify:
     - restart synapse
 
@@ -123,7 +130,7 @@
   args:
     regexp: ".*turn_shared_secret:"
     line: "turn_shared_secret: {{ turn_shared_secret }}"
-  when: turn_shared_secret is defined
+  when: turn_shared_secret is defined and not ansible_check_mode
   notify:
     - restart synapse
 
@@ -132,7 +139,7 @@
   args:
     regexp: ".*turn_shared_secret:"
     line: "#turn_shared_secret:"
-  when: turn_shared_secret is not defined
+  when: turn_shared_secret is not defined and not ansible_check_mode
   notify:
     - restart synapse
 
@@ -141,7 +148,7 @@
   args:
     regexp: ".*turn_username:"
     line: "turn_username: {{ turn_username }}"
-  when: turn_username is defined
+  when: turn_username is defined and not ansible_check_mode
   notify:
     - restart synapse
 
@@ -150,15 +157,16 @@
   args:
     regexp: ".*turn_password:"
     line: "turn_password: {{ turn_password }}"
-  when: turn_password is defined
+  when: turn_password is defined and not ansible_check_mode
   notify:
     - restart synapse
 
 - name: Configure turn_user_lifetime
   lineinfile: "dest=/home/{{ username }}/.synapse/{{synapse_version}}/homeserver.yaml"
   args:
+    regexp: ".*turn_user_lifetime:"
     line: "turn_user_lifetime: 86400000"
-  when: install_turnserver|bool == true
+  when: install_turnserver|bool == true and not ansible_check_mode
   notify:
     - restart synapse
 
@@ -166,12 +174,32 @@
 - name: Enable X-Forwarded-For Header for proxied listener
   shell: "awk '/x_forwarded/{c++;if(c==2){sub(\"x_forwarded: false\",\"x_forwarded: true\");c=0}}1' /home/{{ username }}/.synapse/{{synapse_version}}/homeserver.yaml > /tmp/homeserver.yaml && mv /tmp/homeserver.yaml /home/{{ username }}/.synapse/{{synapse_version}}/homeserver.yaml"
   changed_when: false
+  when: not ansible_check_mode
 
-- name: Configure public_baseurl
+- name: Configure public_baseurl without reverse proxy
   lineinfile: "dest=/home/{{ username }}/.synapse/{{synapse_version}}/homeserver.yaml"
   args:
     regexp: ".*public_baseurl:"
     line: "public_baseurl: https://{{ hostname }}:8448/"
+  notify:
+    - restart synapse
+  when: install_reverseproxy|bool == false and not ansible_check_mode
+
+- name: Configure public_baseurl for use in a reverse proxy
+  lineinfile: "dest=/home/{{ username }}/.synapse/{{synapse_version}}/homeserver.yaml"
+  args:
+    regexp: ".*public_baseurl:"
+    line: "public_baseurl: https://{{ hostname }}/"
+  notify:
+    - restart synapse
+  when: install_reverseproxy|bool == true and not ansible_check_mode
+
+- name: Configure max upload size
+  lineinfile: "dest=/home/{{ username }}/.synapse/{{synapse_version}}/homeserver.yaml"
+  args:
+    regexp: ".*max_upload_size:"
+    line: "max_upload_size: \"{{ max_upload_size }}\""
+  when: not ansible_check_mode
   notify:
     - restart synapse
 
@@ -194,7 +222,7 @@
          notif_template_text: notif_mail.txt
          notif_for_new_users: True
          riot_base_url: "https://{{ riot_hostname }}{{ riot_app_path}}"
-  when: mail|bool == true
+  when: mail|bool == true and not ansible_check_mode
   notify:
     - restart synapse
 
