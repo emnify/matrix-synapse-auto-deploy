@@ -66,7 +66,7 @@ riot_hostname: "{{ hostname }}" # For security it should be on another domain as
 riot_app_path: /app
 riot_path_certificate:
 riot_path_key:
-riot_path: /var/www/"{{ riot_hostname }}"
+riot_path: /var/www/{{ riot_hostname }}
 riot_integration_ui:
 riot_integration_api:
 riot_hs_url: "{{ hostname }}"
