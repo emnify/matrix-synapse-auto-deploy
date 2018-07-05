@@ -1,7 +1,7 @@
 {
-    "default_hs_url": "https://{{ hostname }}",
-    "default_is_url": "https://{{ hostname }}",
-    "brand": "Riot",
+    "default_hs_url": "https://{{ riot_hs_url }}",
+    "default_is_url": "https://{{ riot_is_url }}",
+    "brand": "{{ riot_brand }}",
 {% if riot_integration_ui is defined and not riot_integration_ui is none %}
     "integrations_ui_url": "{{ riot_integration_ui }}",
 {% endif %}

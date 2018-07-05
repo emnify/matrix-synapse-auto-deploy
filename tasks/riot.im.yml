@@ -20,7 +20,7 @@
 - name: riot.im configuration
   template:
     src: riot_config.json.j2
-    dest: "{{ riot_path }}/{{ riot_im_archive }}/config.json"
+    dest: "{{ riot_path }}/{{ riot_im_archive }}/config.{{ riot_hostname }}.json"
 
 - name: Install nginx conf for riot.im
   template:
