@@ -21,19 +21,20 @@
   template:
     src: riot_config.json.j2
     dest: "{{ riot_path }}/{{ riot_im_archive }}/config.json"
-  
 
 - name: Install nginx conf for riot.im
   template:
-    src:  etc/nginx/sites-available/riot.j2
-    dest: /etc/nginx/sites-available/riot
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+  with_items:
+    - { src: 'etc/nginx/sites-available/riot.j2', dest: '/etc/nginx/sites-available/{{ riot_hostname }}' }
   notify:
     - restart nginx
 
 - name: Enable the riot.im vhost (symlink)
   file:
-    src: /etc/nginx/sites-available/riot
-    dest: /etc/nginx/sites-enabled/riot
+    src: /etc/nginx/sites-available/{{ riot_hostname }}
+    dest: /etc/nginx/sites-enabled/{{ riot_hostname }}
     state: link
   notify:
     - restart nginx
