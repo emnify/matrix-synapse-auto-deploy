@@ -1,4 +1,5 @@
 ---
+
 - name: Create riot.im install dir
   file:
     path: "{{ riot_path }}"
