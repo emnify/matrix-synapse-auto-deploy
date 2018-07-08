@@ -8,7 +8,7 @@
       - python-psycopg2
 
 - name: Install psycopg2 into the python venv
-  pip: "name=psycopg2 virtualenv=/home/{{ username }}/.synapse/{{synapse_version}} extra_args='--upgrade'"
+  pip: "name=psycopg2 virtualenv={{ synapse_path }} extra_args='--upgrade'"
 
 - name: Start postgresql unit
   service: name=postgresql state=started
@@ -37,7 +37,7 @@
 
 - name: Patch the conf file to add pgsql database
   lineinfile:
-    dest: "/home/{{ username }}/.synapse/{{synapse_version}}/homeserver.yaml"
+    dest: "{{ synapse_path }}/homeserver.yaml"
     regexp: '(.*)name: "sqlite3"'
     line: '\1name: "psycopg2"'
     backrefs: yes
@@ -45,16 +45,16 @@
 
 - name: Add the args to connect to the db
   lineinfile:
-    dest: /home/{{ username }}/.synapse/{{synapse_version}}/homeserver.yaml
+    dest: "{{ synapse_path }}/homeserver.yaml"
     regexp: '(.*)database: "(.*)homeserver.db"'
     line: '\1user: "{{ username }}"\n\1password: "{{ database_secret }}"\n\1database: "homeserver"\n\1host: "localhost"\n\1cp_min: 5\n\1cp_max: 10'
     backrefs: yes
   when: not ansible_check_mode
 
 - name: Migrate the database
-  command: "/home/{{username}}/.synapse/{{synapse_version}}/bin/synapse_port_db --sqlite-database homeserver.db --postgres-config homeserver.yaml"
+  command: "{{ synapse_path }}/bin/synapse_port_db --sqlite-database homeserver.db --postgres-config homeserver.yaml"
   args:
-    chdir: "/home/{{ username }}/.synapse/{{synapse_version}}"
+    chdir: "{{ synapse_path }}"
   when: make_migration
   notify:
     - restart synapse

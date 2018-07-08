@@ -16,22 +16,21 @@
    - python-lxml
    - libxslt1-dev
    - jq
-   - python-netaddr
 
 - name: Create synapse user
   user: "name={{ username }} shell=/bin/bash comment='{{ username }}'"
 
 - name: Create virtualenv
-  command: virtualenv -p python2.7 ~/.synapse/{{synapse_version}}
+  command: virtualenv -p python2.7 {{ synapse_path }}
   args:
     chdir: "/home/{{ username }}"
-    creates: "/home/{{ username }}/.synapse/{{synapse_version}}/"
+    creates: "{{ synapse_path }}/"
 
 - name: PIP to upgrade setup tools
-  pip: "name=setuptools virtualenv=/home/{{ username }}/.synapse/{{synapse_version}} extra_args='--upgrade'"
+  pip: "name=setuptools virtualenv={{ synapse_path }} extra_args='--upgrade'"
 
 - name: PIP to install needed dependencies into virtualenv
-  pip: "name={{ item }} virtualenv=/home/{{ username }}/.synapse/{{synapse_version}}"
+  pip: "name={{ item }} virtualenv={{ synapse_path }}"
   with_items:
    - cryptography
    - pyasn1_modules
@@ -41,9 +40,10 @@
    - enum34
    - ipaddress
    - lxml
+   - netaddr
 
 - name: PIP to install synapse from Git Repo into virtualenv
-  pip: "name={{ git_repo }} virtualenv=/home/{{ username }}/.synapse/{{synapse_version}}"
+  pip: "name={{ git_repo }} virtualenv={{ synapse_path }}"
 
 #- name: PIP rollback to ldap3 v1.4 (hotfix)
 #  pip: name="ldap3==1.4" virtualenv="/home/{{ username }}/.synapse"
@@ -51,11 +51,11 @@
 - name: Generate homeserver.yaml config file
   shell: ". bin/activate && python -m synapse.app.homeserver --server-name {{ domain }} --config-path homeserver.yaml --generate-config --report-stats=yes"
   args:
-    chdir: "/home/{{ username }}/.synapse/{{synapse_version}}/"
-    creates: "/home/{{ username }}/.synapse/{{synapse_version}}/homeserver.yaml"
+    chdir: "{{ synapse_path }}/"
+    creates: "{{ synapse_path }}/homeserver.yaml"
 
 - name: Configure if registrations are enabled by default or not
-  lineinfile: "dest=/home/{{ username }}/.synapse/{{synapse_version}}/homeserver.yaml"
+  lineinfile: "dest={{ synapse_path }}/homeserver.yaml"
   args:
     regexp: "^enable_registration:"
     line: "enable_registration: {{ enable_registration }}"
@@ -64,7 +64,7 @@
   when: not ansible_check_mode
 
 - name: Configure if captchas are enabled by default or not
-  lineinfile: "dest=/home/{{ username }}/.synapse/{{synapse_version}}/homeserver.yaml"
+  lineinfile: "dest={{ synapse_path }}/homeserver.yaml"
   args:
     regexp: "^enable_registration_captcha:"
     line: "enable_registration_captcha: {{ enable_registration_captcha }}"
@@ -73,7 +73,7 @@
   when: not ansible_check_mode
 
 - name: Configure private-key recaptcha key
-  lineinfile: "dest=/home/{{ username }}/.synapse/{{synapse_version}}/homeserver.yaml"
+  lineinfile: "dest={{ synapse_path }}/homeserver.yaml"
   args:
     regexp: "^recaptcha_private_key:"
     line: "recaptcha_private_key: {{ recaptcha_private_key }}"
@@ -82,7 +82,7 @@
   when: not ansible_check_mode
 
 - name: Configure public-key recaptcha key
-  lineinfile: "dest=/home/{{ username }}/.synapse/{{synapse_version}}/homeserver.yaml"
+  lineinfile: "dest={{ synapse_path }}/homeserver.yaml"
   args:
     regexp: "^recaptcha_public_key:"
     line: "recaptcha_public_key: {{ recaptcha_public_key }}"
@@ -91,7 +91,7 @@
   when: not ansible_check_mode
 
 - name: Configure certificate fullchain location
-  lineinfile: "dest=/home/{{ username }}/.synapse/{{synapse_version}}/homeserver.yaml"
+  lineinfile: "dest={{ synapse_path }}/homeserver.yaml"
   args:
     regexp: "^tls_certificate_path:"
     line: "tls_certificate_path: {{ absolute_path_certificate }}"
@@ -100,7 +100,7 @@
   when: not ansible_check_mode
 
 - name: Configure certificate private key location
-  lineinfile: "dest=/home/{{ username }}/.synapse/{{synapse_version}}/homeserver.yaml"
+  lineinfile: "dest={{ synapse_path }}/homeserver.yaml"
   args:
     regexp: "^tls_private_key_path:"
     line: "tls_private_key_path: {{ absolute_path_key }}"
@@ -109,7 +109,7 @@
   when: not ansible_check_mode
 
 - name: Configure Diffie-Hellman parameters location
-  lineinfile: "dest=/home/{{ username }}/.synapse/{{synapse_version}}/homeserver.yaml"
+  lineinfile: "dest={{ synapse_path }}/homeserver.yaml"
   args:
     regexp: "^tls_dh_params_path:"
     line: "tls_dh_params_path: {{ DH_params_location }}"
@@ -118,7 +118,7 @@
   when: not ansible_check_mode
 
 - name: Configure custom turn_uris
-  lineinfile: "dest=/home/{{ username }}/.synapse/{{synapse_version}}/homeserver.yaml"
+  lineinfile: "dest={{ synapse_path }}/homeserver.yaml"
   args:
     regexp: "^turn_uris:"
     line: "turn_uris: [ {{ turn_uris }} ]"
@@ -127,7 +127,7 @@
     - restart synapse
 
 - name: Configure custom turn_shared_secret
-  lineinfile: "dest=/home/{{ username }}/.synapse/{{synapse_version}}/homeserver.yaml"
+  lineinfile: "dest={{ synapse_path }}/homeserver.yaml"
   args:
     regexp: ".*turn_shared_secret:"
     line: "turn_shared_secret: {{ turn_shared_secret }}"
@@ -136,7 +136,7 @@
     - restart synapse
 
 - name: Comment out turn_shared_secret
-  lineinfile: "dest=/home/{{ username }}/.synapse/{{synapse_version}}/homeserver.yaml"
+  lineinfile: "dest={{ synapse_path }}/homeserver.yaml"
   args:
     regexp: ".*turn_shared_secret:"
     line: "#turn_shared_secret:"
@@ -145,7 +145,7 @@
     - restart synapse
 
 - name: Configure custom turn_username
-  lineinfile: "dest=/home/{{ username }}/.synapse/{{synapse_version}}/homeserver.yaml"
+  lineinfile: "dest={{ synapse_path }}/homeserver.yaml"
   args:
     regexp: ".*turn_username:"
     line: "turn_username: {{ turn_username }}"
@@ -154,7 +154,7 @@
     - restart synapse
 
 - name: Configure custom turn_password
-  lineinfile: "dest=/home/{{ username }}/.synapse/{{synapse_version}}/homeserver.yaml"
+  lineinfile: "dest={{ synapse_path }}/homeserver.yaml"
   args:
     regexp: ".*turn_password:"
     line: "turn_password: {{ turn_password }}"
@@ -163,7 +163,7 @@
     - restart synapse
 
 - name: Configure turn_user_lifetime
-  lineinfile: "dest=/home/{{ username }}/.synapse/{{synapse_version}}/homeserver.yaml"
+  lineinfile: "dest={{ synapse_path }}/homeserver.yaml"
   args:
     regexp: ".*turn_user_lifetime:"
     line: "turn_user_lifetime: 86400000"
@@ -173,12 +173,12 @@
 
   # VERY UGLY!!!
 - name: Enable X-Forwarded-For Header for proxied listener
-  shell: "awk '/x_forwarded/{c++;if(c==2){sub(\"x_forwarded: false\",\"x_forwarded: true\");c=0}}1' /home/{{ username }}/.synapse/{{synapse_version}}/homeserver.yaml > /tmp/homeserver.yaml && mv /tmp/homeserver.yaml /home/{{ username }}/.synapse/{{synapse_version}}/homeserver.yaml"
+  shell: "awk '/x_forwarded/{c++;if(c==2){sub(\"x_forwarded: false\",\"x_forwarded: true\");c=0}}1' {{ synapse_path }}/homeserver.yaml > /tmp/homeserver.yaml && mv /tmp/homeserver.yaml {{ synapse_path }}/homeserver.yaml"
   changed_when: false
   when: not ansible_check_mode
 
 - name: Configure public_baseurl without reverse proxy
-  lineinfile: "dest=/home/{{ username }}/.synapse/{{synapse_version}}/homeserver.yaml"
+  lineinfile: "dest={{ synapse_path }}/homeserver.yaml"
   args:
     regexp: ".*public_baseurl:"
     line: "public_baseurl: https://{{ hostname }}:8448/"
@@ -187,7 +187,7 @@
   when: install_reverseproxy|bool == false and not ansible_check_mode
 
 - name: Configure public_baseurl for use in a reverse proxy
-  lineinfile: "dest=/home/{{ username }}/.synapse/{{synapse_version}}/homeserver.yaml"
+  lineinfile: "dest={{ synapse_path }}/homeserver.yaml"
   args:
     regexp: ".*public_baseurl:"
     line: "public_baseurl: https://{{ hostname }}/"
@@ -196,7 +196,7 @@
   when: install_reverseproxy|bool == true and not ansible_check_mode
 
 - name: Configure max upload size
-  lineinfile: "dest=/home/{{ username }}/.synapse/{{synapse_version}}/homeserver.yaml"
+  lineinfile: "dest={{ synapse_path }}/homeserver.yaml"
   args:
     regexp: ".*max_upload_size:"
     line: "max_upload_size: \"{{ max_upload_size }}\""
@@ -206,7 +206,7 @@
 
 - name: E-Mail Configuration for synapse
   blockinfile:
-    path: /home/{{ username }}/.synapse/{{synapse_version}}/homeserver.yaml
+    path: "{{ synapse_path }}/homeserver.yaml"
     marker: "#<-- {mark} ANSIBLE MANAGED EMAIL BLOCK -->"
     block: |
       email:
@@ -218,7 +218,7 @@
          require_transport_security: "{{ mail_tls_synapse }}"
          notif_from: "Your Friendly %(app)s Home Server {{ mail_from }}"
          app_name: Matrix
-         template_dir: /home/{{ username }}/.synapse/{{synapse_version}}/res/templates
+         template_dir: "{{ synapse_path }}/res/templates"
          notif_template_html: notif_mail.html
          notif_template_text: notif_mail.txt
          notif_for_new_users: True
@@ -229,24 +229,24 @@
 
 - name: Creating mail template folders
   file:
-    path: /home/{{ username }}/.synapse/{{synapse_version}}/res/templates
+    path: "{{ synapse_path }}/res/templates"
     state: directory
     mode: 0755
   when: mail|bool == true
 
-- name: Downloading Mail templates
+- name: Downloading Mail templates{{ synapse_path }}
   get_url:
     url: "{{ item.src }}"
     dest: "{{ item.dst }}"
   with_items:
-    - { src: 'https://raw.githubusercontent.com/matrix-org/synapse/master/res/templates/mail-Vector.css', dst: '/home/{{ username }}/.synapse/{{synapse_version}}/res/templates/mail-Vector.css' }
-    - { src: 'https://raw.githubusercontent.com/matrix-org/synapse/master/res/templates/mail.css', dst: '/home/{{ username }}/.synapse/{{synapse_version}}/res/templates/mail.css' }
-    - { src: 'https://raw.githubusercontent.com/matrix-org/synapse/master/res/templates/notif.html', dst: '/home/{{ username }}/.synapse/{{synapse_version}}/res/templates/notif.html' }
-    - { src: 'https://raw.githubusercontent.com/matrix-org/synapse/master/res/templates/notif.txt', dst: '/home/{{ username }}/.synapse/{{synapse_version}}/res/templates/notif.txt' }
-    - { src: 'https://raw.githubusercontent.com/matrix-org/synapse/master/res/templates/notif_mail.html', dst: '/home/{{ username }}/.synapse/{{synapse_version}}/res/templates/notif_mail.html' }
-    - { src: 'https://raw.githubusercontent.com/matrix-org/synapse/master/res/templates/notif_mail.txt', dst: '/home/{{ username }}/.synapse/{{synapse_version}}/res/templates/notif_mail.txt' }
-    - { src: 'https://raw.githubusercontent.com/matrix-org/synapse/master/res/templates/room.html', dst: '/home/{{ username }}/.synapse/{{synapse_version}}/res/templates/room.html' }
-    - { src: 'https://raw.githubusercontent.com/matrix-org/synapse/master/res/templates/room.txt', dst: '/home/{{ username }}/.synapse/{{synapse_version}}/res/templates/room.txt' }
+    - { src: 'https://raw.githubusercontent.com/matrix-org/synapse/master/res/templates/mail-Vector.css', dst: '{{ synapse_path }}/res/templates/mail-Vector.css' }
+    - { src: 'https://raw.githubusercontent.com/matrix-org/synapse/master/res/templates/mail.css', dst: '{{ synapse_path }}/res/templates/mail.css' }
+    - { src: 'https://raw.githubusercontent.com/matrix-org/synapse/master/res/templates/notif.html', dst: '{{ synapse_path }}/res/templates/notif.html' }
+    - { src: 'https://raw.githubusercontent.com/matrix-org/synapse/master/res/templates/notif.txt', dst: '{{ synapse_path }}/res/templates/notif.txt' }
+    - { src: 'https://raw.githubusercontent.com/matrix-org/synapse/master/res/templates/notif_mail.html', dst: '{{ synapse_path }}/res/templates/notif_mail.html' }
+    - { src: 'https://raw.githubusercontent.com/matrix-org/synapse/master/res/templates/notif_mail.txt', dst: '{{ synapse_path }}/res/templates/notif_mail.txt' }
+    - { src: 'https://raw.githubusercontent.com/matrix-org/synapse/master/res/templates/room.html', dst: '{{ synapse_path }}/res/templates/room.html' }
+    - { src: 'https://raw.githubusercontent.com/matrix-org/synapse/master/res/templates/room.txt', dst: '{{ synapse_path }}/res/templates/room.txt' }
   when: mail|bool == true
 
 - name: Set permissions

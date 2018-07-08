@@ -7,8 +7,8 @@ After=syslog.target
 Type=simple
 User={{ username }}
 Group={{ username }}
-WorkingDirectory=/home/{{ username }}/.synapse/{{synapse_version}}/
-ExecStart=/home/{{ username }}/.synapse/{{synapse_version}}/bin/python -B -m synapse.app.homeserver -c homeserver.yaml
+WorkingDirectory={{ synapse_path }}/
+ExecStart={{ synapse_path }}/bin/python -B -m synapse.app.homeserver -c homeserver.yaml
 Restart=on-failure
 Environment=USER={{ username }} HOME=/home/{{ username }}
 
