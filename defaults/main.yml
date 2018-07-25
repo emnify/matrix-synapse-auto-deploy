@@ -1,6 +1,6 @@
 ---
 username: synapse # under wich user the server should be installed and run
-synapse_version: v0.32.2 # version number or 'master'
+synapse_version: v0.33.0 # version number or 'master'
 git_repo: https://github.com/matrix-org/synapse/archive/{{synapse_version}}.tar.gz
 #git_repo: https://github.com/matrix-org/synapse/tarball/master  # URL to Git Repo you want to install
 hostname: matrix.domain.com # FQDN to be used
@@ -19,6 +19,9 @@ absolute_path_key: "{{ synapse_path }}/{{ domain }}.tls.key"
 generate_DH_params: true   # Generate DH parameters
 DH_params_location: "{{ synapse_path }}/{{ domain }}.tls.dh"
 DH_params_size: 4096
+x_forwarded: true
+# Configures synapse to listen on port 8448 or not (if nginx should also reverse proxies this port)
+public_base_url_behind_nginx: False
 install_postgres: true
 install_nginx_package: true
 install_reverseproxy: true
@@ -59,13 +62,13 @@ mail_tls: 1
 mail_tls_synapse: True
 mail_user:
 mail_pass:
+notif_from: Your Friendly %(app) Home Server <{{ hostname }}>
 
 # riot webclient
-riot_im_version: 0.15.6
+riot_im_version: 0.16.0-rc2
 riot_im_archive: riot-v{{ riot_im_version }}
 riot_im_tarball_url: "https://github.com/vector-im/riot-web/releases/download/v{{ riot_im_version }}/{{ riot_im_archive }}.tar.gz"
 riot_hostname: "{{ hostname }}" # For security it should be on another domain as the matrix server, so change it!
-riot_app_path: /app
 riot_path_certificate:
 riot_path_key:
 riot_path: /var/www/{{ riot_hostname }}
@@ -75,3 +78,5 @@ riot_hs_url: "{{ hostname }}"
 # Recommended: hostname or vector.im
 riot_is_url: "{{ hostname }}"
 riot_brand: Riot
+# light, dark, simple.im
+riot_theme: light
