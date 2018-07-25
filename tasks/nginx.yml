@@ -1,7 +1,9 @@
 ---
 
 - name: Installing packages needed for the reverse proxy
-  action: apt pkg=nginx state=installed
+  apt:
+    pkg: nginx
+    state: present
   when: install_nginx_package|bool == true
 
 - name: Install nginx conf

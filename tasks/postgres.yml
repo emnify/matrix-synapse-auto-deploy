@@ -1,20 +1,29 @@
 ---
 
 - name: Install postgresql
-  apt: "pkg={{ item }} state=installed"
+  apt: 
+    pkg: "{{ item }}"
+    state: present
   with_items:
       - libpq-dev
       - postgresql
       - python-psycopg2
 
 - name: Install psycopg2 into the python venv
-  pip: "name=psycopg2 virtualenv={{ synapse_path }} extra_args='--upgrade'"
+  pip:
+    name: psycopg2
+    virtualenv: "{{ synapse_path }}"
+    extra_args: '--upgrade'
 
 - name: Start postgresql unit
-  service: name=postgresql state=started
+  service:
+    name: postgresql
+    state: started
 
 - name: Creating synapse user in postgres
-  postgresql_user: "name={{ username }} password={{ database_secret }}"
+  postgresql_user:
+    name: "{{ username }}"
+    password: "{{ database_secret }}"
   become: true
   become_user: postgres
   when: not ansible_check_mode
@@ -32,7 +41,9 @@
   when: not ansible_check_mode
 
 - name: Stop synapse
-  service: name=synapse.service state=stopped
+  service:
+    name: synapse.service
+    state: stopped
   when: make_migration
 
 - name: Patch the conf file to add pgsql database

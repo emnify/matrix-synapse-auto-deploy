@@ -1,7 +1,9 @@
 ---
 
 - name: Install packages needed to compile coturn server
-  action: "apt pkg={{item}} state=installed"
+  apt:
+    pkg: "{{item}}"
+    state: present
   with_items:
    - gcc
    - make

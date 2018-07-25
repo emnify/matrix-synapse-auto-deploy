@@ -2,7 +2,7 @@
 
 - name: Install packages required by synapse
   apt:
-    pkg: "{{ item.dst }}"
+    pkg: "{{ item }}"
     state: present
   with_items:
    - build-essential
@@ -22,7 +22,8 @@
 - name: Create synapse user
   user: 
     name: "{{ username }}"
-    shell: /bin/bash comment="{{ username }}"
+    shell: /bin/bash
+    comment: "{{ username }}"
 
 - name: Create virtualenv
   command: virtualenv -p python2.7 {{ synapse_path }}
