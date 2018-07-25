@@ -1,7 +1,8 @@
 ---
 
 - name: Update apt cache
-  apt: update_cache=yes
+  apt: 
+    update_cache: yes
   changed_when: false
 
 - name: install basic packages
@@ -12,20 +13,27 @@
     - wget
     - git
 
-- import_tasks: openssl.yml
+- name: Import openssl tasks
+  import_tasks: openssl.yml
   when: generate_DH_params
 
-- import_tasks: synapse.yml
+- name: Import synapse tasks
+  import_tasks: synapse.yml
   tags: synapse
-- import_tasks: coturn.yml
+- name: Import tunrserver tasks
+  import_tasks: coturn.yml
   when: install_turnserver|bool == true
   tags: turnserver
-- import_tasks: nginx.yml
+- name: Import nginx tasls
+  import_tasks: nginx.yml
   when: install_reverseproxy|bool == true
-- import_tasks: postgres.yml
+- name: Import postgres tasks
+  import_tasks: postgres.yml
   when: install_postgres|bool == true
   tags: postgres
-- import_tasks: mxisd.yml
+- name: Import mxisd tasks
+  import_tasks: mxisd.yml
   when: install_mxisd|bool == true
-- import_tasks: riot.im.yml
+- name: Import riot.im tasks
+  import_tasks: riot.im.yml
   tags: riot

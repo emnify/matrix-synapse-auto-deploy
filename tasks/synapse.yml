@@ -20,7 +20,9 @@
    - jq
 
 - name: Create synapse user
-  user: "name={{ username }} shell=/bin/bash comment='{{ username }}'"
+  user: 
+    name: "{{ username }}"
+    shell: /bin/bash comment="{{ username }}"
 
 - name: Create virtualenv
   command: virtualenv -p python2.7 {{ synapse_path }}
@@ -29,10 +31,15 @@
     creates: "{{ synapse_path }}/"
 
 - name: PIP to upgrade setup tools
-  pip: "name=setuptools virtualenv={{ synapse_path }} extra_args='--upgrade'"
+  pip: 
+    name: setuptools
+    virtualenv: "{{ synapse_path }}"
+    extra_args: '--upgrade'
 
 - name: PIP to install needed dependencies into virtualenv
-  pip: "name={{ item }} virtualenv={{ synapse_path }}"
+  pip: 
+    name: "{{ item }}"
+    virtualenv: "{{ synapse_path }}"
   with_items:
    - cryptography
    - pyasn1_modules
@@ -45,7 +52,9 @@
    - netaddr
 
 - name: PIP to install synapse from Git Repo into virtualenv
-  pip: "name={{ git_repo }} virtualenv={{ synapse_path }}"
+  pip:
+    name: "{{ git_repo }}"
+    virtualenv: "{{ synapse_path }}"
 
 #- name: PIP rollback to ldap3 v1.4 (hotfix)
 #  pip: name="ldap3==1.4" virtualenv="/home/{{ username }}/.synapse"
