@@ -5,7 +5,9 @@
   changed_when: false
 
 - name: install basic packages
-  apt: "pkg={{item}} state=installed"
+  apt: 
+    pkg: "{{item}}"
+    state: present
   with_items:
     - wget
     - git
