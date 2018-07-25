@@ -1,7 +1,9 @@
 ---
 
 - name: Install packages required by synapse
-  action: "apt pkg={{item}} state=installed"
+  apt:
+    pkg: "{{ item.dst }}"
+    state: present
   with_items:
    - build-essential
    - python2.7-dev
