@@ -1,9 +1,12 @@
 # {{ ansible_managed }}
 server {
         listen 80 default_server;
+{% if not (ansible_default_ipv6.address is undefined or ansible_default_ipv6.address is none or ansible_default_ipv6.address | trim == '') %}
+        listen [::]:80;
+{% endif %}
         server_name {{ hostname }};
-        access_log  /var/log/nginx/synapse.access.log;
-        error_log  /var/log/nginx/synapse.nginx_error.log;
+        access_log  /var/log/nginx/{{ hostname }}.access.log;
+        error_log  /var/log/nginx/{{ hostname }}.error.log;
 
 {% if riot_path_certificate is none and riot_path_key is none %}
 {% if install_mxisd | bool %}
@@ -32,10 +35,13 @@ server {
 {% if riot_path_certificate is not none and riot_path_certificate | length > 0 and riot_path_key is not none and riot_path_key | length > 0 %}
 
 server {
-        listen 443 ssl default_server;
+        listen 443 ssl http2;
+{% if not (ansible_default_ipv6.address is undefined or ansible_default_ipv6.address is none or ansible_default_ipv6.address | trim == '') %}
+        listen [::]:443 ssl http2;
+{% endif %}
         server_name {{ hostname }};
-        access_log  /var/log/nginx/synapse.access.log;
-        error_log  /var/log/nginx/synapse.nginx_error.log;
+        access_log  /var/log/nginx/{{ hostname }}.access.log;
+        error_log  /var/log/nginx/{{ hostname }}.error.log;
 
 {% if install_mxisd | bool %}
         location /_matrix/identity/ {

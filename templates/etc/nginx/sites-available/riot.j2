@@ -5,8 +5,8 @@ server {
         listen [::]:80;
 {% endif %}
         server_name {{ riot_hostname }};
-        access_log  /var/log/nginx/riot.access.log;
-        error_log  /var/log/nginx/riot.nginx_error.log;
+        access_log  /var/log/nginx/{{ riot_hostname }}.access.log;
+        error_log  /var/log/nginx/{{ riot_hostname }}.error.log;
 
 {% if riot_path_certificate is none and riot_path_key is none %}
         root {{ riot_path }}/{{ riot_im_archive }};
@@ -23,8 +23,8 @@ server {
         listen [::]:443 ssl http2;
 {% endif %}
         server_name {{ riot_hostname }};
-        access_log  /var/log/nginx/riot.access.log;
-        error_log  /var/log/nginx/riot.nginx_error.log;
+        access_log  /var/log/nginx/{{ riot_hostname }}.access.log;
+        error_log  /var/log/nginx/{{ riot_hostname }}.error.log;
 
         root {{ riot_path }}/{{ riot_im_archive }};
 
