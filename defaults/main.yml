@@ -20,6 +20,7 @@ generate_DH_params: true   # Generate DH parameters
 DH_params_location: "{{ synapse_path }}/{{ domain }}.tls.dh"
 DH_params_size: 4096
 x_forwarded: true
+url_preview_enabled: false
 # Configures synapse to listen on port 8448 or not (if nginx should also reverse proxies this port)
 public_base_url_behind_nginx: False
 install_postgres: true
