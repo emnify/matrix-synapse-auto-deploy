@@ -459,7 +459,7 @@ enable_registration: {{ enable_registration }}
 
 # If set, allows registration by anyone who also has the shared
 # secret, even if registration is otherwise disabled.
-registration_shared_secret: "rcb7+@oHJ*nDDWq.97lRR=RxPUNA3tJKnw+NHP=7jSaPS1R.H7"
+registration_shared_secret: "{{ registration_shared_secret }}"
 
 # Set the number of bcrypt rounds used to generate password hash.
 # Larger numbers increase the work factor needed to generate the hash.
@@ -507,14 +507,14 @@ room_invite_state_types:
 app_service_config_files: []
 
 
-macaroon_secret_key: "rbn+;8E806NsDfTOeY,vta=.obm=LfsowuQx~frvH2aUQ9.15D"
+macaroon_secret_key: "{{ macaroon_secret_key }}"
 
 # Used to enable access token expiration.
 expire_access_token: False
 
 # a secret which is used to calculate HMACs for form values, to stop
 # falsification of values
-form_secret: "^3P0dRup4LfMUEDPvEq;vw,LL@Muxqp.7OLYRp-9&sY:YY_7ev"
+form_secret: "{{ form_secret }}"
 
 ## Signing Keys ##
 

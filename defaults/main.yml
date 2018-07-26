@@ -11,6 +11,9 @@ recaptcha_private_key: YOURPRIVATEKEYHERE
 recaptcha_public_key: YOURPUBLICKEYHERE
 make_migration: true     # Migrate the database from sqlite to postgres
 database_secret: YOURDATABASESECRETHERE
+registration_shared_secret: CHANGEME(pwgen -y 50)
+macaroon_secret_key: CHANGEME(pwgen -y 50)
+form_secret: CHANGEME(pwgen -y 50)
 max_upload_size: 10M # Max size for uploads. Don't forget to configure your reverse proxy!
 #synapse_path: /home/{{ username }}/.synapse/{{synapse_version}}
 synapse_path: /home/{{ username }}/.synapse
