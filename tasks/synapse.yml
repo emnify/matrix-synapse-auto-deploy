@@ -56,6 +56,8 @@
   pip:
     name: "{{ git_repo }}"
     virtualenv: "{{ synapse_path }}"
+  notify:
+    - restart synapse
 
 #- name: PIP rollback to ldap3 v1.4 (hotfix)
 #  pip: name="ldap3==1.4" virtualenv="/home/{{ username }}/.synapse"
