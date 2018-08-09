@@ -1,6 +1,6 @@
 ---
 username: synapse # under wich user the server should be installed and run
-synapse_version: v0.33.1 # version number or 'master'
+synapse_version: v0.33.2 # version number or 'master'
 git_repo: https://github.com/matrix-org/synapse/archive/{{synapse_version}}.tar.gz
 #git_repo: https://github.com/matrix-org/synapse/tarball/master  # URL to Git Repo you want to install
 hostname: matrix.domain.com # FQDN to be used
