@@ -22,6 +22,9 @@
   template:
     src: riot_config.json.j2
     dest: "{{ riot_path }}/{{ riot_im_archive }}/config.{{ riot_hostname }}.json"
+    owner: root
+    group: root
+    mode: 0644
 
 - name: Install nginx conf for riot.im
   template:

@@ -1,6 +1,6 @@
 ---
 username: synapse # under wich user the server should be installed and run
-synapse_version: v0.33.6 # version number or 'master'
+synapse_version: v0.33.7 # version number or 'master'
 git_repo: https://github.com/matrix-org/synapse/archive/{{synapse_version}}.tar.gz
 #git_repo: https://github.com/matrix-org/synapse/tarball/master  # URL to Git Repo you want to install
 hostname: matrix.domain.com # FQDN to be used
@@ -69,7 +69,7 @@ mail_pass:
 notif_from: Your Friendly %(app) Home Server <{{ hostname }}>
 
 # riot webclient
-riot_im_version: 0.16.5
+riot_im_version: 0.17.2
 riot_im_archive: riot-v{{ riot_im_version }}
 riot_im_tarball_url: "https://github.com/vector-im/riot-web/releases/download/v{{ riot_im_version }}/{{ riot_im_archive }}.tar.gz"
 riot_hostname: "{{ hostname }}" # For security it should be on another domain as the matrix server, so change it!
