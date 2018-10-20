@@ -24,7 +24,7 @@
     dest: "{{ riot_path }}/{{ riot_im_archive }}/config.{{ riot_hostname }}.json"
     owner: root
     group: root
-    mode: 0644
+    mode: 0664
 
 - name: Install nginx conf for riot.im
   template:
