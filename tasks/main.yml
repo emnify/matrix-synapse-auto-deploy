@@ -7,11 +7,10 @@
 
 - name: install basic packages
   apt: 
-    pkg: "{{item}}"
+    name:
+      - wget
+      - git
     state: present
-  with_items:
-    - wget
-    - git
 
 - name: Import openssl tasks
   import_tasks: openssl.yml

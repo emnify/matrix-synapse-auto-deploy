@@ -2,7 +2,7 @@
 
 - name: Install openssl
   apt:
-    pkg: openssl
+    name: openssl
     state: present
 
 - name: Check if dhparams exist

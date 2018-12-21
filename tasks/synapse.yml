@@ -2,22 +2,21 @@
 
 - name: Install packages required by synapse
   apt:
-    pkg: "{{ item }}"
+    name:
+      - build-essential
+      - python3-dev
+      - libffi-dev
+      - python3-pip
+      - python3-setuptools
+      - sqlite3
+      - libssl-dev
+      - python3-virtualenv
+      - python3-openssl
+      - libjpeg-dev
+      - python3-lxml
+      - libxslt1-dev
+      - jq
     state: present
-  with_items:
-   - build-essential
-   - python3-dev
-   - libffi-dev
-   - python3-pip
-   - python3-setuptools
-   - sqlite3
-   - libssl-dev
-   - python3-virtualenv
-   - python3-openssl
-   - libjpeg-dev
-   - python3-lxml
-   - libxslt1-dev
-   - jq
 
 - name: Create synapse user
   user: 
@@ -39,18 +38,17 @@
 
 - name: PIP to install needed dependencies into virtualenv
   pip: 
-    name: "{{ item }}"
+    name:
+      - cryptography
+      - pyasn1_modules
+      - characteristic
+      - simplejson
+      - canonicaljson
+      - enum34
+      - ipaddress
+      - lxml
+      - netaddr
     virtualenv: "{{ synapse_path }}"
-  with_items:
-   - cryptography
-   - pyasn1_modules
-   - characteristic
-   - simplejson
-   - canonicaljson
-   - enum34
-   - ipaddress
-   - lxml
-   - netaddr
 
 - name: PIP to install synapse from Git Repo into virtualenv
   pip:

@@ -27,7 +27,7 @@ All new variables are defined under defaults\main.yml
 
 ## Pre-requirements
 * Git
-* Ansible
+* Ansible >= 2.4
 
 ## Clone auto-deploy repo
 

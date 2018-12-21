@@ -2,14 +2,13 @@
 
 - name: Install packages needed to compile coturn server
   apt:
-    pkg: "{{item}}"
+    name:
+      - gcc
+      - make
+      - autoconf
+      - libevent-dev
+      - libsqlite3-dev
     state: present
-  with_items:
-   - gcc
-   - make
-   - autoconf
-   - libevent-dev
-   - libsqlite3-dev
 
 - name: Create coturn install dir
   file:

@@ -2,12 +2,11 @@
 
 - name: Install postgresql
   apt: 
-    pkg: "{{ item }}"
-    state: present
-  with_items:
+    name:
       - libpq-dev
       - postgresql
       - python-psycopg2
+    state: present
 
 - name: Install psycopg2 into the python venv
   pip:
