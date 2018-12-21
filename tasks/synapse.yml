@@ -6,16 +6,16 @@
     state: present
   with_items:
    - build-essential
-   - python2.7-dev
+   - python3-dev
    - libffi-dev
-   - python-pip
-   - python-setuptools
+   - python3-pip
+   - python3-setuptools
    - sqlite3
    - libssl-dev
-   - python-virtualenv
+   - python3-virtualenv
    - python3-openssl
    - libjpeg-dev
-   - python-lxml
+   - python3-lxml
    - libxslt1-dev
    - jq
 
@@ -26,7 +26,7 @@
     comment: "{{ username }}"
 
 - name: Create virtualenv
-  command: virtualenv -p python2.7 {{ synapse_path }}
+  command: virtualenv -p python3 {{ synapse_path }}
   args:
     chdir: "/home/{{ username }}"
     creates: "{{ synapse_path }}/"
