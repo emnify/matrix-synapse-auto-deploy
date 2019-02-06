@@ -4,12 +4,3 @@
   apt:
     name: openssl
     state: present
-
-- name: Check if dhparams exist
-  stat:
-    path: "{{ DH_params_location }}"
-  register: dhparams_file
-
-- name: Generate Diffie-Hellman parameters
-  command: "openssl dhparam -out {{ DH_params_location }} {{ DH_params_size }}"
-  when: generate_DH_params|bool == true and not dhparams_file.stat.exists

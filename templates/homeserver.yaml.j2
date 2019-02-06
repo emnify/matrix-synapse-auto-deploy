@@ -9,9 +9,6 @@ tls_certificate_path: {{ absolute_path_certificate }}
 # PEM encoded private key for TLS
 tls_private_key_path: {{ absolute_path_key }}
 
-# PEM dh parameters for ephemeral keys
-tls_dh_params_path: {{ DH_params_location }}
-
 # Don't bind to the https port
 {% if public_base_url_behind_nginx %}
 no_tls: True

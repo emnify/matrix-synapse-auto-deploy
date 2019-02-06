@@ -51,8 +51,6 @@ All new variables are defined under defaults\main.yml
         database_secret: YOURDATABASESECRETHERE
         absolute_path_certificate: /etc/ssl/your_org/fullchain.pem
         absolute_path_key: /etc/ssl/your_org/private_key.pem
-        generate_DH_params: true   # Generate DH parameters
-        DH_params_location: /etc/ssl/your_org/diffihellman.pem
         install_turnserver: yes
         riot_hostname: chat.domain.com
         riot_path_certificate: /etc/ssl/your_org/fullchain.pem
