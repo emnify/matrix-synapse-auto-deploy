@@ -4,15 +4,16 @@
 # autogenerates on launch with your own SSL certificate + key pair
 # if you like.  Any required intermediary certificates can be
 # appended after the primary certificate in hierarchical order.
+{% if install_reverseproxy %}
+
+# Don't bind to the https port
+no_tls: True
+{% else %}
 tls_certificate_path: {{ absolute_path_certificate }}
 
 # PEM encoded private key for TLS
 tls_private_key_path: {{ absolute_path_key }}
 
-# Don't bind to the https port
-{% if install_reverseproxy %}
-no_tls: True
-{% else %}
 no_tls: False
 {% endif %}
 
@@ -120,6 +121,8 @@ soft_file_limit: 0
 # List of ports that Synapse should listen on, their purpose and their
 # configuration.
 listeners:
+{% if install_reverseproxy %}
+{% else %}
   # Main HTTPS listener
   # For when matrix traffic is sent directly to synapse.
   -
@@ -165,6 +168,7 @@ listeners:
     #     module: my_module.CustomRequestHandler
     #     config: {}
 
+{% endif %}
   # Unsecure HTTP listener,
   # For when matrix traffic passes through loadbalancer that unwraps TLS.
   - port: 8008
