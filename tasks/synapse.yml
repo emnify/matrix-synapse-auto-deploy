@@ -6,8 +6,8 @@
       - build-essential
       - python3-dev
       - libffi-dev
+      - python-setuptools
       - python3-pip
-      - python3-setuptools
       - sqlite3
       - libssl-dev
       - python3-virtualenv
@@ -24,18 +24,6 @@
     shell: /bin/bash
     comment: "{{ username }}"
 
-- name: Create virtualenv
-  command: virtualenv -p python3 {{ synapse_path }}
-  args:
-    chdir: "/home/{{ username }}"
-    creates: "{{ synapse_path }}/"
-
-- name: PIP to upgrade setup tools
-  pip:
-    name: setuptools
-    virtualenv: "{{ synapse_path }}"
-    extra_args: '--upgrade'
-
 - name: PIP to install needed dependencies into virtualenv
   pip:
     name:
@@ -48,12 +36,9 @@
       - ipaddress
       - lxml
       - netaddr
+      - "{{ git_repo }}"
     virtualenv: "{{ synapse_path }}"
-
-- name: PIP to install synapse from Git Repo into virtualenv
-  pip:
-    name: "{{ git_repo }}"
-    virtualenv: "{{ synapse_path }}"
+    virtualenv_python: python3
   notify:
     - restart synapse
 
@@ -80,21 +65,6 @@
     state: directory
     mode: 0755
   when: mail
-
-#- name: Downloading Mail templates{{ synapse_path }}
-#  get_url:
-#    url: "{{ item.src }}"
-#    dest: "{{ item.dst }}"
-#  with_items:
-#    - { src: 'https://raw.githubusercontent.com/matrix-org/synapse/master/res/templates/mail-Vector.css', dst: '{{ synapse_path }}/res/templates/mail-Vector.css' }
-#    - { src: 'https://raw.githubusercontent.com/matrix-org/synapse/master/res/templates/mail.css', dst: '{{ synapse_path }}/res/templates/mail.css' }
-#    - { src: 'https://raw.githubusercontent.com/matrix-org/synapse/master/res/templates/notif.html', dst: '{{ synapse_path }}/res/templates/notif.html' }
-#    - { src: 'https://raw.githubusercontent.com/matrix-org/synapse/master/res/templates/notif.txt', dst: '{{ synapse_path }}/res/templates/notif.txt' }
-#    - { src: 'https://raw.githubusercontent.com/matrix-org/synapse/master/res/templates/notif_mail.html', dst: '{{ synapse_path }}/res/templates/notif_mail.html' }
-#    - { src: 'https://raw.githubusercontent.com/matrix-org/synapse/master/res/templates/notif_mail.txt', dst: '{{ synapse_path }}/res/templates/notif_mail.txt' }
-#    - { src: 'https://raw.githubusercontent.com/matrix-org/synapse/master/res/templates/room.html', dst: '{{ synapse_path }}/res/templates/room.html' }
-#    - { src: 'https://raw.githubusercontent.com/matrix-org/synapse/master/res/templates/room.txt', dst: '{{ synapse_path }}/res/templates/room.txt' }
-#  when: mail
 
 - name: Set permissions
   file:
