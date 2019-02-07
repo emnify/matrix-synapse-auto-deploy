@@ -25,7 +25,7 @@
     shell: /bin/bash
     comment: "{{ username }}"
 
-- name: PIP to upgrade setup tools
+- name: PIP to upgrade setuptools
   pip: 
     name: setuptools
     virtualenv: "{{ synapse_path }}"
