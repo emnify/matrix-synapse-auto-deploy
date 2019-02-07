@@ -1,6 +1,6 @@
 ---
 sudo: required
-
+# comment for ci test
 notifications:
   webhooks: https://galaxy.ansible.com/api/v1/notifications/
 
