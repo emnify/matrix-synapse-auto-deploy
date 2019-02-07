@@ -79,7 +79,7 @@
     path: "{{ synapse_path }}/res/templates"
     state: directory
     mode: 0755
-  when: mail|bool == true
+  when: mail
 
 #- name: Downloading Mail templates{{ synapse_path }}
 #  get_url:
@@ -94,7 +94,7 @@
 #    - { src: 'https://raw.githubusercontent.com/matrix-org/synapse/master/res/templates/notif_mail.txt', dst: '{{ synapse_path }}/res/templates/notif_mail.txt' }
 #    - { src: 'https://raw.githubusercontent.com/matrix-org/synapse/master/res/templates/room.html', dst: '{{ synapse_path }}/res/templates/room.html' }
 #    - { src: 'https://raw.githubusercontent.com/matrix-org/synapse/master/res/templates/room.txt', dst: '{{ synapse_path }}/res/templates/room.txt' }
-#  when: mail|bool == true
+#  when: mail
 
 - name: Set permissions
   file:
