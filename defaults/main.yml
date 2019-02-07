@@ -1,7 +1,6 @@
 ---
 
 ### Features
-install_openssl: true
 install_synapse: true
 install_turnserver: true
 install_reverseproxy: true
