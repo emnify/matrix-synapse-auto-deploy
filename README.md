@@ -75,6 +75,7 @@ You should have an SRV entry like that in order to tell other HomeServers on whi
 ## Run the ansible playbook
 
 If you are not familiar with ansible, the easiest way is to lauch from the server you want to install matrix on:
+
 `ansible-playbook playbook.yml -c local`
 
 ## Getting safe
