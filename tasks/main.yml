@@ -13,11 +13,6 @@
       - openssl
     state: present
 
-- name: Import openssl tasks
-  import_tasks: openssl.yml
-  when: install_openssl
-  tags: openssl
-
 - name: Import synapse tasks
   import_tasks: synapse.yml
   when: install_synapse
