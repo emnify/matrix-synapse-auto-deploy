@@ -25,6 +25,13 @@
     shell: /bin/bash
     comment: "{{ username }}"
 
+- name: PIP to upgrade setup tools
+  pip: 
+    name: setuptools
+    virtualenv: "{{ synapse_path }}"
+    virtualenv_python: python3
+    extra_args: '--upgrade'
+
 - name: PIP to install needed dependencies and synapse into virtualenv
   pip:
     name:
