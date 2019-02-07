@@ -10,6 +10,7 @@
     name:
       - wget
       - git
+      - openssl
     state: present
 
 - name: Import openssl tasks
