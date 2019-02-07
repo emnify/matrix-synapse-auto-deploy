@@ -11,6 +11,7 @@
       - wget
       - git
       - openssl
+      - apt-utils
     state: present
 
 - name: Import synapse tasks
