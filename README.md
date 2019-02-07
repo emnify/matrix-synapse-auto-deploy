@@ -2,7 +2,7 @@
 
 [![Maintenance](https://img.shields.io/maintenance/yes/2019.svg)](https://github.com/Madic-/matrix-synapse-auto-deploy) [![Build Status](https://travis-ci.org/Madic-/matrix-synapse-auto-deploy.svg?branch=master)](https://travis-ci.org/Madic-/matrix-synapse-auto-deploy)
 
-Auto-deployment process for the [matrix-org/synapse](https://github.com/matrix-org/synapse) homeserver and turnserver using  ansible, this will automatically deploy a ready-to-go matrix server on any server.
+Auto-deployment process for the [matrix-org/synapse](https://github.com/matrix-org/synapse) homeserver and turnserver using  ansible. This will automatically deploy a ready-to-go matrix server on any server.
 
 The playbook will try to install latest [synapse release](https://github.com/matrix-org/synapse/releases)
 and latest [riot.im release](https://github.com/vector-im/riot-web/releases).
@@ -34,13 +34,13 @@ All new variables are defined under defaults\main.yml
 - Git
 - Ansible >= 2.6
 - DNS Entries
-  - A Record
+  - A Records
     - A Record for matrix-machine.yourdomain.tld.
     - A Record for riot-webclient.yourdomain.tld.
   - SRV Record
     - `_matrix._tcp.yourdomain.tld. 3600 IN SRV 10 5 443 matrix-machine.yourdomain.tld.`
 
-You should have a SRV entry like that in order to tell other HomeServers on which port they need to speak.
+You should have an SRV entry like that in order to tell other HomeServers on which port they need to speak.
 
 ## Clone auto-deploy repo
 
@@ -74,11 +74,12 @@ You should have a SRV entry like that in order to tell other HomeServers on whic
 
 ## Run the ansible playbook
 
-If you are not familiar with ansible, the easiest way is to lauch from the server you want to install matrix on: `ansible-playbook playbook.yml -c local`
+If you are not familiar with ansible, the easiest way is to lauch from the server you want to install matrix on:
+`ansible-playbook playbook.yml -c local`
 
 ## Getting safe
 
-Get an SSL certificate, you can use let's encrypt, put the symlinks where they should be and be sure the nginx and synapse users have the right to read certs.
+Get an SSL certificate. You can use let's encrypt, put the symlinks where they should be and be sure the nginx and synapse users have access rights to read the certs.
 
 ## Enjoy
 
