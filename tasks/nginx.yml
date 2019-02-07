@@ -14,7 +14,7 @@
     group: "root"
     mode: 0755
   with_items:
-    - "{{ riot_path }}/.well-known"
+    - "{{ riot_path }}/{{ riot_im_archive }}/.well-known"
 
 - name: Install nginx conf
   template:

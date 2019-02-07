@@ -8,7 +8,7 @@
     group: "root"
     mode: 0755
   with_items:
-    - "{{ riot_path }}"
+    - "{{ riot_path }}/{{ riot_im_archive }}"
     - "{{ riot_path }}/.well-known"
 
 - name: Download and extract riot.im

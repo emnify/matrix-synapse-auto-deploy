@@ -10,7 +10,7 @@ tls_certificate_path: {{ absolute_path_certificate }}
 tls_private_key_path: {{ absolute_path_key }}
 
 # Don't bind to the https port
-{% if public_base_url_behind_nginx %}
+{% if install_reverseproxy %}
 no_tls: True
 {% else %}
 no_tls: False
@@ -84,7 +84,7 @@ pid_file: {{ synapse_path }}/homeserver.pid
 # web_client_location: "/path/to/web/root"
 
 # The public-facing base URL for the client API (not including _matrix/...)
-{% if public_base_url_behind_nginx %}
+{% if install_reverseproxy %}
 public_baseurl: https://{{ hostname }}:8448/
 {% else %}
 public_baseurl: https://{{ hostname }}/

@@ -14,15 +14,16 @@ database_secret: YOURDATABASESECRETHERE
 registration_shared_secret: CHANGEME(pwgen -y 50)
 macaroon_secret_key: CHANGEME(pwgen -y 50)
 form_secret: CHANGEME(pwgen -y 50)
-max_upload_size: 10M # Max size for uploads. Don't forget to configure your reverse proxy!
+max_upload_size: 10M # Max upload size
 #synapse_path: /home/{{ username }}/.synapse/{{synapse_version}}
 synapse_path: /home/{{ username }}/.synapse
 absolute_path_certificate: "{{ synapse_path }}/{{ domain }}.tls.crt"
 absolute_path_key: "{{ synapse_path }}/{{ domain }}.tls.key"
+synapse_path_certificate: "{{ absolute_path_certificate }}"
+synapse_path_key: "{{ absolute_path_key }}"
 x_forwarded: true
 url_preview_enabled: false
 # Configures synapse to listen on port 8448 or not (if nginx should also reverse proxies this port)
-public_base_url_behind_nginx: False
 install_postgres: true
 install_nginx_package: true
 install_reverseproxy: true
