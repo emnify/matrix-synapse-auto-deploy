@@ -59,7 +59,7 @@ turn_shared_secret: CHANGEME
 # turn_password:
 
 ### NGINX
-install_nginx_package: true
+install_nginx_package: true # installs nginx via package manager
 
 ### mxisd (identity server)
 # configuration, only for ldap for now
