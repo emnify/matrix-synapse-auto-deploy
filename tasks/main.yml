@@ -14,25 +14,35 @@
 
 - name: Import openssl tasks
   import_tasks: openssl.yml
-  when: generate_DH_params
+  when: install_openssl|bool == true
+  tags: openssl
 
 - name: Import synapse tasks
   import_tasks: synapse.yml
+  when: install_synapse|bool == true
   tags: synapse
+
 - name: Import tunrserver tasks
   import_tasks: coturn.yml
   when: install_turnserver|bool == true
   tags: turnserver
+
 - name: Import nginx tasls
   import_tasks: nginx.yml
   when: install_reverseproxy|bool == true
+  tags: nginx
+
 - name: Import postgres tasks
   import_tasks: postgres.yml
   when: install_postgres|bool == true
   tags: postgres
+
 - name: Import mxisd tasks
   import_tasks: mxisd.yml
   when: install_mxisd|bool == true
+  tags: mxisd
+
 - name: Import riot.im tasks
   import_tasks: riot.im.yml
+  when: install_riot|bool == true
   tags: riot

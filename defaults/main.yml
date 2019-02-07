@@ -1,8 +1,18 @@
 ---
-username: synapse # under wich user the server should be installed and run
+
+### Features
+install_openssl: true
+install_synapse: true
+install_turnserver: true
+install_reverseproxy: true
+install_postgres: true
+install_mxisd: false
+install_riot: true
+
+### Synapse
+username: synapse # under wich linux user the server should be installed and run
 synapse_version: v0.99.0 # version number or 'master'
 git_repo: https://github.com/matrix-org/synapse/archive/{{synapse_version}}.tar.gz
-#git_repo: https://github.com/matrix-org/synapse/tarball/master  # URL to Git Repo you want to install
 hostname: matrix.domain.com # FQDN to be used
 domain: domain.com # Domain Part of the User MXIDs
 enable_registration: true # this will open registration by default, take care if you run a public server!
@@ -23,35 +33,6 @@ synapse_path_certificate: "{{ absolute_path_certificate }}"
 synapse_path_key: "{{ absolute_path_key }}"
 x_forwarded: true
 url_preview_enabled: false
-# Configures synapse to listen on port 8448 or not (if nginx should also reverse proxies this port)
-install_postgres: true
-install_nginx_package: true
-install_reverseproxy: true
-letsencrypt: false
-
-install_turnserver: yes
-turn_version: 4.5.0.7
-turn_archive: coturn-{{ turn_version }}
-turn_tarball_url: https://github.com/coturn/coturn/archive/{{ turn_version }}.tar.gz
-turn_path: /usr/src
-# Define this variables if you want to use a custom turn server AND install_turnserver is set to false.
-# Recommended if you do not let the playbook install the cotrun turnserver.
-# turn_uris: '"turn:{{ hostname }}:3478?transport=udp\", \"turn:{{ hostname }}:3478?transport=tcp"'
-turn_shared_secret: CHANGEME
-# turn_username:
-# turn_password:
-
-# mxisd (identity server) configuration, only for ldap for now
-# For more information see https://github.com/kamax-io/mxisd/
-install_mxisd: false
-ldap_server:
-bind_dn:
-bind_pass:
-base_dn:
-ldap_tls: true
-ldap_port: 636
-ldap_filter: (&(objectclass=user)(mail=*))
-
 # Configure e-mail Settings
 mail: no
 mail_from: matrix@{{ domain }}
@@ -66,7 +47,33 @@ mail_user:
 mail_pass:
 notif_from: Your Friendly %(app) Home Server <{{ hostname }}>
 
-# riot webclient
+### Turnserver
+turn_version: 4.5.0.7
+turn_archive: coturn-{{ turn_version }}
+turn_tarball_url: https://github.com/coturn/coturn/archive/{{ turn_version }}.tar.gz
+turn_path: /usr/src
+# Define this variables if you want to use a custom turn server AND install_turnserver is set to false.
+# Recommended if you do not let the playbook install the cotrun turnserver.
+# turn_uris: '"turn:{{ hostname }}:3478?transport=udp\", \"turn:{{ hostname }}:3478?transport=tcp"'
+turn_shared_secret: CHANGEME
+# turn_username:
+# turn_password:
+
+### NGINX
+install_nginx_package: true
+
+### mxisd (identity server)
+# configuration, only for ldap for now
+# For more information see https://github.com/kamax-io/mxisd/
+ldap_server:
+bind_dn:
+bind_pass:
+base_dn:
+ldap_tls: true
+ldap_port: 636
+ldap_filter: (&(objectclass=user)(mail=*))
+
+### riot webclient
 riot_im_version: 0.17.9
 riot_im_archive: riot-v{{ riot_im_version }}
 riot_im_tarball_url: "https://github.com/vector-im/riot-web/releases/download/v{{ riot_im_version }}/{{ riot_im_archive }}.tar.gz"
