@@ -72,7 +72,6 @@ server {
             client_max_body_size {{ max_upload_size }};
         }
 }
-{% endif %}
 {% if install_reverseproxy | bool %}
 
 server {
@@ -95,4 +94,5 @@ server {
             client_max_body_size {{ max_upload_size }};
         }
 }
+{% endif %}
 {% endif %}

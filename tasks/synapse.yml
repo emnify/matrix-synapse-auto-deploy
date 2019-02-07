@@ -24,7 +24,7 @@
     shell: /bin/bash
     comment: "{{ username }}"
 
-- name: PIP to install needed dependencies into virtualenv
+- name: PIP to install needed dependencies and synapse into virtualenv
   pip:
     name:
       - cryptography
@@ -32,7 +32,6 @@
       - characteristic
       - simplejson
       - canonicaljson
-      - enum34
       - ipaddress
       - lxml
       - netaddr
