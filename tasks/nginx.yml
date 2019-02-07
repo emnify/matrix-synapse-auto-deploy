@@ -16,7 +16,7 @@
   with_items:
     - "{{ riot_path }}/{{ riot_im_archive }}/.well-known"
 
-- name: Install nginx conf
+- name: Install nginx conf for synapse
   template:
     src:  etc/nginx/sites-available/synapse.j2
     dest: /etc/nginx/sites-available/synapse

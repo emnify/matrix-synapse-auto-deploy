@@ -88,3 +88,6 @@ riot_is_url: "{{ hostname }}"
 riot_brand: Riot
 # light, dark, simple.im
 riot_theme: light
+
+### Travis CI
+ansible_default_ipv6: # required for Travis CI tests
