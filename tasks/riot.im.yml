@@ -4,11 +4,10 @@
   file:
     path: "{{ item }}"
     state: directory
-    owner: "root"
-    group: "root"
+    owner: root
+    group: root
     mode: 0755
   with_items:
-    - "{{ riot_path }}/{{ riot_im_archive }}"
     - "{{ riot_path }}/.well-known"
 
 - name: Download and extract riot.im
