@@ -6,6 +6,16 @@
     state: present
   when: install_nginx_package|bool == true
 
+- name: Create required matrix dir
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: "root"
+    group: "root"
+    mode: 0755
+  with_items:
+    - {{ riot_path }}/.well-known
+
 - name: Install nginx conf
   template:
     src:  etc/nginx/sites-available/synapse.j2

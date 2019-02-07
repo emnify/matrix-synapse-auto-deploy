@@ -28,6 +28,10 @@ server {
                 proxy_set_header X-Forwarded-For $remote_addr;
         }
 {% endif %}
+        location ~ /\.well-known {
+            allow all;
+            root {{ riot_path }};
+        }
 {% if riot_path_certificate is not none and riot_path_certificate | length > 0 and riot_path_key is not none and riot_path_key | length > 0 %}
         return 301 https://$host$request_uri;
 {% endif %}
@@ -63,5 +67,9 @@ server {
         }
         ssl_certificate      {{ absolute_path_certificate }};
         ssl_certificate_key  {{ absolute_path_key }};
+        location ~ /\.well-known {
+            allow all;
+            root {{ riot_path }};
+        }
 }
 {% endif %}

@@ -8,6 +8,10 @@ server {
         access_log  /var/log/nginx/{{ riot_hostname }}.access.log;
         error_log  /var/log/nginx/{{ riot_hostname }}.error.log;
 
+        location ~ /\.well-known {
+            allow all;
+            root {{ riot_path }};
+        }
 {% if riot_path_certificate is none and riot_path_key is none %}
         root {{ riot_path }}/{{ riot_im_archive }};
 {% endif %}
@@ -30,5 +34,10 @@ server {
 
         ssl_certificate      {{ riot_path_certificate }};
         ssl_certificate_key  {{ riot_path_key }};
+
+        location ~ /\.well-known {
+            allow all;
+            root {{ riot_path }};
+        }
 }
 {% endif %}

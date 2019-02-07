@@ -2,11 +2,14 @@
 
 - name: Create riot.im install dir
   file:
-    path: "{{ riot_path }}"
+    path: "{{ item }}"
     state: directory
     owner: "root"
     group: "root"
     mode: 0755
+  with_items:
+    - {{ riot_path }}
+    - {{ riot_path }}/.well-known
 
 - name: Download and extract riot.im
   unarchive:
