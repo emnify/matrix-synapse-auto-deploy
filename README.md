@@ -76,7 +76,7 @@ You should have an SRV entry like that in order to tell other HomeServers on whi
 
 If you are not familiar with ansible, the easiest way is to lauch from the server you want to install matrix on:
 
-`ansible-playbook playbook.yml -c local`
+    ansible-playbook playbook.yml -c local
 
 ## Getting safe
 
@@ -97,8 +97,7 @@ With this configuration you should allow:
 
 ### Check your DNS entry
 
-With the commands :
-`dig _matrix._tcp.yourdomain.tld SRV` and `dig matrix-machine.yourdomain.tld A`
+With the commands `dig _matrix._tcp.yourdomain.tld SRV` and `dig matrix-machine.yourdomain.tld A`
 
 ### Check if synapse and nginx can access certs
 
