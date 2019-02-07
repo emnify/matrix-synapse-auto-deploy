@@ -14,7 +14,7 @@
     group: "root"
     mode: 0755
   with_items:
-    - {{ riot_path }}/.well-known
+    - "{{ riot_path }}/.well-known"
 
 - name: Install nginx conf
   template:
@@ -28,7 +28,7 @@
     src: /etc/nginx/sites-available/synapse
     dest: /etc/nginx/sites-enabled/synapse
     state: link
-  notify: 
+  notify:
     - restart nginx
   when: not ansible_check_mode
 
@@ -36,5 +36,5 @@
   file:
     path: /etc/nginx/sites-enabled/default
     state: absent
-  notify: 
+  notify:
     - restart nginx

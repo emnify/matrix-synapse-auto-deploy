@@ -1,12 +1,12 @@
 ---
 
 - name: Update apt cache
-  apt: 
+  apt:
     update_cache: yes
   changed_when: false
 
 - name: install basic packages
-  apt: 
+  apt:
     name:
       - wget
       - git

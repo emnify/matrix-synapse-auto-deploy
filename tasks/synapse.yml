@@ -19,7 +19,7 @@
     state: present
 
 - name: Create synapse user
-  user: 
+  user:
     name: "{{ username }}"
     shell: /bin/bash
     comment: "{{ username }}"
@@ -31,13 +31,13 @@
     creates: "{{ synapse_path }}/"
 
 - name: PIP to upgrade setup tools
-  pip: 
+  pip:
     name: setuptools
     virtualenv: "{{ synapse_path }}"
     extra_args: '--upgrade'
 
 - name: PIP to install needed dependencies into virtualenv
-  pip: 
+  pip:
     name:
       - cryptography
       - pyasn1_modules

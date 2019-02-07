@@ -38,7 +38,7 @@
   template:
     src: etc/turnserver.conf.j2
     dest: /etc/turnserver.conf
-  notify: 
+  notify:
     - restart turn server
 
 - name: Install systemd service

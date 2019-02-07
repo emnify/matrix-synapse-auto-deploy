@@ -1,7 +1,7 @@
 ---
 
 - name: Install postgresql
-  apt: 
+  apt:
     name:
       - libpq-dev
       - postgresql
