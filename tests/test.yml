@@ -46,7 +46,7 @@
       register: status
       failed_when: status.rc != 0
 
-    - name: Check if mxisd is running
-      shell: "systemctl status mxisd | grep -i running"
-      register: status
-      failed_when: status.rc != 0
+#    - name: Check if mxisd is running
+#      shell: "systemctl status mxisd | grep -i running"
+#      register: status
+#      failed_when: status.rc != 0

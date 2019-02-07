@@ -16,6 +16,7 @@
       - python3-lxml
       - libxslt1-dev
       - jq
+      - virtualenv
     state: present
 
 - name: Create synapse user
