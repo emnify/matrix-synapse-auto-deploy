@@ -35,16 +35,16 @@ script:
   - 'sudo docker inspect $(cat ${container_id})'
 
   # Print ansible version
-  - 'sudo docker exec --tty "$(cat ${container_id})" env TERM=xterm ansible --version'
+  - 'sudo docker exec --tty "$(cat ${container_id})" env TERM=xterm env ANSIBLE_CONFIG=/etc/ansible/roles/role_under_test/tests/ansible.cfg ansible --version'
 
   # Check Ansible host setup
-  - 'sudo docker exec --tty "$(cat ${container_id})" env TERM=xterm ansible all -i "localhost," -c local -m setup'
+  - 'sudo docker exec --tty "$(cat ${container_id})" env TERM=xterm env ANSIBLE_CONFIG=/etc/ansible/roles/role_under_test/tests/ansible.cfg ansible all -i "localhost," -c local -m setup'
 
   # Check the role/playbook's syntax
-  - 'sudo docker exec --tty "$(cat ${container_id})" env TERM=xterm ansible-playbook /etc/ansible/roles/role_under_test/tests/playbook.yml --syntax-check'
+  - 'sudo docker exec --tty "$(cat ${container_id})" env TERM=xterm env ANSIBLE_CONFIG=/etc/ansible/roles/role_under_test/tests/ansible.cfg ansible-playbook /etc/ansible/roles/role_under_test/tests/playbook.yml --syntax-check'
   
   # Run the role
-  - 'sudo docker exec --tty "$(cat ${container_id})" env TERM=xterm ansible-playbook /etc/ansible/roles/role_under_test/tests/playbook.yml'
+  - 'sudo docker exec --tty "$(cat ${container_id})" env TERM=xterm env ANSIBLE_CONFIG=/etc/ansible/roles/role_under_test/tests/ansible.cfg ansible-playbook /etc/ansible/roles/role_under_test/tests/playbook.yml'
   
   # Run the role/playbook again, checking to make sure it's idempotent.
   #- idempotence=$(mktemp)
