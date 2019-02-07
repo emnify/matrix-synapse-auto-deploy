@@ -15,35 +15,35 @@
 
 - name: Import openssl tasks
   import_tasks: openssl.yml
-  when: install_openssl|bool == true
+  when: install_openssl
   tags: openssl
 
 - name: Import synapse tasks
   import_tasks: synapse.yml
-  when: install_synapse|bool == true
+  when: install_synapse
   tags: synapse
 
 - name: Import tunrserver tasks
   import_tasks: coturn.yml
-  when: install_turnserver|bool == true
+  when: install_turnserver
   tags: turnserver
 
 - name: Import nginx tasls
   import_tasks: nginx.yml
-  when: install_reverseproxy|bool == true
+  when: install_reverseproxy
   tags: nginx
 
 - name: Import postgres tasks
   import_tasks: postgres.yml
-  when: install_postgres|bool == true
+  when: install_postgres
   tags: postgres
 
 - name: Import mxisd tasks
   import_tasks: mxisd.yml
-  when: install_mxisd|bool == true
+  when: install_mxisd
   tags: mxisd
 
 - name: Import riot.im tasks
   import_tasks: riot.im.yml
-  when: install_riot|bool == true
+  when: install_riot
   tags: riot
