@@ -2,7 +2,11 @@
 
 PDIR="$(dirname "$(pwd)")"
 
-docker pull geerlingguy/docker-ubuntu1604-ansible:latest
+distro=ubuntu1604
+#distro=debian8
+#distro=debian9
+
+docker pull geerlingguy/docker-${distro}-ansible:latest
 
 CID=$(docker run --detach --privileged --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro \
  --volume="$PDIR":/etc/ansible/roles/role_under_test:ro geerlingguy/docker-ubuntu1604-ansible:latest)

@@ -18,7 +18,6 @@ enable_registration: true # this will open registration by default, take care if
 enable_registration_captcha: false
 recaptcha_private_key: YOURPRIVATEKEYHERE
 recaptcha_public_key: YOURPUBLICKEYHERE
-make_migration: true     # Migrate the database from sqlite to postgres
 database_secret: YOURDATABASESECRETHERE
 registration_shared_secret: CHANGEME(pwgen -y 50)
 macaroon_secret_key: CHANGEME(pwgen -y 50)
@@ -60,6 +59,9 @@ turn_shared_secret: CHANGEME
 
 ### NGINX
 install_nginx_package: true # installs nginx via package manager
+
+### Postgresql
+make_migration: true     # Migrate the database from sqlite to postgres
 
 ### mxisd (identity server)
 # configuration, only for ldap for now
