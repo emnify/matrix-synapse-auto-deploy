@@ -14,7 +14,7 @@
     group: "root"
     mode: 0755
   with_items:
-    - "{{ riot_path }}/{{ riot_im_archive }}/.well-known"
+    - "{{ matrix_wellknown_location }}/.well-known"
 
 - name: Install nginx conf for synapse
   template:
