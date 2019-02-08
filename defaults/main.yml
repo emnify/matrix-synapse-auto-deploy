@@ -63,6 +63,9 @@ install_nginx_package: true # installs nginx via package manager
 ### Postgresql
 make_migration: true     # Migrate the database from sqlite to postgres
 
+### Let's Encrypt
+matrix_wellknown_location: "{{ riot_path }}"
+
 ### mxisd (identity server)
 # configuration, only for ldap for now
 # For more information see https://github.com/kamax-io/mxisd/
