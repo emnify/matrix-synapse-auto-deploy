@@ -12,7 +12,7 @@ if [ $1 == "ubuntu1604" ] || [ $1 == "debian8" ] || [ $1 == "debian9" ]; then DI
 
 docker pull geerlingguy/docker-${DISTRO}-ansible:latest || exit
 
-CID=$(docker run --detach --volume="$PDIR":/etc/ansible/roles/role_under_test:ro geerlingguy/docker-ubuntu1604-ansible:latest /lib/systemd/systemd || exit)
+CID=$(docker run --detach --volume="$PDIR":/etc/ansible/roles/role_under_test:ro geerlingguy/docker-ubuntu1604-ansible:latest /sbin/init || exit)
 
 docker inspect "$CID" || exit
 
