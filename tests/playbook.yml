@@ -4,14 +4,5 @@
   vars:
     enable_registration: false
 
-  pre_tasks:
-    - name: Install apt-utils
-      apt:
-        name:
-          - apt-utils
-        install_recommends: no
-        state: present
-      when: ansible_os_family == 'Debian'
-
   roles:
     - role_under_test
