@@ -2,11 +2,15 @@
 
 PDIR="$(dirname "$(pwd)")"
 
-distro=ubuntu1604
-#distro=debian8
-#distro=debian9
+USAGE() {
+	echo -e "Usage: ${0##*/} [ubuntu1604|debian8|debian9]"
+	exit
+}
 
-docker pull geerlingguy/docker-${distro}-ansible:latest
+if [ -z "$1" ]; then USAGE; fi
+if [ $1 == "ubuntu1604" ] || [ $1 == "debian8" ] || [ $1 == "debian9" ]; then DISTRO="$1"; else USAGE; fi
+
+docker pull geerlingguy/docker-${DISTRO}-ansible:latest
 
 CID=$(docker run --detach --privileged --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro \
  --volume="$PDIR":/etc/ansible/roles/role_under_test:ro geerlingguy/docker-ubuntu1604-ansible:latest /lib/systemd/systemd)
