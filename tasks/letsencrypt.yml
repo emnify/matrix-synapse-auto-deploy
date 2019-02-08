@@ -1,0 +1,11 @@
+---
+
+- name: Create required Let's Encrypt directory
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: "www-data"
+    group: "www-data"
+    mode: 0755
+  with_items:
+    - "{{ le_well_known_location }}/.well-known"

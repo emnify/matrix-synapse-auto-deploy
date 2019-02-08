@@ -9,7 +9,7 @@ server {
         location ~ /\.well-known {
             default_type "text/plain";
             allow all;
-            root {{ matrix_wellknown_location }};
+            root {{ le_well_known_location }};
         }
 {% if riot_path_certificate is none and riot_path_key is none %}
         root {{ riot_path }}/{{ riot_im_archive }};
@@ -34,7 +34,7 @@ server {
         location ~ /\.well-known {
             default_type "text/plain";
             allow all;
-            root {{ matrix_wellknown_location }};
+            root {{ le_well_known_location }};
         }
 }
 {% endif %}

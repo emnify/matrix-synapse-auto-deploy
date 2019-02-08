@@ -29,7 +29,7 @@ server {
         location ~ /\.well-known {
             default_type "text/plain";
             allow all;
-            root {{ matrix_wellknown_location }};
+            root {{ le_well_known_location }};
         }
 {% if riot_path_certificate is not none and riot_path_certificate | length > 0 and riot_path_key is not none and riot_path_key | length > 0 %}
         return 301 https://$host$request_uri;
@@ -48,7 +48,7 @@ server {
         location ~ /\.well-known {
             default_type "text/plain";
             allow all;
-            root {{ matrix_wellknown_location }};
+            root {{ le_well_known_location }};
         }
 
 {% if install_mxisd | bool %}

@@ -77,11 +77,18 @@
 
 - name: Set permissions
   file:
-    path: '/home/{{ username }}/.synapse'
+    path: "/home/{{ username }}/.synapse"
     state: directory
     owner: "{{ username }}"
     group: "{{ username }}"
     recurse: yes
+
+- name: Configure .well-known server matrix discovery
+  template:
+    src: server.j2
+    dest: "{{ matrix_well_known_location }}/server"
+    mode: 0644
+  when: install_well_known
 
 - name: Install synapse systemd conf
   template:

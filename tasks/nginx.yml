@@ -6,16 +6,6 @@
     state: present
   when: install_nginx_package
 
-- name: Create required matrix dir
-  file:
-    path: "{{ item }}"
-    state: directory
-    owner: "www-data"
-    group: "www-data"
-    mode: 0755
-  with_items:
-    - "{{ matrix_wellknown_location }}/.well-known"
-
 - name: Install nginx conf for synapse
   template:
     src:  etc/nginx/sites-available/synapse.j2
