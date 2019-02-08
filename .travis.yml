@@ -7,13 +7,16 @@ notifications:
 env:
   matrix:
     - distro: ubuntu1604
-      init: /lib/systemd/systemd
+      #init: /lib/systemd/systemd
+      init: /sbin/init
       run_opts: "--privileged --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro"
     - distro: debian8
-      init: /lib/systemd/systemd
+      #init: /lib/systemd/systemd
+      init: /sbin/init
       run_opts: "--privileged --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro"
     - distro: debian9
-      init: /lib/systemd/systemd
+      #init: /lib/systemd/systemd
+      init: /sbin/init
       run_opts: "--privileged --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro"
 
 services:
