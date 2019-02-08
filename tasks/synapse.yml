@@ -31,6 +31,7 @@
     virtualenv: "{{ synapse_path }}"
     virtualenv_python: python3
     extra_args: '--upgrade'
+  when: not ansible_check_mode
 
 - name: PIP to install needed dependencies and synapse into virtualenv
   pip:
@@ -48,6 +49,7 @@
     virtualenv_python: python3
   notify:
     - restart synapse
+  when: not ansible_check_mode
 
 #- name: PIP rollback to ldap3 v1.4 (hotfix)
 #  pip: name="ldap3==1.4" virtualenv="/home/{{ username }}/.synapse"
