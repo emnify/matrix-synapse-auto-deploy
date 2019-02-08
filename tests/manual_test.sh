@@ -9,7 +9,7 @@ distro=ubuntu1604
 docker pull geerlingguy/docker-${distro}-ansible:latest
 
 CID=$(docker run --detach --privileged --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro \
- --volume="$PDIR":/etc/ansible/roles/role_under_test:ro geerlingguy/docker-ubuntu1604-ansible:latest)
+ --volume="$PDIR":/etc/ansible/roles/role_under_test:ro geerlingguy/docker-ubuntu1604-ansible:latest /lib/systemd/systemd)
 
 docker inspect "$CID"
 
