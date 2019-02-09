@@ -43,8 +43,10 @@
       - canonicaljson
       - ipaddress
       - lxml
+      - jinja2 
+      - bleach
       - netaddr
-      - "{{ git_repo }}"
+      - matrix-synapse
     virtualenv: "{{ synapse_path }}"
     virtualenv_python: python3
   notify:
