@@ -81,7 +81,7 @@ ldap_port: 636
 ldap_filter: (&(objectclass=user)(mail=*))
 
 # riot webclient
-riot_im_version: 1.0.0
+riot_im_version: 1.0.1
 riot_im_archive: riot-v{{ riot_im_version }}
 riot_im_tarball_url: "https://github.com/vector-im/riot-web/releases/download/v{{ riot_im_version }}/{{ riot_im_archive }}.tar.gz"
 riot_hostname: "{{ hostname }}" # For security it should be on another domain as the matrix server, so change it!
