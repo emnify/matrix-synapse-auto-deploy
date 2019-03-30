@@ -1,6 +1,8 @@
 ---
+
 - hosts: localhost
-- tasks:
+
+  tasks:
     - name: Check if turnserver service is enabled
       command: systemctl is-enabled turnserver
       register: command_result

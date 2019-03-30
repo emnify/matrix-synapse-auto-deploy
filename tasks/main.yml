@@ -5,6 +5,12 @@
     update_cache: yes
   changed_when: false
 
+- name: Making sure the man8 folder exists
+  file:
+    path: /usr/share/man/man8
+    state: directory
+    mode: 0755
+
 - name: install basic packages
   apt:
     name:
