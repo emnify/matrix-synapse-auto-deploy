@@ -111,5 +111,7 @@ Come and ask for help on matrix:matrix.org using [Riot client](http://riot.im).
 
 ## Supported OS
 
-This playbook is made to run on Debian 8, Debian 9 and Ubuntu 16.04. It should also run smoothly on any systemd flavoured OS.
-You're free to test and give me feedback (or PR to add support of your favorite system).
+- Ubuntu 18.04
+- Debian 9
+
+It should also run smoothly on any systemd flavoured OS. You're free to test and give me feedback (or PR to add support of your favorite system).
