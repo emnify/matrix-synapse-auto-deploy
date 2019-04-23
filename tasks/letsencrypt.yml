@@ -38,10 +38,6 @@
   openssl_csr:
     path: "{{ absolute_path_certificate_csr }}"
     privatekey_path: "{{ absolute_path_key }}"
-    #country_name: US
-    #state_or_province_name: WA
-    #organization_name: "{{cert.organization_name}}"
-    #email_address: "{{cert.email_address}}"
     common_name: "{{ le_cert.le_common_name }}"
     subject_alt_name: "{{ le_cert.le_subject_alt_name }}"
 
