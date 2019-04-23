@@ -31,8 +31,8 @@
   postgresql_db:
     name: homeserver
     encoding: UTF-8
-    lc_collate: C
-    lc_ctype: C
+    lc_collate: en_US.UTF-8
+    lc_ctype: en_US.UTF-8
     template: template0
     owner: synapse
   become: true

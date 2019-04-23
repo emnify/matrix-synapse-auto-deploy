@@ -55,7 +55,8 @@
     remaining_days: "{{ le_remaining_days }}"
   register: le_acme_data
 
-#- debug:
+#- name: Output of le_acme_data
+#  debug:
 #    var: le_acme_data
 
 - name: Copy challenge file for {{ hostname }}

@@ -6,13 +6,10 @@
     state: present
   when: install_nginx_package
 
-- name: Install nginx conf for synapse
-  template:
-    src:  etc/nginx/sites-available/synapse.j2
-    dest: /etc/nginx/sites-available/synapse
-  notify:
-    - restart nginx
-  when: not install_letsencrypt
+- name: Test if nginx synapse config exists
+  stat:
+    path: /etc/nginx/sites-available/synapse
+  register: nginx_stats_synapse
 
 - name: Install nginx conf for lets encrypt
   template:
@@ -20,7 +17,15 @@
     dest: /etc/nginx/sites-available/synapse
   notify:
     - restart nginx
-  when: install_letsencrypt
+  when: install_letsencrypt and nginx_stats_synapse.stat.exists == False
+
+- name: Install nginx conf for synapse
+  template:
+    src:  etc/nginx/sites-available/synapse.j2
+    dest: /etc/nginx/sites-available/synapse
+  notify:
+    - restart nginx
+  when: not install_letsencrypt
 
 - name: Enable the vhost (symlink)
   file:

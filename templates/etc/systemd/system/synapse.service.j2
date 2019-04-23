@@ -8,7 +8,8 @@ Type=simple
 User={{ username }}
 Group={{ username }}
 WorkingDirectory={{ synapse_path }}/
-ExecStart={{ synapse_path }}/bin/python -B -m synapse.app.homeserver -c homeserver.yaml
+ExecStart={{ synapse_path }}/bin/python -B -m synapse.app.homeserver -c {{ synapse_path }}/homeserver.yaml
+ExecStop={{ synapse_path }}/bin/synctl stop {{ synapse_path }}/homeserver.yaml
 Restart=on-failure
 Environment=USER={{ username }} HOME=/home/{{ username }}
 
