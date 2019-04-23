@@ -1,6 +1,6 @@
 ---
 
-- name: Create required Let's Encrypt directory
+- name: Create required Let's Encrypt directories
   file:
     path: "{{ item }}"
     state: directory
@@ -8,4 +8,105 @@
     group: "www-data"
     mode: 0755
   with_items:
-    - "{{ le_well_known_location }}/.well-known"
+    - "{{ le_well_known_location }}/.well-known/acme-challenge"
+    - "/etc/pki/letsencrypt/{{ hostname }}"
+
+- name: Create certificate storage directory
+  file:
+    dest: "{{ item.path }}"
+    owner: root
+    group: root
+    mode: 0750
+    state: directory
+  with_items:
+  - path: /etc/pki
+  - path: /etc/pki/letsencrypt
+
+- name: Create RSA key to be used for ansible account
+  openssl_privatekey:
+    path: "/etc/pki/letsencrypt/letsencrypt_account.pem"
+    size: 4096
+    type: RSA
+
+- name: Create RSA key to be used for certificate
+  openssl_privatekey:
+    path: "{{ absolute_path_key }}"
+    size: 4096
+    type: RSA
+
+- name: Create CSR for certificate
+  openssl_csr:
+    path: "{{ absolute_path_certificate_csr }}"
+    privatekey_path: "{{ absolute_path_key }}"
+    #country_name: US
+    #state_or_province_name: WA
+    #organization_name: "{{cert.organization_name}}"
+    #email_address: "{{cert.email_address}}"
+    common_name: "{{ le_cert.le_common_name }}"
+    subject_alt_name: "{{ le_cert.le_subject_alt_name }}"
+
+- name: Get ACME challenge
+  acme_certificate:
+    account_email: "{{ le_cert.le_email_address }}"
+    account_key: "{{ le_account_key }}"
+    acme_version: 2
+    acme_directory: "{{ le_acme_directory }}"
+    challenge: http-01
+    chain_dest: "{{ absolute_path_intermediate_chain }}"
+    csr: "{{ absolute_path_certificate_csr }}"
+    dest: "{{ absolute_path_certificate }}"
+    terms_agreed: yes
+    remaining_days: "{{ le_remaining_days }}"
+  register: le_acme_data
+
+#- debug:
+#    var: le_acme_data
+
+- name: Copy challenge file for {{ hostname }}
+  copy:
+    dest: "{{ le_well_known_location }}/{{ le_acme_data['challenge_data'][hostname]['http-01']['resource'] }}"
+    content: "{{ le_acme_data['challenge_data'][hostname]['http-01']['resource_value'] }}"
+  when: le_acme_data.changed
+
+- name: Copy challenge file for {{ riot_hostname }}
+  copy:
+    dest: "{{ le_well_known_location }}/{{ le_acme_data['challenge_data'][riot_hostname]['http-01']['resource'] }}"
+    content: "{{ le_acme_data['challenge_data'][riot_hostname]['http-01']['resource_value'] }}"
+  when: le_acme_data.changed and riot_hostname != hostname
+
+- name: Get certificate
+  acme_certificate:
+    account_email: "{{ le_cert.le_email_address}}"
+    account_key: "{{ le_account_key }}"
+    acme_directory: "{{ le_acme_directory }}"
+    acme_version: 2
+    challenge: http-01
+    chain_dest: "{{ absolute_path_intermediate_chain }}"
+    csr: "{{ absolute_path_certificate_csr }}"
+    dest: "{{ absolute_path_certificate }}"
+    terms_agreed: yes
+    remaining_days: "{{ le_remaining_days }}"
+    data: "{{ le_acme_data }}"
+  when: le_acme_data.changed
+
+- name: Delete challenge file for {{ hostname }}
+  file:
+    path: "{{ le_well_known_location }}/{{ le_acme_data['challenge_data'][hostname]['http-01']['resource'] }}"
+    state: absent
+  when: le_acme_data.changed
+
+- name: Delete challenge file for {{ riot_hostname }}
+  file:
+    path: "{{ le_well_known_location }}/{{ le_acme_data['challenge_data'][riot_hostname]['http-01']['resource'] }}"
+    state: absent
+  when: le_acme_data.changed
+
+- name: Install nginx conf for synapse
+  template:
+    src:  etc/nginx/sites-available/synapse.j2
+    dest: /etc/nginx/sites-available/synapse
+  notify:
+   - restart nginx
+
+- name: Flush handlers
+  meta: flush_handlers

@@ -1,0 +1,14 @@
+# {{ ansible_managed }}
+server {
+        listen 80 default_server;
+{% if not (ansible_default_ipv6.address is undefined or ansible_default_ipv6.address is none or ansible_default_ipv6.address | trim == '') %}
+        listen [::]:80 default_server;
+{% endif %}
+        server_name {{ hostname }} {{ riot_hostname }};
+
+        location ~ /\.well-known {
+            default_type "text/plain";
+            allow all;
+            root {{ le_well_known_location }};
+        }
+}

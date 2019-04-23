@@ -7,6 +7,7 @@ install_reverseproxy: true
 install_postgres: true
 install_mxisd: false
 install_riot: true
+install_letsencrypt: false
 
 # Synapse
 username: synapse # under wich linux user the server should be installed and run
@@ -22,8 +23,10 @@ macaroon_secret_key: CHANGEME(pwgen -y 50)
 form_secret: CHANGEME(pwgen -y 50)
 max_upload_size: 10M # Max upload size
 synapse_path: /home/{{ username }}/.synapse
-absolute_path_certificate: "{{ synapse_path }}/{{ domain }}.tls.crt"
-absolute_path_key: "{{ synapse_path }}/{{ domain }}.tls.key"
+absolute_path_certificate: /etc/pki/letsencrypt/{{ hostname }}/{{ hostname }}.crt
+absolute_path_certificate_csr: /etc/pki/letsencrypt/{{ hostname }}/{{ hostname }}.csr
+absolute_path_key: /etc/pki/letsencrypt/{{ hostname }}/{{ le_privatekey }}
+absolute_path_intermediate_chain: /etc/pki/letsencrypt/{{ hostname }}/intermediate.pem
 synapse_path_certificate: "{{ absolute_path_certificate }}"
 synapse_path_key: "{{ absolute_path_key }}"
 x_forwarded: true
@@ -68,6 +71,18 @@ make_migration: true     # Migrate the database from sqlite to postgres
 
 # Let's Encrypt
 le_well_known_location: "{{ riot_path }}"
+le_account_key: /etc/pki/letsencrypt/letsencrypt_account.pem
+le_privatekey: "{{ hostname }}.key"
+le_acme_directory: https://acme-v02.api.letsencrypt.org/directory
+# For debugging Let's Encrypt
+#le_acme_directory: https://acme-staging-v02.api.letsencrypt.org/directory
+le_cert:
+  le_common_name: "{{ hostname }}"
+  #le_organization_name: EXAMPLE
+  le_email_address: jonjane@example.org
+  le_subject_alt_name:
+  - 'DNS:{{riot_hostname }}'
+le_remaining_days: 20
 
 # mxisd (identity server)
 ## configuration, only for ldap for now

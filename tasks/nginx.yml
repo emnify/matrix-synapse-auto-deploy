@@ -11,7 +11,16 @@
     src:  etc/nginx/sites-available/synapse.j2
     dest: /etc/nginx/sites-available/synapse
   notify:
-   - restart nginx
+    - restart nginx
+  when: not install_letsencrypt
+
+- name: Install nginx conf for lets encrypt
+  template:
+    src:  etc/nginx/sites-available/synapse-le.j2
+    dest: /etc/nginx/sites-available/synapse
+  notify:
+    - restart nginx
+  when: install_letsencrypt
 
 - name: Enable the vhost (symlink)
   file:
@@ -28,3 +37,6 @@
     state: absent
   notify:
     - restart nginx
+
+- name: Flush handlers
+  meta: flush_handlers

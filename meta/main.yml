@@ -2,7 +2,7 @@
 galaxy_info:
   author: "Michael Neese"
   description: Ansible playbook for managing a matrix node with synapse and riot
-  min_ansible_version: 2.2
+  min_ansible_version: 2.5
   license: BSD
   platforms:
   - name: Ubuntu

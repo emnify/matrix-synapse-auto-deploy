@@ -17,6 +17,7 @@
       - wget
       - git
       - openssl
+      - python-openssl
     state: present
 
 - name: Import synapse tasks
@@ -24,15 +25,20 @@
   when: install_synapse
   tags: synapse
 
-- name: Import tunrserver tasks
+- name: Import turnserver tasks
   import_tasks: coturn.yml
   when: install_turnserver
   tags: turnserver
 
-- name: Import nginx tasls
+- name: Import nginx tasks
   import_tasks: nginx.yml
   when: install_reverseproxy
   tags: nginx
+
+- name: Import letsencrypt tasks
+  import_tasks: letsencrypt.yml
+  when: install_letsencrypt
+  tags: letsencrypt
 
 - name: Import postgres tasks
   import_tasks: postgres.yml
