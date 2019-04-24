@@ -3,6 +3,7 @@
 
   vars:
     enable_registration: false
+    make_migration: false
 
   roles:
     - role_under_test

@@ -11,6 +11,8 @@ set -e
 
 CID=$(date +%s)
 CLEANUP=${CLEANUP:-"true"}
+DISTRO=${DISTRO:-"ubuntu1804"}
+ANSIBLE_CONFIG=/etc/ansible/roles/role_under_test/tests/ansible.cfg
 
 if [ "$DISTRO" = 'ubuntu1804' ]; then
   init="/lib/systemd/systemd"
@@ -26,30 +28,30 @@ docker run --detach --volume="$PWD":/etc/ansible/roles/role_under_test:ro --name
 
 docker inspect "$CID"
 
-docker exec --tty "$CID" env TERM=xterm env ANSIBLE_CONFIG=/etc/ansible/roles/role_under_test/tests/ansible.cfg ansible --version
+docker exec --tty "$CID" env TERM=xterm env ansible --version
 
-docker exec --tty "$CID" env TERM=xterm env ANSIBLE_CONFIG=/etc/ansible/roles/role_under_test/tests/ansible.cfg ansible all -i "localhost," -c local -m setup
+docker exec --tty "$CID" env TERM=xterm env ansible all -i "localhost," -c local -m setup
 
-docker exec --tty "$CID" env TERM=xterm env ANSIBLE_CONFIG=/etc/ansible/roles/role_under_test/tests/ansible.cfg ansible-playbook /etc/ansible/roles/role_under_test/tests/playbook.yml --syntax-check 
+docker exec --tty "$CID" env TERM=xterm env ansible-playbook /etc/ansible/roles/role_under_test/tests/playbook.yml --syntax-check
 
-docker exec --tty "$CID" env TERM=xterm env ANSIBLE_CONFIG=/etc/ansible/roles/role_under_test/tests/ansible.cfg ansible-playbook /etc/ansible/roles/role_under_test/tests/playbook.yml
+docker exec --tty "$CID" env TERM=xterm env ansible-playbook /etc/ansible/roles/role_under_test/tests/playbook.yml
 
 # Idempotence test
 #idempotence=$(mktemp)
 #echo -e "\n\nRunning idempotence test..."
-#docker exec --tty "$CID" env TERM=xterm env ANSIBLE_CONFIG=/etc/ansible/roles/role_under_test/tests/ansible.cfg ansible-playbook \
-# /etc/ansible/roles/role_under_test/tests/playbook.yml --extra-vars "make_migration=false" | tee -a $idempotence
+#docker exec --tty "$CID" env TERM=xterm env ansible-playbook \
+# /etc/ansible/roles/role_under_test/tests/playbook.yml | tee -a $idempotence
 #tail -n 200 $idempotence \
 # | grep -q 'changed=0.*failed=0' \
 # && (echo 'Idempotence test passed' && exit 0) || (echo 'Idempotence test failed' && exit 1)
 
 # Run tests
 #echo -e "\n\nRunning smoke tests..."
-#docker exec --tty "$CID" env TERM=xterm ANSIBLE_CONFIG=/etc/ansible/roles/role_under_test/tests/ansible.cfg ansible-playbook /etc/ansible/roles/role_under_test/tests/test.yml
+#docker exec --tty "$CID" env TERM=xterm ansible-playbook /etc/ansible/roles/role_under_test/tests/test.yml
 
 if [ "$CLEANUP" = true ]; then
-echo -e "\n\nStopping container..."
-docker stop "$CID"
-echo "Removing container..."
-docker rm "$CID"
+  echo -e "\n\nStopping container..."
+  docker stop "$CID"
+  echo "Removing container..."
+  docker rm "$CID"
 fi
