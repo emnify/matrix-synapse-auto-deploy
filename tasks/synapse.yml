@@ -18,6 +18,7 @@
       - jq
       - virtualenv
       - libsystemd-dev
+      - pkg-config
     state: present
 
 - name: Create synapse user
