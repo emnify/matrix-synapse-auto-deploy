@@ -52,6 +52,7 @@
       - systemd-python
     virtualenv: "{{ synapse_path }}"
     virtualenv_python: python3
+    state: latest
   notify:
     - restart synapse
   when: not ansible_check_mode
