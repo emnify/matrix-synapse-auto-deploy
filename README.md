@@ -7,7 +7,7 @@ Auto-deployment process for the [matrix-org/synapse](https://github.com/matrix-o
 The playbook will try to install latest [synapse release](https://github.com/matrix-org/synapse/releases)
 and latest [riot.im release](https://github.com/vector-im/riot-web/releases).
 
-This playbook is a fork from [EMnify/matrix-synapse-auto-deploy](https://github.com/EMnify/matrix-synapse-auto-deploy).
+This playbook is a fork from [EMnify/matrix-synapse-auto-deploy](https://github.com/EMnify/matrix-synapse-auto-deploy) but extends and fixes it in many ways.
 
 ## Changes from the original repository
 
@@ -114,4 +114,4 @@ Come and ask for help on matrix:matrix.org using [Riot client](http://riot.im).
 - Ubuntu 18.04
 - Debian 9
 
-It should also run smoothly on any systemd flavoured OS. You're free to test and give me feedback (or PR to add support of your favorite system).
+It should also run smoothly on any systemd flavoured OS. You're free to test and give me feedback (or PR to add support for your favorite system).
