@@ -71,6 +71,7 @@
     src: homeserver.yaml.j2
     dest: "{{ synapse_path }}/homeserver.yaml"
     mode: 0644
+  diff: true
   notify:
     - restart synapse
 
@@ -79,6 +80,7 @@
     src: log.config.j2
     dest: "{{ synapse_path }}/{{ domain }}.log.config"
     mode: 0644
+  diff: true
   notify:
     - restart synapse
 
