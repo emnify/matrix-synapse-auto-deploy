@@ -29,9 +29,13 @@
   register: turn_download
 
 - name: Compile and install coturn
-  command: "./configure && make && make install"
+  command: "{{ item }}"
   args:
     chdir: "{{ turn_path }}/{{ turn_archive }}"
+  with_items:
+    - ./configure
+    - /usr/bin/make
+    - /usr/bin/make install
   when: turn_download.changed
 
 - name: Install turnserver config

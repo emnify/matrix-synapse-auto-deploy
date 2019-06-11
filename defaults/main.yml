@@ -52,7 +52,7 @@ matrix_well_known_location: /var/www/domain.com/.well-known/matrix
 matrix_well_known_port: 443 # The port which gets announced to other servers for communication
 
 # Turnserver
-turn_version: 4.5.0.7
+turn_version: 4.5.1.1
 turn_archive: coturn-{{ turn_version }}
 turn_tarball_url: https://github.com/coturn/coturn/archive/{{ turn_version }}.tar.gz
 turn_path: /usr/src
