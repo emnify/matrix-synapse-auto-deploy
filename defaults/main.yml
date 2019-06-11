@@ -26,8 +26,8 @@ synapse_path: /home/{{ username }}/.synapse
 absolute_path_certificate: /etc/pki/letsencrypt/{{ hostname }}/{{ hostname }}.crt
 absolute_path_certificate_csr: /etc/pki/letsencrypt/{{ hostname }}/{{ hostname }}.csr
 absolute_path_key: /etc/pki/letsencrypt/{{ hostname }}/{{ le_privatekey }}
-absolute_path_intermediate_chain: /etc/pki/letsencrypt/{{ hostname }}/intermediate.pem
-absolute_path_fullchain: /etc/pki/letsencrypt/{{ hostname }}/fullchain.pem
+absolute_path_intermediate_chain: /etc/pki/letsencrypt/{{ hostname }}/intermediate.crt
+absolute_path_fullchain: /etc/pki/letsencrypt/{{ hostname }}/fullchain.crt
 synapse_path_certificate: "{{ absolute_path_fullchain }}"
 synapse_path_key: "{{ absolute_path_key }}"
 x_forwarded: true
