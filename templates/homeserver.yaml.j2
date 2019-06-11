@@ -208,7 +208,7 @@ database:
   name: "sqlite3"
   # Arguments to pass to the engine
   args:
-    database: "/home/synapse/.synapse/homeserver.db"
+    database: "{{ synapse_path }}/homeserver.db"
 {% endif %}
 
 # Number of events to cache in memory.
@@ -250,7 +250,7 @@ federation_rc_concurrent: 3
 
 
 # Directory where uploaded images and attachments are stored.
-media_store_path: "/home/synapse/.synapse/media_store"
+media_store_path: "{{ synapse_path }}/media_store"
 
 # Media storage providers allow media to be stored in different
 # locations.
@@ -267,7 +267,7 @@ media_store_path: "/home/synapse/.synapse/media_store"
 #     directory: /mnt/some/other/directory
 
 # Directory where in-progress uploads are stored.
-uploads_path: "/home/synapse/.synapse/uploads"
+uploads_path: "{{ synapse_path }}/uploads"
 
 # The largest allowed upload size in bytes
 max_upload_size: "{{ max_upload_size }}"
@@ -561,7 +561,7 @@ perspectives:
 # See pysaml2 docs for format of config.
 #saml2_config:
 #   enabled: true
-#   config_path: "/home/synapse/.synapse/sp_conf.py"
+#   config_path: "{{ synapse_path }}/sp_conf.py"
 #   idp_redirect_url: "http://{{ domain }}/idp"
 
 
