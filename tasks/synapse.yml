@@ -35,7 +35,7 @@
     extra_args: '--upgrade'
   when: not ansible_check_mode
 
-- name: PIP to install needed dependencies and synapse into virtualenv
+- name: PIP to install / update needed dependencies and synapse into virtualenv
   pip:
     name:
       - cryptography

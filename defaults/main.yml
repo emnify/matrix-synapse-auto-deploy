@@ -57,8 +57,8 @@ turn_archive: coturn-{{ turn_version }}
 turn_tarball_url: https://github.com/coturn/coturn/archive/{{ turn_version }}.tar.gz
 turn_path: /usr/src
 ## Define this variables if you want to use a custom turn server AND install_turnserver is set to false.
-## Recommended if you do not let the playbook install the cotrun turnserver.
-## turn_uris: '"turn:{{ hostname }}:3478?transport=udp\", \"turn:{{ hostname }}:3478?transport=tcp"'
+## Recommended if you do not let the playbook install the coturn turnserver.
+turn_uris: '"turn:{{ hostname }}:3478?transport=udp\", \"turn:{{ hostname }}:3478?transport=tcp"'
 turn_shared_secret: CHANGEME
 ## turn_username:
 ## turn_password:

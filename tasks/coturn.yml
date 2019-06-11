@@ -50,11 +50,11 @@
     - reload systemctl daemon
     - restart turn server
 
-- name: Configure local coturn turn_uris
-  lineinfile: "dest={{ synapse_path }}/homeserver.yaml"
-  args:
-    regexp: "^turn_uris:"
-    line: "turn_uris: [ \"turn:{{ hostname }}:3478?transport=udp\", \"turn:{{ hostname }}:3478?transport=tcp\" ]"
-  when: install_turnserver and not ansible_check_mode
-  notify:
-    - restart synapse
+#- name: Configure local coturn turn_uris
+#  lineinfile: "dest={{ synapse_path }}/homeserver.yaml"
+#  args:
+#    regexp: "^turn_uris:"
+#    line: "turn_uris: [ \"turn:{{ hostname }}:3478?transport=udp\", \"turn:{{ hostname }}:3478?transport=tcp\" ]"
+#  when: install_turnserver and not ansible_check_mode
+#  notify:
+#    - restart synapse
