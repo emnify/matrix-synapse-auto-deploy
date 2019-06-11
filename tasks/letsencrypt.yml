@@ -55,6 +55,8 @@
     terms_agreed: yes
     remaining_days: "{{ le_remaining_days }}"
   register: le_acme_data
+  notify:
+    - restart nginx
 
 #- name: Output of le_acme_data
 #  debug:
@@ -80,6 +82,7 @@
     acme_version: 2
     challenge: http-01
     chain_dest: "{{ absolute_path_intermediate_chain }}"
+    fullchain_dest: "{{ absolute_path_fullchain }}"
     csr: "{{ absolute_path_certificate_csr }}"
     dest: "{{ absolute_path_certificate }}"
     terms_agreed: yes
