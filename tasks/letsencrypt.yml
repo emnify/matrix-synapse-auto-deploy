@@ -49,6 +49,7 @@
     acme_directory: "{{ le_acme_directory }}"
     challenge: http-01
     chain_dest: "{{ absolute_path_intermediate_chain }}"
+    fullchain_dest: "{{ absolute_path_fullchain }}"
     csr: "{{ absolute_path_certificate_csr }}"
     dest: "{{ absolute_path_certificate }}"
     terms_agreed: yes
