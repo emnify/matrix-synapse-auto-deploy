@@ -194,11 +194,22 @@ listeners:
 # Database configuration
 database:
   # The database engine name
+{% if install_postgres %}
+  name: "psycopg2"
+  # Arguments to pass to the engine
+  args:
+    user: "{{ username }}"
+    password: "{{ database_secret }}"
+    database: "homeserver"
+    host: "localhost"
+    cp_min: 5
+    cp_max: 10
+{% else %}
   name: "sqlite3"
   # Arguments to pass to the engine
   args:
-    # Path to the database
     database: "/home/synapse/.synapse/homeserver.db"
+{% endif %}
 
 # Number of events to cache in memory.
 event_cache_size: "10K"
