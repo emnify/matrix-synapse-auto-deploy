@@ -51,6 +51,8 @@ notif_from: Your Friendly %(app) Home Server <{{ hostname }}>
 install_well_known: true
 matrix_well_known_location: /var/www/domain.com/.well-known/matrix
 matrix_well_known_port: 443 # The port which gets announced to other servers for communication
+## See https://github.com/matrix-org/synapse#help-synapse-is-slow-and-eats-all-my-ram-cpu
+synapse_cache_factor: 0.5
 
 # Turnserver
 turn_version: 4.5.1.1
@@ -107,8 +109,8 @@ riot_path: /var/www/{{ riot_hostname }}
 riot_integration_ui:
 riot_integration_api:
 riot_hs_url: "{{ hostname }}"
-## Recommended: hostname or vector.im
-riot_is_url: "{{ hostname }}"
+## Recommended: matrix.org, vector.im or {{ hostname }}
+riot_is_url: matrix.org
 riot_brand: Riot
 ## light, dark, simple.im
 riot_theme: light

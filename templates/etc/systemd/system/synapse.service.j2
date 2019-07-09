@@ -12,6 +12,7 @@ ExecStart={{ synapse_path }}/bin/python -B -m synapse.app.homeserver -c {{ synap
 ExecStop={{ synapse_path }}/bin/synctl stop {{ synapse_path }}/homeserver.yaml
 Restart=on-failure
 Environment=USER={{ username }} HOME=/home/{{ username }}
+Environment=SYNAPSE_CACHE_FACTOR={{synapse_cache_factor }}
 
 [Install]
 WantedBy=multi-user.target

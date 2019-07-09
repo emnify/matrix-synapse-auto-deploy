@@ -2,8 +2,10 @@ version: 1
 # {{ ansible_managed }}
 
 formatters:
+    fmt:
+        format: '%(asctime)s - %(name)s - %(lineno)d - %(levelname)s - %(request)s - %(message)s'
     journal_fmt:
-        format: '%(name)s: [%(request)s] %(message)s'
+        format: '%(levelname)s - %(name)s: [%(request)s] %(message)s'
 
 filters:
     context:
@@ -11,11 +13,37 @@ filters:
         request: ""
 
 handlers:
+    console:
+        class: logging.StreamHandler
+        formatter: fmt
+        filters: [context]
+    file:
+        class: logging.handlers.RotatingFileHandler
+        formatter: fmt
+        filename: {{ synapse_path }}/homeserver.log
+        maxBytes: 100000000
+        backupCount: 3
+        filters: [context]
+        encoding: utf8
     journal:
         class: systemd.journal.JournalHandler
         formatter: journal_fmt
         filters: [context]
         SYSLOG_IDENTIFIER: synapse
+
+loggers:
+    twisted:
+        level: WARN
+
+    synapse:
+        # level: INFO
+        level: WARN
+
+    synapse.storage.SQL:
+        level: INFO
+
+    synapse.http.matrixfederationclient:
+        level: ERROR
 
 root:
     level: INFO
