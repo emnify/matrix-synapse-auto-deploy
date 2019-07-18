@@ -183,6 +183,10 @@ listeners:
         compress: true
       - names: [federation]
         compress: false
+{% if synapse_enable_metrics %}
+      - names: [metrics]
+        compress: true
+{% endif %}
 
   # Turn on the twisted ssh manhole service on localhost on the given
   # port.
@@ -304,6 +308,13 @@ thumbnail_sizes:
 # an explicit url_preview_ip_range_blacklist of IPs that the spider is
 # denied from accessing.
 url_preview_enabled: {{ url_preview_enabled }}
+
+# Keeps track of who is online and who is offline. And how long ago they were last online, etc.
+{% if synapse_use_presence %}
+use_presence: True
+{% else %}
+use_presence: False
+{% endif %}
 
 # List of IP address CIDR ranges that the URL preview spider is denied
 # from accessing.  There are no defaults: you must explicitly
@@ -497,7 +508,11 @@ trusted_third_party_id_servers:
 ## Metrics ###
 
 # Enable collection and rendering of performance metrics
+{% if synapse_enable_metrics %}
+enable_metrics: True
+{% else %}
 enable_metrics: False
+{% endif %}
 report_stats: True
 
 
@@ -518,7 +533,11 @@ app_service_config_files: []
 macaroon_secret_key: "{{ macaroon_secret_key }}"
 
 # Used to enable access token expiration.
+{% if synapse_expire_access_token %}
+expire_access_token: True
+{% else %}
 expire_access_token: False
+{% endif %}
 
 # a secret which is used to calculate HMACs for form values, to stop
 # falsification of values

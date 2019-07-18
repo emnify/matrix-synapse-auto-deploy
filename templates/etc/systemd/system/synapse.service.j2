@@ -7,6 +7,7 @@ After=syslog.target
 Type=simple
 User={{ username }}
 Group={{ username }}
+MemoryMax={{ synapse_memory_percent }}
 WorkingDirectory={{ synapse_path }}/
 ExecStart={{ synapse_path }}/bin/python -B -m synapse.app.homeserver -c {{ synapse_path }}/homeserver.yaml
 ExecStop={{ synapse_path }}/bin/synctl stop {{ synapse_path }}/homeserver.yaml
