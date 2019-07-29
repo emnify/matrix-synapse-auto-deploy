@@ -222,7 +222,6 @@ database:
 event_cache_size: "10K"
 
 
-
 # A yaml python logging config file
 log_config: "{{ synapse_path }}/{{ domain }}.log.config"
 
@@ -253,7 +252,6 @@ federation_rc_reject_limit: 50
 # The number of federation requests to concurrently process from a
 # single server
 federation_rc_concurrent: 3
-
 
 
 # Directory where uploaded images and attachments are stored.
@@ -396,8 +394,6 @@ url_preview_ip_range_blacklist:
 
 # The largest allowed URL preview spidering size in bytes
 max_spider_size: "10M"
-
-
 
 
 ## Captcha ##
@@ -548,6 +544,17 @@ expire_access_token: True
 expire_access_token: False
 {% endif %}
 
+# Time that a user's session remains valid for, after they log in.
+#
+# Note that this is not currently compatible with guest logins.
+#
+# Note also that this is calculated at login time: changes are not applied
+# retrospectively to users who have already logged in.
+#
+# By default, this is infinite.
+#
+session_lifetime: "{{ synapse_session_lifetime }}"
+
 # a secret which is used to calculate HMACs for form values, to stop
 # falsification of values
 form_secret: "{{ form_secret }}"
@@ -581,7 +588,6 @@ perspectives:
           key: "Noi6WqcDj0QmPxCNQqgezwTlBKrfqehY1u2FyWP9uYw"
 
 
-
 # Enable SAML2 for registration and login. Uses pysaml2
 # config_path:      Path to the sp_conf.py configuration file
 # idp_redirect_url: Identity provider URL which will redirect
@@ -591,7 +597,6 @@ perspectives:
 #   enabled: true
 #   config_path: "{{ synapse_path }}/sp_conf.py"
 #   idp_redirect_url: "http://{{ domain }}/idp"
-
 
 
 # Enable CAS for registration and login.
@@ -611,14 +616,12 @@ perspectives:
 #    algorithm: "HS256"
 
 
-
 # Enable password for login.
 password_config:
    enabled: true
    # Uncomment and change to a secret random string for extra security.
    # DO NOT CHANGE THIS AFTER INITIAL SETUP!
    #pepper: ""
-
 
 
 # Enable sending emails for notification events
@@ -678,7 +681,6 @@ email:
 #         #filter: "(objectClass=posixAccount)"
 
 
-
 # Clients requesting push notifications can either have the body of
 # the message sent in the notification poke along with other details
 # like the sender, or just the event ID and room ID (`event_id_only`).
@@ -707,7 +709,6 @@ enable_group_creation: false
 # If enabled, non server admins can only create groups with local parts
 # starting with this prefix
 # group_creation_prefix: "unofficial/"
-
 
 
 # User Directory configuration

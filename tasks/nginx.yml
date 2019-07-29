@@ -4,7 +4,7 @@
   apt:
     name: nginx
     state: present
-  when: install_nginx_package
+  when: nginx_install_package
 
 - name: Test if nginx synapse config exists
   stat:

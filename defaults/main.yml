@@ -1,6 +1,7 @@
 ---
+# Ansible Variables
 
-# Features
+## Features
 install_synapse: true
 install_turnserver: true
 install_reverseproxy: true
@@ -9,7 +10,7 @@ install_mxisd: false
 install_riot: true
 install_letsencrypt: false
 
-# Synapse
+## Synapse
 username: synapse # under wich linux user the server should be installed and run
 hostname: matrix.domain.com # FQDN to be used
 domain: domain.com # Domain Part of the User MXIDs
@@ -32,76 +33,82 @@ synapse_path_certificate: "{{ absolute_path_fullchain }}"
 synapse_path_key: "{{ absolute_path_key }}"
 x_forwarded: true
 url_preview_enabled: false
-## Configure e-mail Settings
+### Configure e-mail Settings
 mail: no
 mail_from: matrix@{{ domain }}
 mail_name: Identity Server
 mail_host:
 mail_port: 587
-## For mxisd: 0 = no STARTLS, 1 = try, 2 = force
+### For mxisd: 0 = no STARTLS, 1 = try, 2 = force
 mail_tls: 1
-## For synapse: True = TLS / False = No TLS (StartTLS not possible)
+### For synapse: True = TLS / False = No TLS (StartTLS not possible)
 mail_tls_synapse: True
 mail_user:
 mail_pass:
 notif_from: Your Friendly %(app) Home Server <{{ hostname }}>
-## .well-known support - The well-known server file needs to be placed at the apex domain, e.g. domain.com/.well-known/matrix
-### Because this role does not configure your apex domain it just assumes that it will also get server via the same server
-### where synapse runs and you can configure the path to your .well-known apex domain directory
+#### .well-known support - The well-known server file needs to be placed at the apex domain, e.g. domain.com/.well-known/matrix
+#### Because this role does not configure your apex domain it just assumes that it will also get served via the same server
+#### where synapse runs. You can configure the path to your .well-known apex domain directory
 install_well_known: true
 matrix_well_known_location: /var/www/domain.com/.well-known/matrix
 matrix_well_known_port: 443 # The port which gets announced to other servers for communication
-## See https://github.com/matrix-org/synapse#help-synapse-is-slow-and-eats-all-my-ram-cpu
+### See https://github.com/matrix-org/synapse#help-synapse-is-slow-and-eats-all-my-ram-cpu
 synapse_cache_factor: 0.5
-# Enables prometheus monitoring endpoint on :443/metrics
-# Further information: https://github.com/matrix-org/synapse/blob/develop/docs/metrics-howto.rst
+### Enables prometheus monitoring endpoint on :443/metrics
+### Further information: https://github.com/matrix-org/synapse/blob/develop/docs/metrics-howto.rst
 synapse_enable_metrics: false
-# Keeps track of who is online and who is offline. And how long ago they were last online, etc. Disabling can increase performance
+### Keeps track of who is online and who is offline. And how long ago they were last online, etc. Disabling can increase performance
 synapse_use_presence: true
+### Expire user access token after 24h
 synapse_expire_access_token: false
-# How much ram in percent should synapse be allowed to use
+synapse_session_lifetime: 24h
+### How much ram in percent should synapse be allowed to use
 synapse_memory_percent: 80%
+#### When true, search all users visible to your HS when searching the user directory, rather than limiting to users visible in public rooms
 synapse_user_directory: false
+### Path(s) to app service configuration files
 synapse_app_service_config_files:
+#### - /path/to/app_service1/configuration.conf
+#### - /path/to/app_service2/configuration.conf
 
-# Turnserver
+## nginx
+nginx_install_package: true # installs nginx via package manager
+### Block openid requests to synapse
+nginx_block_openid: true
+
+## Turnserver
 turn_version: 4.5.1.1
 turn_archive: coturn-{{ turn_version }}
 turn_tarball_url: https://github.com/coturn/coturn/archive/{{ turn_version }}.tar.gz
 turn_path: /usr/src
-## Define this variables if you want to use a custom turn server AND install_turnserver is set to false.
-## Recommended if you do not let the playbook install the coturn turnserver.
+### Define this variables if you want to use a custom turn server AND install_turnserver is set to false.
+### Recommended if you do not let the playbook install the coturn turnserver.
 turn_uris: '"turn:{{ hostname }}:3478?transport=udp\", \"turn:{{ hostname }}:3478?transport=tcp"'
 turn_shared_secret: CHANGEME
-## turn_username:
-## turn_password:
+### turn_username:
+### turn_password:
 
-# NGINX
-install_nginx_package: true # installs nginx via package manager
-# Block openid requests to synapse
-nginx_block_openid: true
-
-# Postgresql
-make_migration: false     # Migrate the database from sqlite to postgres
-
-# Let's Encrypt
+## letsencrypt
 le_well_known_location: "{{ riot_path }}"
 le_account_key: /etc/pki/letsencrypt/letsencrypt_account.pem
 le_privatekey: "{{ hostname }}.key"
 le_acme_directory: https://acme-v02.api.letsencrypt.org/directory
-# For debugging Let's Encrypt
-#le_acme_directory: https://acme-staging-v02.api.letsencrypt.org/directory
+### For debugging Let's Encrypt
+### le_acme_directory: https://acme-staging-v02.api.letsencrypt.org/directory
 le_cert:
   le_common_name: "{{ hostname }}"
-  #le_organization_name: EXAMPLE
+  ### le_organization_name: EXAMPLE
   le_email_address: jonjane@example.org
   le_subject_alt_name:
   - 'DNS:{{riot_hostname }}'
 le_remaining_days: 20
 
-# mxisd (identity server)
-## configuration, only for ldap for now
-## For more information see https://github.com/kamax-io/mxisd/
+## Postgresql
+make_migration: false     # Migrate the database from sqlite to postgres
+
+## mxisd (identity server)
+### Only ldap configuration for now
+### For more information see https://github.com/kamax-io/mxisd/
 ldap_server:
 bind_dn:
 bind_pass:
@@ -110,7 +117,7 @@ ldap_tls: true
 ldap_port: 636
 ldap_filter: (&(objectclass=user)(mail=*))
 
-# riot webclient
+## riot-web
 riot_im_version: 1.3.0
 riot_im_archive: riot-v{{ riot_im_version }}
 riot_im_tarball_url: "https://github.com/vector-im/riot-web/releases/download/v{{ riot_im_version }}/{{ riot_im_archive }}.tar.gz"
@@ -123,12 +130,12 @@ riot_integration_api: "https://scalar.vector.im/api"
 riot_integrations_jitsi_widget_url: "https://scalar.vector.im/api/widgets/jitsi.html"
 riot_bug_report_endpoint_url: "https://riot.im/bugreports/submit"
 riot_hs_url: "{{ hostname }}"
-## Recommended: matrix.org, vector.im or {{ hostname }}
+### Recommended: matrix.org, vector.im or {{ hostname }}
 riot_is_url: matrix.org
 riot_brand: Riot
-## light, dark, simple.im
+### light, dark, simple.im
 riot_theme: light
 riot_defaultCountryCode: EN
 
-# Travis CI
+## Travis CI
 ansible_default_ipv6: # required for Travis CI tests
