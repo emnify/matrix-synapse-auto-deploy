@@ -61,6 +61,8 @@ synapse_use_presence: true
 synapse_expire_access_token: false
 # How much ram in percent should synapse be allowed to use
 synapse_memory_percent: 80%
+synapse_user_directory: false
+synapse_app_service_config_files:
 
 # Turnserver
 turn_version: 4.5.1.1
@@ -76,9 +78,11 @@ turn_shared_secret: CHANGEME
 
 # NGINX
 install_nginx_package: true # installs nginx via package manager
+# Block openid requests to synapse
+nginx_block_openid: true
 
 # Postgresql
-make_migration: true     # Migrate the database from sqlite to postgres
+make_migration: false     # Migrate the database from sqlite to postgres
 
 # Let's Encrypt
 le_well_known_location: "{{ riot_path }}"
@@ -114,14 +118,17 @@ riot_hostname: "{{ hostname }}" # For security it should be on another domain as
 riot_path_certificate:
 riot_path_key:
 riot_path: /var/www/{{ riot_hostname }}
-riot_integration_ui: https://scalar.vector.im/
-riot_integration_api: https://scalar.vector.im/api
+riot_integration_ui: "https://scalar.vector.im/"
+riot_integration_api: "https://scalar.vector.im/api"
+riot_integrations_jitsi_widget_url: "https://scalar.vector.im/api/widgets/jitsi.html"
+riot_bug_report_endpoint_url: "https://riot.im/bugreports/submit"
 riot_hs_url: "{{ hostname }}"
 ## Recommended: matrix.org, vector.im or {{ hostname }}
 riot_is_url: matrix.org
 riot_brand: Riot
 ## light, dark, simple.im
 riot_theme: light
+riot_defaultCountryCode: EN
 
 # Travis CI
 ansible_default_ipv6: # required for Travis CI tests

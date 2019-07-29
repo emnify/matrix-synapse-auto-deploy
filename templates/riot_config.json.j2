@@ -14,15 +14,11 @@
     "disable_login_language_selector": false,
     "disable_3pid_login": false,
     "brand": "Riot",
-{% if riot_integration_ui is defined and not riot_integration_ui is none %}
-    "integrations_ui_url": "{{ riot_integration_ui }}",
-{% endif %}
-{% if riot_integration_api is defined and not riot_integration_api is none %}
-    "integrations_rest_url": "{{ riot_integration_api }}",
-{% endif %}
-    "integrations_jitsi_widget_url": "https://scalar.vector.im/api/widgets/jitsi.html",
-    "bug_report_endpoint_url": "https://riot.im/bugreports/submit",
-    "defaultCountryCode": "DE",
+    "integrations_ui_url": {{ riot_integration_ui }},
+    "integrations_rest_url": {{ riot_integration_api }},
+    "integrations_jitsi_widget_url": {{ riot_integration_ui }},
+    "bug_report_endpoint_url": {{ riot_bug_report_endpoint_url }},
+    "defaultCountryCode": "{{ riot_defaultCountryCode }}",
     "showLabsSettings": true,
     "default_federate": true,
     "default_theme": "{{ riot_theme }}",
@@ -34,7 +30,7 @@
     },
     "welcomeUserId": "@riot-bot:matrix.org",
     "piwik": {
-        "url": "https://piwik.riot.im/",
+        "x-url": "https://piwik.riot.im/",
         "whitelistedHSUrls": ["https://matrix.org"],
         "whitelistedISUrls": ["https://vector.im", "https://matrix.org"],
         "siteId": 1

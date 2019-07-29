@@ -25,6 +25,12 @@ server {
             proxy_set_header Host $http_host;
             proxy_set_header X-Forwarded-For $remote_addr;
         }
+{% if nginx_block_openid | bool %}
+
+        location ~ /_matrix/.*(openid) {
+            deny  all;
+        }
+{% endif %}
 {% endif %}
         location ~ /\.well-known {
             default_type "text/plain";
@@ -71,6 +77,12 @@ server {
             client_body_buffer_size 128k;
             client_max_body_size {{ max_upload_size }};
         }
+{% if nginx_block_openid | bool %}
+
+        location ~ /_matrix/.*(openid) {
+            deny  all;
+        }
+{% endif %}
 }
 {% if install_reverseproxy | bool %}
 
@@ -93,6 +105,12 @@ server {
             client_body_buffer_size 128k;
             client_max_body_size {{ max_upload_size }};
         }
+{% if nginx_block_openid | bool %}
+
+        location ~ /_matrix/.*(openid) {
+            deny  all;
+        }
+{% endif %}
 }
 {% endif %}
 {% endif %}

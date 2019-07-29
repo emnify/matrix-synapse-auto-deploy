@@ -86,9 +86,9 @@ pid_file: {{ synapse_path }}/homeserver.pid
 
 # The public-facing base URL for the client API (not including _matrix/...)
 {% if install_reverseproxy %}
-public_baseurl: https://{{ hostname }}:8448/
-{% else %}
 public_baseurl: https://{{ hostname }}/
+{% else %}
+public_baseurl: https://{{ hostname }}:8448/
 {% endif %}
 
 # Set the soft limit on the number of file descriptors synapse can use
@@ -121,8 +121,7 @@ soft_file_limit: 0
 # List of ports that Synapse should listen on, their purpose and their
 # configuration.
 listeners:
-{% if install_reverseproxy %}
-{% else %}
+{% if install_reverseproxy == false %}
   # Main HTTPS listener
   # For when matrix traffic is sent directly to synapse.
   -
@@ -173,7 +172,11 @@ listeners:
   # For when matrix traffic passes through loadbalancer that unwraps TLS.
   - port: 8008
     tls: false
+{% if install_reverseproxy %}
+    bind_addresses: ['127.0.0.1']
+{% else %}
     bind_addresses: ['::', '0.0.0.0']
+{% endif %}
     type: http
 
     x_forwarded: {{ x_forwarded }}
@@ -527,8 +530,14 @@ room_invite_state_types:
 
 
 # A list of application service config file to use
+{% if synapse_app_service_config_files %}
+app_service_config_files:
+{% for i in synapse_app_service_config_files %}
+  - "{{ i }}"
+{% endfor %}
+{% else %}
 app_service_config_files: []
-
+{% endif %}
 
 macaroon_secret_key: "{{ macaroon_secret_key }}"
 
@@ -709,9 +718,13 @@ enable_group_creation: false
 # UPDATE user_directory_stream_pos SET stream_id = NULL;
 # on your database to tell it to rebuild the user_directory search indexes.
 #
+{% if synapse_user_directory %}
+user_directory:
+   search_all_users: true
+{% else %}
 #user_directory:
-#   search_all_users: false
-
+#   search_all_users: true
+{% endif %}
 
 # User Consent configuration
 #
