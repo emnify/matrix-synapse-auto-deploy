@@ -105,6 +105,8 @@ le_remaining_days: 20
 
 ## Postgresql
 make_migration: false     # Migrate the database from sqlite to postgres
+postgres_database: homeserver
+postgres_host: localhost
 
 ## mxisd (identity server)
 ### Only ldap configuration for now

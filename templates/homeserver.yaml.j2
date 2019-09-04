@@ -207,8 +207,8 @@ database:
   args:
     user: "{{ username }}"
     password: "{{ database_secret }}"
-    database: "homeserver"
-    host: "localhost"
+    database: "{{ postgres_database }}"
+    host: "{{ postgres_host }}"
     cp_min: 5
     cp_max: 10
 {% else %}
@@ -721,9 +721,11 @@ enable_group_creation: false
 #
 {% if synapse_user_directory %}
 user_directory:
+   enabled: true
    search_all_users: true
 {% else %}
 #user_directory:
+#   enabled: true
 #   search_all_users: true
 {% endif %}
 
