@@ -21,8 +21,11 @@
 
 - name: Install nginx conf for synapse
   template:
-    src:  etc/nginx/sites-available/synapse.j2
-    dest: /etc/nginx/sites-available/synapse
+    src:  etc/nginx/{{item.src}}
+    dest: /etc/nginx/{{item.dest}}
+  with_items:
+    - { src: 'sites-available/synapse.j2', dest: 'sites-available/synapse' }
+    - { src: 'common/matrix.conf.j2', dest: 'common/matrix.conf' }
   notify:
     - restart nginx
   when: not install_letsencrypt

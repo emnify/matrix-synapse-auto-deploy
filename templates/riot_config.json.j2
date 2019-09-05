@@ -8,16 +8,23 @@
             "base_url": "https://{{ riot_is_url }}"
         }
     },
-    "disable_identity_server": false,
-    "disable_custom_urls": false,
+    "disable_custom_urls": true,
     "disable_guests": true,
     "disable_login_language_selector": false,
     "disable_3pid_login": false,
     "brand": "Riot",
+{% if riot_integration_ui is not none and riot_integration_ui | length > 0 %}
     "integrations_ui_url": {{ riot_integration_ui }},
+{% endif %}
+{% if riot_integration_api is not none and riot_integration_api | length > 0 %}
     "integrations_rest_url": {{ riot_integration_api }},
+{% endif %}
+{% if riot_integration_ui is not none and riot_integration_ui | length > 0 %}
     "integrations_jitsi_widget_url": {{ riot_integration_ui }},
+{% endif %}
+{% if riot_bug_report_endpoint_url is not none and riot_bug_report_endpoint_url | length > 0 %}
     "bug_report_endpoint_url": {{ riot_bug_report_endpoint_url }},
+{% endif %}
     "defaultCountryCode": "{{ riot_defaultCountryCode }}",
     "showLabsSettings": true,
     "default_federate": true,
@@ -28,7 +35,7 @@
             "matrix.org"
         ]
     },
-    "welcomeUserId": "@riot-bot:matrix.org",
+    "welcomeUserId": null,
     "piwik": {
         "x-url": "https://piwik.riot.im/",
         "whitelistedHSUrls": ["https://matrix.org"],
@@ -37,5 +44,8 @@
     },
     "enable_presence_by_hs_url": {
         "https://matrix.org": false
+    },
+    "embeddedPages": {
+        "homeUrl": ""
     }
 }
