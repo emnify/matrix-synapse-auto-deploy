@@ -6,6 +6,11 @@
     state: present
   when: nginx_install_package
 
+- name: Creating required directories
+  file:
+    dest: /etc/nginx/common
+    state: directory
+
 - name: Test if nginx synapse config exists
   stat:
     path: /etc/nginx/sites-available/synapse
