@@ -704,11 +704,15 @@ email:
 
 
 # Whether to allow non server admins to create groups on this server
-enable_group_creation: false
+enable_group_creation: {{ synapse_enable_group_creation | lower }}
 
 # If enabled, non server admins can only create groups with local parts
 # starting with this prefix
+{% if synapse_enable_group_creation %}
+group_creation_prefix: "{{ synapse_enable_group_creation_prefix }}"
+{% else %}
 # group_creation_prefix: "unofficial/"
+{% endif %}
 
 
 # User Directory configuration
