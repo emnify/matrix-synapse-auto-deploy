@@ -4,6 +4,7 @@
   vars:
     enable_registration: false
     make_migration: false
+    install_letsencrypt: false
 
   roles:
     - role_under_test/roles/matrix-synapse-auto-deploy

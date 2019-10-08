@@ -8,7 +8,7 @@ install_reverseproxy: true
 install_postgres: true
 install_mxisd: true
 install_riot: true
-install_letsencrypt: false
+install_letsencrypt: true
 
 ## Synapse
 username: synapse # under wich linux user the server should be installed and run
