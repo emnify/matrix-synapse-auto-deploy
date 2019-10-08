@@ -6,4 +6,4 @@
     make_migration: false
 
   roles:
-    - role_under_test
+    - role_under_test/roles/matrix-synapse-auto-deploy
