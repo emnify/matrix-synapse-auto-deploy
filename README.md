@@ -48,9 +48,7 @@ It should also run smoothly on any systemd flavoured OS. You're free to test and
 
 ## Installation
 
-If you are not familiar with ansible, the easiest way is to lauch from the server you want to install matrix on:
-
-    ansible-playbook playbook.yml -c local
+    ansible-playbook playbook.example.yml --extra-vars "host=matrix.domain.com"
 
 ## Enjoy
 

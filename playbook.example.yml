@@ -1,0 +1,22 @@
+    ---
+    - name: "Setup a Matrix server"
+      hosts: '{{ host }}'
+
+      roles:
+        - matrix-synapse-auto-deploy
+
+      vars:
+        username: synapse # under wich user the server should be installed and run
+        hostname: matrix.domain.com # FQDN to be used
+        enable_registration: true # this will open registration by default, take care if you run a public server!
+        enable_registration_captcha: false
+        recaptcha_private_key: YOURPRIVATEKEYHERE
+        recaptcha_public_key: YOURPUBLICKEYHERE
+        turn_shared_secret: YOURSHAREDSECRETHERE
+        database_secret: YOURDATABASESECRETHERE
+        absolute_path_certificate: /etc/ssl/your_org/fullchain.pem
+        absolute_path_key: /etc/ssl/your_org/private_key.pem
+        riot_hostname: chat.domain.com
+        riot_path_certificate: /etc/ssl/your_org/fullchain.pem
+        riot_path_key: /etc/ssl/your_org/private_key.pem
+        riot_path: /var/www/riot
