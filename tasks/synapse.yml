@@ -108,11 +108,14 @@
 
 - name: Configure .well-known server matrix discovery
   template:
-    src: server.j2
-    dest: "{{ matrix_well_known_location }}/server"
+    src: well-known/{{ item.src }}
+    dest: "{{ matrix_well_known_location }}/{{ item.dest }}"
     owner: www-data
     group: www-data
     mode: 0644
+  with_items:
+    - { src: 'client.j2', dest: 'client' }
+    - { src: 'server.j2', dest: 'server' }
   when: install_well_known
 
 - name: Install synapse systemd conf

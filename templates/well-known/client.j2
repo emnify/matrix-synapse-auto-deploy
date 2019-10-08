@@ -1,0 +1,9 @@
+{
+	"m.homeserver": {
+		"base_url": "https://{{ hostname }}"
+	}{% if install_mxisd %},
+	"m.identity_server": {
+		"base_url": "https://{{ hostname }}"
+	}
+{% endif %}
+}

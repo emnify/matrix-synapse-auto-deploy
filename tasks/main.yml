@@ -45,10 +45,10 @@
   when: install_postgres
   tags: postgres
 
-#- name: Import mxisd tasks
-#  import_tasks: mxisd.yml
-#  when: install_mxisd
-#  tags: mxisd
+- name: Import mxisd tasks
+  import_tasks: mxisd.yml
+  when: install_mxisd
+  tags: mxisd
 
 - name: Import riot.im tasks
   import_tasks: riot.im.yml

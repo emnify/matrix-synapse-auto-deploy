@@ -118,6 +118,27 @@ soft_file_limit: 0
 #  - nyc.example.com
 #  - syd.example.com
 
+# Prevent federation requests from being sent to the following
+# blacklist IP address CIDR ranges. If this option is not specified, or
+# specified with an empty list, no ip range blacklist will be enforced.
+#
+# As of Synapse v1.4.0 this option also affects any outbound requests to identity
+# servers provided by user input.
+#
+# (0.0.0.0 and :: are always blacklisted, whether or not they are explicitly
+# listed here, since they correspond to unroutable addresses.)
+#
+federation_ip_range_blacklist:
+  - '127.0.0.0/8'
+  - '10.0.0.0/8'
+  - '172.16.0.0/12'
+  - '192.168.0.0/16'
+  - '100.64.0.0/10'
+  - '169.254.0.0/16'
+  - '::1/128'
+  - 'fe80::/64'
+  - 'fc00::/7'
+
 # List of ports that Synapse should listen on, their purpose and their
 # configuration.
 listeners:
@@ -491,12 +512,57 @@ bcrypt_rounds: 12
 # accessible to anonymous users.
 allow_guest_access: False
 
+# The identity server which we suggest that clients should use when users log
+# in on this server.
+#
+# (By default, no suggestion is made, so it is left up to the client.
+# This setting is ignored unless public_baseurl is also set.)
+#
+#default_identity_server: https://matrix.org
+
 # The list of identity servers trusted to verify third party
 # identifiers by this server.
-trusted_third_party_id_servers:
-    - matrix.org
-    - vector.im
-    - riot.im
+#
+# Also defines the ID server which will be called when an account is
+# deactivated (one will be picked arbitrarily).
+#
+# Note: This option is deprecated. Since v0.99.4, Synapse has tracked which identity
+# server a 3PID has been bound to. For 3PIDs bound before then, Synapse runs a
+# background migration script, informing itself that the identity server all of its
+# 3PIDs have been bound to is likely one of the below.
+#
+# As of Synapse v1.4.0, all other functionality of this option has been deprecated, and
+# it is now solely used for the purposes of the background migration script, and can be
+# removed once it has run.
+#trusted_third_party_id_servers:
+#  - matrix.org
+#  - vector.im
+
+# Handle threepid (email/phone etc) registration and password resets through a set of
+# *trusted* identity servers. Note that this allows the configured identity server to
+# reset passwords for accounts!
+#
+# Be aware that if `email` is not set, and SMTP options have not been
+# configured in the email config block, registration and user password resets via
+# email will be globally disabled.
+#
+# Additionally, if `msisdn` is not set, registration and password resets via msisdn
+# will be disabled regardless. This is due to Synapse currently not supporting any
+# method of sending SMS messages on its own.
+#
+# To enable using an identity server for operations regarding a particular third-party
+# identifier type, set the value to the URL of that identity server as shown in the
+# examples below.
+#
+# Servers handling the these requests must answer the `/requestToken` endpoints defined
+# by the Matrix Identity Service API specification:
+# https://matrix.org/docs/spec/identity_service/latest
+#
+# If a delegate is specified, the config option public_baseurl must also be filled out.
+#
+account_threepid_delegates:
+    #email: https://example.com     # Delegate email sending to example.org
+    #msisdn: http://localhost:8090  # Delegate SMS sending to this local process
 
 # Users who register on this homeserver will automatically be joined
 # to these rooms
@@ -580,12 +646,58 @@ old_signing_keys: {}
 key_refresh_interval: "1d" # 1 Day.
 
 # The trusted servers to download signing keys from.
-perspectives:
-  servers:
-    "matrix.org":
-      verify_keys:
-        "ed25519:auto":
-          key: "Noi6WqcDj0QmPxCNQqgezwTlBKrfqehY1u2FyWP9uYw"
+#
+# When we need to fetch a signing key, each server is tried in parallel.
+#
+# Normally, the connection to the key server is validated via TLS certificates.
+# Additional security can be provided by configuring a `verify key`, which
+# will make synapse check that the response is signed by that key.
+#
+# This setting supercedes an older setting named `perspectives`. The old format
+# is still supported for backwards-compatibility, but it is deprecated.
+#
+# 'trusted_key_servers' defaults to matrix.org, but using it will generate a
+# warning on start-up. To suppress this warning, set
+# 'suppress_key_server_warning' to true.
+#
+# Options for each entry in the list include:
+#
+#    server_name: the name of the server. required.
+#
+#    verify_keys: an optional map from key id to base64-encoded public key.
+#       If specified, we will check that the response is signed by at least
+#       one of the given keys.
+#
+#    accept_keys_insecurely: a boolean. Normally, if `verify_keys` is unset,
+#       and federation_verify_certificates is not `true`, synapse will refuse
+#       to start, because this would allow anyone who can spoof DNS responses
+#       to masquerade as the trusted key server. If you know what you are doing
+#       and are sure that your network environment provides a secure connection
+#       to the key server, you can set this to `true` to override this
+#       behaviour.
+#
+# An example configuration might look like:
+#
+#trusted_key_servers:
+#  - server_name: "my_trusted_server.example.com"
+#    verify_keys:
+#      "ed25519:auto": "abcdefghijklmnopqrstuvwxyzabcdefghijklmopqr"
+#  - server_name: "my_other_trusted_server.example.com"
+#
+trusted_key_servers:
+  - server_name: "matrix.org"
+
+# Uncomment the following to disable the warning that is emitted when the
+# trusted_key_servers include 'matrix.org'. See above.
+#
+suppress_key_server_warning: true
+
+# The signing keys to use when acting as a trusted key server. If not specified
+# defaults to the server signing key.
+#
+# Can contain multiple keys, one per line.
+#
+#key_server_signing_keys_path: "key_server_signing_keys.key"
 
 
 # Enable SAML2 for registration and login. Uses pysaml2
@@ -618,10 +730,20 @@ perspectives:
 
 # Enable password for login.
 password_config:
-   enabled: true
+   # Uncomment to disable password login
+   #
+   #enabled: false
+
+   # Uncomment to disable authentication against the local password
+   # database. This is ignored if `enabled` is false, and is only useful
+   # if you have other password_providers.
+   #
+   #localdb_enabled: false
+
    # Uncomment and change to a secret random string for extra security.
    # DO NOT CHANGE THIS AFTER INITIAL SETUP!
-   #pepper: ""
+   #
+   #pepper: "EVEN_MORE_SECRET"
 
 
 # Enable sending emails for notification events
@@ -636,17 +758,82 @@ password_config:
 #email:
 #   enable_notifs: false
 #   smtp_host: "localhost"
-#   smtp_port: 25
+#   smtp_port: 25 # SSL: 465, STARTTLS: 587
 #   smtp_user: "exampleusername"
 #   smtp_pass: "examplepassword"
 #   require_transport_security: False
 #   notif_from: "Your Friendly %(app)s Home Server <noreply@example.com>"
 #   app_name: Matrix
-#   template_dir: res/templates
+#
+#   # Enable email notifications by default
+#   #
+#   notif_for_new_users: True
+#
+#   # Defining a custom URL for Riot is only needed if email notifications
+#   # should contain links to a self-hosted installation of Riot; when set
+#   # the "app_name" setting is ignored
+#   #
+#   riot_base_url: "http://localhost/riot"
+#
+#   # Configure the time that a validation email or text message code
+#   # will expire after sending
+#   #
+#   # This is currently used for password resets
+#   #
+#   #validation_token_lifetime: 1h
+#
+#   # Template directory. All template files should be stored within this
+#   # directory. If not set, default templates from within the Synapse
+#   # package will be used
+#   #
+#   # For the list of default templates, please see
+#   # https://github.com/matrix-org/synapse/tree/master/synapse/res/templates
+#   #
+#   #template_dir: res/templates
+#
+#   # Templates for email notifications
+#   #
 #   notif_template_html: notif_mail.html
 #   notif_template_text: notif_mail.txt
-#   notif_for_new_users: True
-#   riot_base_url: "http://localhost/riot"
+#
+#   # Templates for account expiry notices
+#   #
+#   expiry_template_html: notice_expiry.html
+#   expiry_template_text: notice_expiry.txt
+#
+#   # Templates for password reset emails sent by the homeserver
+#   #
+#   #password_reset_template_html: password_reset.html
+#   #password_reset_template_text: password_reset.txt
+#
+#   # Templates for registration emails sent by the homeserver
+#   #
+#   #registration_template_html: registration.html
+#   #registration_template_text: registration.txt
+#
+#   # Templates for validation emails sent by the homeserver when adding an email to
+#   # your user account
+#   #
+#   #add_threepid_template_html: add_threepid.html
+#   #add_threepid_template_text: add_threepid.txt
+#
+#   # Templates for password reset success and failure pages that a user
+#   # will see after attempting to reset their password
+#   #
+#   #password_reset_template_success_html: password_reset_success.html
+#   #password_reset_template_failure_html: password_reset_failure.html
+#
+#   # Templates for registration success and failure pages that a user
+#   # will see after attempting to register using an email or phone
+#   #
+#   #registration_template_success_html: registration_success.html
+#   #registration_template_failure_html: registration_failure.html
+#
+#   # Templates for success and failure pages that a user will see after attempting
+#   # to add an email or phone to their account
+#   #
+#   #add_threepid_success_html: add_threepid_success.html
+#   #add_threepid_failure_html: add_threepid_failure.html
 {% else %}
 email:
    enable_notifs: true
@@ -657,11 +844,12 @@ email:
    require_transport_security: "{{ mail_tls_synapse }}"
    notif_from: "{{ notif_from }}"
    app_name: Matrix
-#   template_dir: "{{ synapse_path }}/res/templates"
+   #template_dir: "{{ synapse_path }}/res/templates"
    notif_template_html: notif_mail.html
    notif_template_text: notif_mail.txt
    notif_for_new_users: True
    riot_base_url: "https://{{ riot_hostname }}"
+   validation_token_lifetime: 1h
 {% endif %}
 
 
@@ -771,6 +959,20 @@ user_directory:
 #
 
 
+# Local statistics collection. Used in populating the room directory.
+#
+# 'bucket_size' controls how large each statistics timeslice is. It can
+# be defined in a human readable short form -- e.g. "1d", "1y".
+#
+# 'retention' controls how long historical statistics will be kept for.
+# It can be defined in a human readable short form -- e.g. "1d", "1y".
+#
+#
+#stats:
+#   enabled: true
+#   bucket_size: 1d
+#   retention: 1y
+
 # Server Notices room configuration
 #
 # Uncomment this section to enable a room which can be used to send notices
@@ -789,3 +991,119 @@ user_directory:
 #   system_mxid_display_name: "Server Notices"
 #   system_mxid_avatar_url: "mxc://server.com/oumMVlgDnLYFaPVkExemNVVZ"
 #   room_name: "Server Notices"
+
+# Uncomment to disable searching the public room list. When disabled
+# blocks searching local and remote room lists for local and remote
+# users by always returning an empty list for all queries.
+#
+#enable_room_list_search: false
+
+# The `alias_creation` option controls who's allowed to create aliases
+# on this server.
+#
+# The format of this option is a list of rules that contain globs that
+# match against user_id, room_id and the new alias (fully qualified with
+# server name). The action in the first rule that matches is taken,
+# which can currently either be "allow" or "deny".
+#
+# Missing user_id/room_id/alias fields default to "*".
+#
+# If no rules match the request is denied. An empty list means no one
+# can create aliases.
+#
+# Options for the rules include:
+#
+#   user_id: Matches against the creator of the alias
+#   alias: Matches against the alias being created
+#   room_id: Matches against the room ID the alias is being pointed at
+#   action: Whether to "allow" or "deny" the request if the rule matches
+#
+# The default is:
+#
+#alias_creation_rules:
+#  - user_id: "*"
+#    alias: "*"
+#    room_id: "*"
+#    action: allow
+
+# The `room_list_publication_rules` option controls who can publish and
+# which rooms can be published in the public room list.
+#
+# The format of this option is the same as that for
+# `alias_creation_rules`.
+#
+# If the room has one or more aliases associated with it, only one of
+# the aliases needs to match the alias rule. If there are no aliases
+# then only rules with `alias: *` match.
+#
+# If no rules match the request is denied. An empty list means no one
+# can publish rooms.
+#
+# Options for the rules include:
+#
+#   user_id: Matches agaisnt the creator of the alias
+#   room_id: Matches against the room ID being published
+#   alias: Matches against any current local or canonical aliases
+#            associated with the room
+#   action: Whether to "allow" or "deny" the request if the rule matches
+#
+# The default is:
+#
+#room_list_publication_rules:
+#  - user_id: "*"
+#    alias: "*"
+#    room_id: "*"
+#    action: allow
+
+
+# Server admins can define a Python module that implements extra rules for
+# allowing or denying incoming events. In order to work, this module needs to
+# override the methods defined in synapse/events/third_party_rules.py.
+#
+# This feature is designed to be used in closed federations only, where each
+# participating server enforces the same rules.
+#
+#third_party_event_rules:
+#  module: "my_custom_project.SuperRulesSet"
+#  config:
+#    example_option: 'things'
+
+
+## Opentracing ##
+
+# These settings enable opentracing, which implements distributed tracing.
+# This allows you to observe the causal chains of events across servers
+# including requests, key lookups etc., across any server running
+# synapse or any other other services which supports opentracing
+# (specifically those implemented with Jaeger).
+#
+opentracing:
+    # tracing is disabled by default. Uncomment the following line to enable it.
+    #
+    #enabled: true
+
+    # The list of homeservers we wish to send and receive span contexts and span baggage.
+    # See docs/opentracing.rst
+    # This is a list of regexes which are matched against the server_name of the
+    # homeserver.
+    #
+    # By defult, it is empty, so no servers are matched.
+    #
+    #homeserver_whitelist:
+    #  - ".*"
+
+    # Jaeger can be configured to sample traces at different rates.
+    # All configuration options provided by Jaeger can be set here.
+    # Jaeger's configuration mostly related to trace sampling which
+    # is documented here:
+    # https://www.jaegertracing.io/docs/1.13/sampling/.
+    #
+    #jaeger_config:
+    #  sampler:
+    #    type: const
+    #    param: 1
+
+    #  Logging whether spans were started and reported
+    #
+    #  logging:
+    #    false

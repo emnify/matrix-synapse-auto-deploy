@@ -8,14 +8,17 @@
 #
 # This is used to build the various identifiers for identity, auth and directory.
 matrix:
-  domain: '{{ domain }}'
+  domain: {{ domain }}
 
 server:
-   name: '{{ hostname }}'
+   name: {{ hostname }}
 
-dns.overwrite.homeserver.client:
-  - name: '{{ hostname }}'
-    value: 'http://127.0.0.1:8008'
+dns:
+  overwrite:
+    homeserver:
+      client:
+      - name: {{ hostname }}
+        value: http://127.0.0.1:8008
 
 #directory.exclude.homeserver: true
 
@@ -25,7 +28,8 @@ dns.overwrite.homeserver.client:
 # Absolute path for the Identity Server signing key.
 # During testing, /var/tmp/mxisd.key is a possible value
 #
-key.path: '/var/lib/mxisd/signing.key'
+key:
+  path: /var/lib/mxisd/signing.key
 
 ############################
 # Persistence config items #
@@ -38,7 +42,11 @@ key.path: '/var/lib/mxisd/signing.key'
 #storage.backend: 'sqlite'
 
 # Path to the SQLite DB file
-storage.provider.sqlite.database: '/var/lib/mxisd/mxisd.db'
+storage:
+  provider:
+    sqlite:
+      database: /var/lib/mxisd/mxisd.db
+{% if mxisd_ldap_enable %}
 
 ################
 # LDAP Backend #
@@ -49,30 +57,37 @@ storage.provider.sqlite.database: '/var/lib/mxisd/mxisd.db'
 ldap:
   enabled: true
   connection:
-    host: '{{ ldap_server }}'
-    bindDn: '{{ bind_dn }}'
-    bindPassword: '{{ bind_pass }}'
-    baseDn: '{{ base_dn }}'
-    tls: {{ ldap_tls }}
-    port: {{ ldap_port }}
-  filter: '{{ ldap_filter }}'
+    host: {{ mxisd_ldap_server }}
+    bindDn: {{ mxisd_bind_dn }}
+    bindPassword: {{ mxisd_bind_pass }}
+    baseDn: {{ mxisd_base_dn }}
+    tls: {{ mxisd_ldap_tls }}
+    port: {{ mxisd_ldap_port }}
+  filter: {{ mxisd_ldap_filter }}
   attribute:
     uid:
-      type: 'uid'
-      value: 'sAMAccountName'
-    name: 'displayName'
+      type: uid
+      value: sAMAccountName
+    name: displayName
     threepid:
       email:
         - mail
       msisdn:
         - telephoneNumber
         - mobile
+{% endif %}
+{% if mxisd_sql_enable %}
 
 ###############
 # SQL Backend #
 ###############
 # If you would like to integrate with a MySQL/MariaDB/PostgreQL/SQLite DB,
 # see https://github.com/kamax-io/mxisd/blob/master/docs/backends/sql.md
+synapseSql:
+    connection: {{ mxisd_sql_connection_string }}
+    enabled: true
+    type: {{ mxisd_sql_type }}
+{% endif %}
 
 ################
 # REST Backend #
@@ -88,19 +103,21 @@ ldap:
 #
 #### E-mail invite sender
 
-{% if mail | bool %}
+{% if mail %}
 threepid:
   medium:
     email:
       identity:
-        from: '{{ mail_from }}'
-        name: '{{ mail_name }}'
+        from: {{ mail_from }}
+        name: {{ mail_name }}
       connectors:
         smtp:
-          host: '{{ mail_host }}'
+          host: {{ mail_host }}
           port: {{ mail_port }}
           # 0 = no STARTLS, 1 = try, 2 = force
           tls: {{ mail_tls }}
-          login: '{{ mail_user }}'
-          password: '{{ mail_pass }}'
+          login: {{ mail_user }}
+          password: {{ mail_pass }}
+      identity:
+        from: {{ mail_from }}
 {% endif %}

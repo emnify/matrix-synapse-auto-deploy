@@ -6,7 +6,7 @@ install_synapse: true
 install_turnserver: true
 install_reverseproxy: true
 install_postgres: true
-install_mxisd: false
+install_mxisd: true
 install_riot: true
 install_letsencrypt: false
 
@@ -113,13 +113,20 @@ postgres_host: localhost
 ## mxisd (identity server)
 ### Only ldap configuration for now
 ### For more information see https://github.com/kamax-io/mxisd/
-ldap_server:
-bind_dn:
-bind_pass:
-base_dn:
-ldap_tls: true
-ldap_port: 636
-ldap_filter: (&(objectclass=user)(mail=*))
+mxisd_version: 1.4.5
+
+mxisd_ldap_enable: false
+mxisd_ldap_server:
+mxisd_bind_dn:
+mxisd_bind_pass:
+mxisd_base_dn:
+mxisd_ldap_tls: true
+mxisd_ldap_port: 636
+mxisd_ldap_filter: (&(objectclass=user)(mail=*))
+
+mxisd_sql_enable: true
+mxisd_sql_connection_string: //{{ postgres_host }}/{{ postgres_database }}?user={{ username }}&password={{ database_secret }}
+mxisd_sql_type: postgresql
 
 ## riot-web
 riot_im_version: 1.4.2
@@ -134,8 +141,8 @@ riot_integration_api: "https://scalar.vector.im/api"
 riot_integrations_jitsi_widget_url: "https://scalar.vector.im/api/widgets/jitsi.html"
 riot_bug_report_endpoint_url: "https://riot.im/bugreports/submit"
 riot_hs_url: "{{ hostname }}"
-### Recommended: matrix.org, vector.im or {{ hostname }}
-riot_is_url: matrix.org
+### Recommended: matrix.org, vector.im or {{ hostname }} (when installing mxisd)
+riot_is_url: "{{ hostname }}"
 riot_brand: Riot
 ### light, dark, simple.im
 riot_theme: light
