@@ -1,4 +1,4 @@
-# Architecture
+# Architecture Overview
 
 By default only nginx is exposed to the world and proxies every request on port 80, 443 and 8443 to the appropriate service.
 

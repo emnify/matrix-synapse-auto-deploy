@@ -12,7 +12,7 @@ This role configures the following services on your server:
 
 - [Coturn](https://github.com/coturn/coturn): STUN/TURN server for WebRTC audio/video calls
 
-- [mxisd](https://github.com/kamax-io/mxisd): Federated Matrix Identity server to further increase privacy
+- [mxisd](https://github.com/kamax-io/mxisd): Federated Matrix Identity server, to further increase privacy ([doc](docs/mxisd.md))
 
 - [nginx](http://nginx.org/): Web server for riot.web and reverse proxy for synapse and mxisd
 
@@ -21,6 +21,8 @@ This role configures the following services on your server:
 - [Riot](https://riot.im/): WebUI preconfigured for your homeserver
 
 - [Let's Encrypt](https://letsencrypt.org/): TLS certificate for Riot and Synapse
+
+Small [Architecture Overview](docs/architecture.md)
 
 ## Pre-requirements
 
