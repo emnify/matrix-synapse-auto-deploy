@@ -48,6 +48,8 @@ It should also run smoothly on any systemd flavoured OS. You're free to test and
 
 ## Installation
 
+All variables are defined under [roles/matrix-synapse-auto-deploy/defaults/main.yml](roles/matrix-synapse-auto-deploy/defaults/main.yml). You need to adapt to your needs. Take a look at the [playbook.example.yml](playbook.example.yml) file for the most important variables.
+
     ansible-playbook playbook.example.yml --extra-vars "host=matrix.domain.com"
 
 ## Enjoy
