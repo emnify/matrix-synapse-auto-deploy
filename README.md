@@ -54,4 +54,4 @@ All variables are defined under [roles/matrix-synapse-auto-deploy/defaults/main.
 
 ## Enjoy
 
-You can now connect to your HomeServer via the riot webclient or by specifying your HomeServer on any other client.
+You can now connect to your Homeserver via the riot webclient or by specifying your Homeserver on any other client.
