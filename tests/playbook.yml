@@ -7,4 +7,4 @@
     install_letsencrypt: false
 
   roles:
-    - role_under_test/roles/matrix-synapse-auto-deploy
+    - role_under_test
