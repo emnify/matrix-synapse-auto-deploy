@@ -28,4 +28,4 @@
     riot_path: /var/www/riot
 
   roles:
-    - matrix-synapse-auto-deploy
+    - .
