@@ -45,7 +45,7 @@ mail_tls: 1
 mail_tls_synapse: True
 mail_user:
 mail_pass:
-notif_from: Your Friendly %(app) Home Server <{{ hostname }}>
+notif_from: "{{ domain | upper }} Matrix Home Server <{{ mail_from }}>"
 #### .well-known support - The well-known server file needs to be placed at the apex domain, e.g. domain.com/.well-known/matrix
 #### Because this role does not configure your apex domain it just assumes that it will also get served via the same server
 #### where synapse runs. You can configure the path to your .well-known apex domain directory

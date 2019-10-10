@@ -837,21 +837,30 @@ password_config:
 {% else %}
 email:
    enable_notifs: true
-   smtp_host: "{{ mail_host }}"
-   smtp_port: "{{ mail_port }}"
+{% if not (mail_host is undefined or mail_host is none or mail_host | trim == '') %}
+   smtp_host: {{ mail_host }}
+{% endif %}
+{% if not (mail_port is undefined or mail_port is none or mail_port | trim == '') %}
+   smtp_port: {{ mail_port }}
+{% endif %}
+{% if not (mail_user is undefined or mail_user is none or mail_user | trim == '') %}
    smtp_user: "{{ mail_user }}"
+{% endif %}
+{% if not (mail_pass is undefined or mail_pass is none or mail_pass | trim == '') %}
    smtp_pass: "{{ mail_pass }}"
-   require_transport_security: "{{ mail_tls_synapse }}"
+{% endif %}
+   require_transport_security: {{ mail_tls_synapse | lower }}
    notif_from: "{{ notif_from }}"
    app_name: Matrix
    #template_dir: "{{ synapse_path }}/res/templates"
    notif_template_html: notif_mail.html
    notif_template_text: notif_mail.txt
+   expiry_template_html: notice_expiry.html
+   expiry_template_text: notice_expiry.txt
    notif_for_new_users: True
    riot_base_url: "https://{{ riot_hostname }}"
    validation_token_lifetime: 1h
 {% endif %}
-
 
 # password_providers:
 #     - module: "ldap_auth_provider.LdapAuthProvider"
