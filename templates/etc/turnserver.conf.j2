@@ -15,3 +15,7 @@ denied-peer-ip=172.16.0.0-172.31.255.255
 # consider whether you want to limit the quota of relayed streams per user (or total) to avoid risk of DoS.
 user-quota=12 # 4 streams per video call, so 12 streams = 3 simultaneous relayed calls per user.
 total-quota=1200
+
+{% for addr in turn_listening_ips %}
+listening-ip={{ addr }}
+{% endfor %}

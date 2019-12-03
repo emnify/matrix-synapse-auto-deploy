@@ -87,6 +87,10 @@ turn_path: /usr/src
 ### Recommended if you do not let the playbook install the coturn turnserver.
 turn_uris: '"turn:{{ hostname }}:3478?transport=udp\", \"turn:{{ hostname }}:3478?transport=tcp"'
 turn_shared_secret: CHANGEME
+### Listening IP addresses. If coturn should be accessible from the outside, you probably want that, they need to be changed.
+turn_listening_ips:
+  - 127.0.0.1
+  - fe80::1
 ### turn_username:
 ### turn_password:
 
@@ -129,7 +133,7 @@ mxisd_sql_connection_string: //{{ postgres_host }}/{{ postgres_database }}?user=
 mxisd_sql_type: postgresql
 
 ## riot-web
-riot_im_version: 1.4.2
+riot_im_version: 1.5.5
 riot_im_archive: riot-v{{ riot_im_version }}
 riot_im_tarball_url: "https://github.com/vector-im/riot-web/releases/download/v{{ riot_im_version }}/{{ riot_im_archive }}.tar.gz"
 riot_hostname: "{{ hostname }}" # For security it should be on another domain as the matrix server, so change it!

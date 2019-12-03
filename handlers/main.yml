@@ -1,6 +1,6 @@
 - name: reload systemctl daemon
   systemd: daemon_reload=yes
-  tags: synapse, turnserver
+  tags: synapse, turnserver, mxisd, riot
 
 - name: restart turn server
   service: name=turnserver state=restarted enabled=yes
@@ -8,6 +8,7 @@
 
 - name: restart mxisd
   service: name=mxisd state=restarted enabled=yes
+  tags: mxisd
 
 - name: restart nginx
   service: name=nginx state=restarted enabled=yes
