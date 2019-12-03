@@ -35,10 +35,16 @@
   when: install_reverseproxy
   tags: nginx
 
+- name: Flush handlers
+  meta: flush_handlers
+
 - name: Import letsencrypt tasks
   import_tasks: letsencrypt.yml
   when: install_letsencrypt
   tags: letsencrypt
+
+- name: Flush handlers
+  meta: flush_handlers
 
 - name: Import postgres tasks
   import_tasks: postgres.yml

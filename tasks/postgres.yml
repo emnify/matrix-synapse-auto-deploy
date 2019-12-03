@@ -13,6 +13,7 @@
     name: psycopg2
     virtualenv: "{{ synapse_path }}"
     extra_args: '--upgrade'
+  when: not ansible_check_mode
 
 - name: Start postgresql unit
   service:

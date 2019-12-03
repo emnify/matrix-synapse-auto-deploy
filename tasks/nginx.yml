@@ -50,6 +50,3 @@
     state: absent
   notify:
     - restart nginx
-
-- name: Flush handlers
-  meta: flush_handlers

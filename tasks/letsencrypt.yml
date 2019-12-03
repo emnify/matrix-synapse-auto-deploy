@@ -112,6 +112,3 @@
     - { src: 'common/matrix.conf.j2', dest: 'common/matrix.conf' }
   notify:
     - restart nginx
-
-- name: Flush handlers
-  meta: flush_handlers

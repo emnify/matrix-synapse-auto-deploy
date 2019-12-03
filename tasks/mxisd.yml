@@ -12,8 +12,8 @@
   notify:
     - restart mxisd
 
-- name: Enabling mxisd service at boot
-  command: systemctl enable mxisd
+#- name: Enabling mxisd service at boot
+#  command: systemctl enable mxisd
 
 #- name: Configure synapse to use mxisd
 #  blockinfile:
