@@ -14,17 +14,17 @@
 {% if install_mxisd | bool %}
 
         location /_matrix/identity {
-            proxy_pass       http://127.0.0.1:8090/_matrix/identity;
+            proxy_pass       http://mxisd/_matrix/identity;
             proxy_set_header X-Forwarded-For $remote_addr;
         }
 
         location /_matrix/client/r0/user_directory {
-            proxy_pass       http://127.0.0.1:8090/_matrix/client/r0/user_directory;
+            proxy_pass       http://mxisd/_matrix/client/r0/user_directory;
             proxy_set_header X-Forwarded-For $remote_addr;
         }
 {% endif %}
 
         location / {
-            proxy_pass       http://127.0.0.1:8008;
+            proxy_pass       http://matrix;
             proxy_set_header X-Forwarded-For $remote_addr;
         }

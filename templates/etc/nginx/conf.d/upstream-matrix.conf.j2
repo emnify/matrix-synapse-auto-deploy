@@ -1,0 +1,11 @@
+# {{ ansible_managed }}
+
+{% if install_mxisd | bool %}
+upstream mxisd {
+    server [::1]:8090;
+}
+
+{% endif %}
+upstream matrix {
+    server [::1]:8008;
+}

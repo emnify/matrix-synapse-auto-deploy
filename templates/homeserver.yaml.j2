@@ -194,9 +194,9 @@ listeners:
   - port: 8008
     tls: false
 {% if install_reverseproxy %}
-    bind_addresses: ['127.0.0.1']
+    bind_addresses: ['::1']
 {% else %}
-    bind_addresses: ['::', '0.0.0.0']
+    bind_addresses: ['::']
 {% endif %}
     type: http
 

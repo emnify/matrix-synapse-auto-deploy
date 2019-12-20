@@ -60,3 +60,6 @@
   import_tasks: riot.im.yml
   when: install_riot
   tags: riot
+
+- name: Flush handlers
+  meta: flush_handlers
