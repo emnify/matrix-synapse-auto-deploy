@@ -619,7 +619,11 @@ expire_access_token: False
 #
 # By default, this is infinite.
 #
+{% if synapse_session_lifetime %}
 session_lifetime: "{{ synapse_session_lifetime }}"
+{% else %}
+# session_lifetime: "{{ synapse_session_lifetime }}"
+{% endif %}
 
 # a secret which is used to calculate HMACs for form values, to stop
 # falsification of values
