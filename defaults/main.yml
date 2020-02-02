@@ -72,6 +72,7 @@ synapse_app_service_config_files:
 #### - /path/to/app_service2/configuration.conf
 synapse_enable_group_creation: false
 synapse_enable_group_creation_prefix: "unofficial/"
+synapse_admin_contact: mailto:admin@server.com
 
 ## nginx
 nginx_install_package: true # installs nginx via package manager
