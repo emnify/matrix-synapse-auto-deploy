@@ -7,7 +7,7 @@ server {
         server_name {{ hostname }};
 
 {% if riot_path_certificate is none and riot_path_key is none %}
-        include common/matrix.conf;
+        include common/{{ hostname}}/*.conf;
 {% endif %}
         location ~ /\.well-known {
             default_type "text/plain";
@@ -34,7 +34,7 @@ server {
             allow all;
             root {{ le_well_known_location }};
         }
-        include common/matrix.conf;
+        include common/{{ hostname}}/*.conf;
 }
 {% if install_reverseproxy | bool %}
 
@@ -49,7 +49,7 @@ server {
         ssl_certificate_key  {{ synapse_path_key }};
 
         access_log off;
-        include common/matrix.conf;
+        include common/{{ hostname}}/*.conf;
 }
 {% endif %}
 {% endif %}

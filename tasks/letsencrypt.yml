@@ -109,7 +109,7 @@
     dest: /etc/nginx/{{item.dest}}
   with_items:
     - { src: 'sites-available/synapse.j2', dest: 'sites-available/synapse' }
-    - { src: 'common/matrix.conf.j2', dest: 'common/matrix.conf' }
+    - { src: 'common//matrix/matrix.conf.j2', dest: 'common/{{ hostname }}/matrix.conf' }
     - { src: 'conf.d/upstream-matrix.conf.j2', dest: 'conf.d/upstream-matrix.conf' }
   notify:
     - restart nginx
