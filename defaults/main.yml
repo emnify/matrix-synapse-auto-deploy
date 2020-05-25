@@ -6,7 +6,8 @@ install_synapse: true
 install_turnserver: true
 install_reverseproxy: true
 install_postgres: true
-install_mxisd: true
+install_ma1sd: true
+install_mxisd: false
 install_riot: true
 install_letsencrypt: true
 
@@ -80,7 +81,7 @@ nginx_install_package: true # installs nginx via package manager
 nginx_block_openid: true
 
 ## Turnserver
-turn_version: 4.5.1.1
+turn_version: 4.5.1.2
 turn_archive: coturn-{{ turn_version }}
 turn_tarball_url: https://github.com/coturn/coturn/archive/{{ turn_version }}.tar.gz
 turn_path: /usr/src
@@ -133,8 +134,26 @@ mxisd_sql_enable: true
 mxisd_sql_connection_string: //{{ postgres_host }}/{{ postgres_database }}?user={{ username }}&password={{ database_secret }}
 mxisd_sql_type: postgresql
 
+## ma1sd (identity server)
+### Only ldap configuration for now
+### For more information see https://github.com/ma1uta/ma1sd/
+ma1sd_version: 2.3.0
+
+ma1sd_ldap_enable: false
+ma1sd_ldap_server:
+ma1sd_bind_dn:
+ma1sd_bind_pass:
+ma1sd_base_dn:
+ma1sd_ldap_tls: true
+ma1sd_ldap_port: 636
+ma1sd_ldap_filter: (&(objectclass=user)(mail=*))
+
+ma1sd_sql_enable: true
+ma1sd_sql_connection_string: //{{ postgres_host }}/{{ postgres_database }}?user={{ username }}&password={{ database_secret }}
+ma1sd_sql_type: postgresql
+
 ## riot-web
-riot_im_version: 1.5.15
+riot_im_version: 1.6.2
 riot_im_archive: riot-v{{ riot_im_version }}
 riot_im_tarball_url: "https://github.com/vector-im/riot-web/releases/download/v{{ riot_im_version }}/{{ riot_im_archive }}.tar.gz"
 riot_hostname: "{{ hostname }}" # For security it should be on another domain as the matrix server, so change it!

@@ -6,6 +6,10 @@
   service: name=turnserver state=restarted enabled=yes
   tags: turnserver
 
+- name: restart ma1sd
+  service: name=ma1sd state=restarted enabled=yes
+  tags: ma1sd
+
 - name: restart mxisd
   service: name=mxisd state=restarted enabled=yes
   tags: mxisd
@@ -15,5 +19,5 @@
   tags: riot
 
 - name: restart synapse
-  service: name=synapse state=started enabled=yes
+  service: name=synapse state=restarted enabled=yes
   tags: synapse

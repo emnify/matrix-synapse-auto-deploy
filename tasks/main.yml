@@ -51,6 +51,11 @@
   when: install_postgres
   tags: postgres
 
+- name: Import ma1sd tasks
+  import_tasks: ma1sd.yml
+  when: install_ma1sd
+  tags: ma1sd
+
 - name: Import mxisd tasks
   import_tasks: mxisd.yml
   when: install_mxisd

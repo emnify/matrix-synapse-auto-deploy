@@ -1,5 +1,5 @@
 # {{ ansible_managed }}
-# For a complete list of options, see https://github.com/kamax-io/mxisd
+# For a complete list of options, see https://github.com/ma1uta/ma1sd/
 
 #######################
 # Matrix config items #
@@ -18,7 +18,7 @@ dns:
     homeserver:
       client:
       - name: {{ hostname }}
-        value: http://127.0.0.1:8008
+        value: http://[::1]:8008
 
 #directory.exclude.homeserver: true
 
@@ -26,10 +26,10 @@ dns:
 # Signing keys #
 ################
 # Absolute path for the Identity Server signing key.
-# During testing, /var/tmp/mxisd.key is a possible value
+# During testing, /var/tmp/ma1sd.key is a possible value
 #
 key:
-  path: /var/lib/mxisd/signing.key
+  path: /var/lib/ma1sd/signing.key
 
 ############################
 # Persistence config items #
@@ -45,25 +45,25 @@ key:
 storage:
   provider:
     sqlite:
-      database: /var/lib/mxisd/mxisd.db
-{% if mxisd_ldap_enable %}
+      database: /var/lib/ma1sd/store.db
+{% if ma1sd_ldap_enable %}
 
 ################
 # LDAP Backend #
 ################
 # If you would like to integrate with your AD/Samba/LDAP server,
-# see https://github.com/kamax-io/mxisd/blob/master/docs/backends/ldap.md
+# see https://github.com/ma1uta/ma1sd/blob/master/docs/stores/ldap.md
 
 ldap:
   enabled: true
   connection:
-    host: {{ mxisd_ldap_server }}
-    bindDn: {{ mxisd_bind_dn }}
-    bindPassword: {{ mxisd_bind_pass }}
-    baseDn: {{ mxisd_base_dn }}
-    tls: {{ mxisd_ldap_tls }}
-    port: {{ mxisd_ldap_port }}
-  filter: {{ mxisd_ldap_filter }}
+    host: {{ ma1sd_ldap_server }}
+    bindDn: {{ ma1sd_bind_dn }}
+    bindPassword: {{ ma1sd_bind_pass }}
+    baseDn: {{ ma1sd_base_dn }}
+    tls: {{ ma1sd_ldap_tls }}
+    port: {{ ma1sd_ldap_port }}
+  filter: {{ ma1sd_ldap_filter }}
   attribute:
     uid:
       type: uid
@@ -76,30 +76,30 @@ ldap:
         - telephoneNumber
         - mobile
 {% endif %}
-{% if mxisd_sql_enable %}
+{% if ma1sd_sql_enable %}
 
 ###############
 # SQL Backend #
 ###############
 # If you would like to integrate with a MySQL/MariaDB/PostgreQL/SQLite DB,
-# see https://github.com/kamax-io/mxisd/blob/master/docs/backends/sql.md
+# see https://github.com/ma1uta/ma1sd/blob/master/docs/stores/sql.md
 synapseSql:
-    connection: {{ mxisd_sql_connection_string }}
+    connection: {{ ma1sd_sql_connection_string }}
     enabled: true
-    type: {{ mxisd_sql_type }}
+    type: {{ ma1sd_sql_type }}
 {% endif %}
 
 ################
 # REST Backend #
 ################
 # If you would like to integrate with an existing web service/webapp,
-# see https://github.com/kamax-io/mxisd/blob/master/docs/backends/rest.md
+# see https://github.com/ma1uta/ma1sd/blob/master/docs/stores/rest.md
 
 #################################################
 # Notifications for invites/addition to profile #
 #################################################
 # If you would like to change the content,
-# see https://github.com/kamax-io/mxisd/blob/master/docs/threepids/notifications/template-generator.md
+# see https://github.com/ma1uta/ma1sd/blob/master/docs/threepids/notification/template-generator.md
 #
 #### E-mail invite sender
 

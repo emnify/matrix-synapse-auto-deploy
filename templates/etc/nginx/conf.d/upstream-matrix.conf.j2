@@ -6,6 +6,12 @@ upstream mxisd {
 }
 
 {% endif %}
+{% if install_ma1sd | bool %}
+upstream ma1sd {
+    server [::1]:8090;
+}
+
+{% endif %}
 upstream matrix {
     server [::1]:8008;
 }

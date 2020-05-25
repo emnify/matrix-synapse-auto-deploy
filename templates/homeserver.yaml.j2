@@ -1103,7 +1103,7 @@ allow_guest_access: False
 # (By default, no suggestion is made, so it is left up to the client.
 # This setting is ignored unless public_baseurl is also set.)
 #
-#default_identity_server: https://matrix.org
+default_identity_server: https://{{ hostname }}
 
 # The list of identity servers trusted to verify third party
 # identifiers by this server.
@@ -1307,6 +1307,7 @@ old_signing_keys:
 #  - server_name: "my_other_trusted_server.example.com"
 #
 trusted_key_servers:
+  - server_name: "{{ hostname }}"
   - server_name: "matrix.org"
 
 # Uncomment the following to disable the warning that is emitted when the

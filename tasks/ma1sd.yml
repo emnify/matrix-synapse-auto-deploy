@@ -1,0 +1,28 @@
+---
+
+- name: Install mxisd
+  apt:
+    deb: https://github.com/ma1uta/ma1sd/releases/download/{{ ma1sd_version }}/ma1sd_{{ ma1sd_version }}_all.deb
+
+- name: Install ma1sd conf
+  template:
+    src:  etc/ma1sd/ma1sd.yaml.j2
+    dest: /etc/ma1sd/ma1sd.yaml
+    mode: 0644
+  notify:
+    - restart ma1sd
+
+#- name: Enabling ma1sd service at boot
+#  command: systemctl enable ma1sd
+
+#- name: Configure synapse to use ma1sd
+#  blockinfile:
+#    path: "{{ synapse_path }}/homeserver.yaml"
+#    marker: "#<-- {mark} ANSIBLE MANAGED ma1sd BLOCK -->"
+#    block: |
+#      password_providers:
+#          - module: "rest_auth_provider.RestAuthProvider"
+#            config:
+#              endpoint: "http://127.0.0.1:8090"
+#  notify:
+#    - restart synapse

@@ -16,16 +16,33 @@
 
         location /_matrix/identity {
             proxy_pass       http://mxisd/_matrix/identity;
+            proxy_set_header Host $host;
             proxy_set_header X-Forwarded-For $remote_addr;
         }
 
-        location /_matrix/client/r0/user_directory {
-            proxy_pass       http://mxisd/_matrix/client/r0/user_directory;
+        location /_matrix/client/r0/user_directory/search {
+            proxy_pass       http://mxisd/_matrix/client/r0/user_directory/search;
+            proxy_set_header Host $host;
+            proxy_set_header X-Forwarded-For $remote_addr;
+        }
+{% endif %}
+{% if install_ma1sd | bool %}
+
+        location /_matrix/identity {
+            proxy_pass       http://ma1sd/_matrix/identity;
+            proxy_set_header Host $host;
+            proxy_set_header X-Forwarded-For $remote_addr;
+        }
+
+        location /_matrix/client/r0/user_directory/search {
+            proxy_pass       http://ma1sd/_matrix/client/r0/user_directory/search;
+            proxy_set_header Host $host;
             proxy_set_header X-Forwarded-For $remote_addr;
         }
 {% endif %}
 
         location / {
             proxy_pass       http://matrix;
+            proxy_set_header Host $host;
             proxy_set_header X-Forwarded-For $remote_addr;
         }
